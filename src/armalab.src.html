@@ -316,7 +316,7 @@ a.lnk{color:var(--kraft);font-weight:700;text-decoration:none} a.lnk:hover{text-
    ArmaLab — modelador de manualidades con materiales de librería
    Unidades internas: centímetros. Espesores del catálogo en mm.
    ========================================================= */
-const VERSION = '0.4.4';
+const VERSION = '0.4.5';
 // URL del servidor de Armi (Cloudflare Worker de /worker). Si queda vacío, cada persona puede usar su propia clave de Gemini.
 const ARMI_PROXY = 'https://armi.joacofermandez.workers.dev';
 const FONT_JSON = /*FONT_JSON*/null;
@@ -1241,9 +1241,14 @@ function cutsOf(pc){
       break; }
   }
   if (pc.p.lastre) C.push({pid:pc.id, ins:'yeso5', qty:0, nota:'lastre'});
+  if (pc.p.forro && MAT[pc.p.forro.mat]){ const a = superficie(pc); if (a > 0) C.push({pid:pc.id, mat:pc.p.forro.mat, color:MAT[pc.p.forro.mat].colorable ? pc.p.forro.color : null, nombre:'Forrado', mano:true, qty:1, area:a*1.15, medida:`${nf(a*1.15)} cm² para forrar (con solape)`}); }
   return C;
 }
 const allCuts = () => state.project.pieces.flatMap(cutsOf);
+function superficie(pc){ const p = pc.p;
+  switch (pc.kind){ case 'cilindro': return Math.PI*p.d*p.h + Math.PI*p.d*p.d/4; case 'tubo': return Math.PI*p.d*p.h; case 'cono': return Math.PI*p.r*Math.hypot(p.r, p.h);
+    case 'prisma': return 2*(p.w*p.d + p.w*p.h + p.d*p.h); case 'piramide': return 2*p.b*Math.hypot(p.h, p.b/2) + p.b*p.b; case 'prismaT': return 3*p.a*p.l + p.a*p.a*0.87;
+    case 'placa': return p.w*p.h; case 'disco': return Math.PI*p.d*p.d/4; case 'esfera': return Math.PI*p.d*p.alto; default: return 0; } }
 
 /* ---------- Peso, centro de masa y vuelco ---------- */
 function pesoPieza(pc){
@@ -1594,6 +1599,7 @@ function buildPiece(pc){
       }
       break; }
   }
+  if (pc.p.forro && COLORES[pc.p.forro.color]){ const fm = stdMat(COLORES[pc.p.forro.color], pc.p.forro.mat==='alu'?{metalness:0.6, roughness:0.35}:null); o.traverse(c=>{ if (c.isMesh && !c.isInstancedMesh && !Array.isArray(c.material)) c.material = fm; }); }
   o.traverse(c=>{ if (c.isMesh){ c.castShadow = true; c.receiveShadow = true; } });
   o.position.set(...pc.pos); o.rotation.set(...pc.rot.map(THREE.MathUtils.degToRad));
   o.userData.pid = pc.id;
@@ -2245,8 +2251,9 @@ function armiSistema(){
   return `Sos Armi, el asistente de ArmaLab, una app argentina para diseñar manualidades con materiales de librería (cartón, papel, goma eva, alambre). Hablás en español rioplatense, con voseo, claro y cálido.
 Tu trabajo: interpretar lo que la persona quiere armar y devolver un plan que la app construye en 3D y convierte en piezas a cortar, compras y paso a paso.
 Respondé SOLO con JSON válido con esta forma:
-{"respuesta": "2 a 5 oraciones: qué armaste, qué materiales elegiste y por qué, y un consejo práctico",
- "accion": {"tipo":"plantilla","id":"<id>","params":{...}} o {"tipo":"piezas","nombre":"<nombre corto>","piezas":[{"kind":"<kind>","mat":"<material>","p":{...},"pos":[x,y,z],"rot":[rx,ry,rz],"color":"<color>","nombre":"<nombre de la pieza>"}]} o {"tipo":"ninguna"},
+{"idea": "lista corta de las partes del objeto real, pensada como alguien que lo arma a mano (estructura, forrado, decoración)",
+ "respuesta": "2 a 5 oraciones: qué armaste, con qué materiales y por qué, y un consejo práctico. Mencioná SOLO materiales y piezas que de verdad pusiste",
+ "accion": {"tipo":"plantilla","id":"<id>","params":{...}} o {"tipo":"piezas","nombre":"<nombre corto>","piezas":[{"kind":"<kind>","mat":"<material>","p":{...},"pos":[x,y,z],"rot":[rx,ry,rz],"color":"<color>","forro":{"mat":"<papel>","color":"<color>"},"nombre":"<nombre de la pieza>"}]} o {"tipo":"ninguna"},
  "unidades": número de unidades si lo pidió, o null}
 Reglas:
 1. Si una plantilla sirve, usala (son las más completas). Si no, armá el objeto combinando piezas (máximo 30) para que se parezca de verdad a lo pedido.
@@ -2255,6 +2262,8 @@ Reglas:
 4. "varilla", "tubo", "cilindro", "prisma", "piramide", "cono", "arbol": parados, pos es el centro de la base. "racimo" y "esfera": pos es el centro.
 5. Elegí materiales que aguanten: placas paradas de más de 50 cm en corrugado doble (corrD) o foam; palos con liston o var8; cajas y cilindros en cartulina, opalina o micro. Si el pedido trae colores, usalos (solo en materiales con color).
 6. Si es una pregunta (no un pedido de armar), contestala en "respuesta" y usá {"tipo":"ninguna"}. Si pide cambiar el proyecto actual, devolvé el proyecto completo cambiado.
+7. Que se vea lindo y real: una composición tiene entre 4 y 20 piezas, con estructura + forrado o color + detalles (cintas, bordes, flores, manijas, picos). Nada flota: cada pieza apoya en el piso o sobre otra. Medidas realistas en cm.
+8. "forro" (opcional) forra la pieza con un papel de color (crepe, seda, afiche, cartulina, glase, alu, eva): sirve para darle color a cajas, cilindros, conos y placas de cartón. "color" solo vale en materiales con color.
 Plantillas:
 ${tpl}
 Piezas sueltas:
@@ -2262,7 +2271,19 @@ ${kin}
 Materiales:
 ${mats}
 Colores válidos: ${Object.keys(COLORES).join(', ')}
-Ejemplo de composición: "cartel de protesta" → plantilla cartel. "mesita de 20 cm" → piezas: un disco de cartón gris 3 mm de Ø 20 en y=20 y cuatro varillas var8 de 20 cm en las esquinas.`;
+Ejemplos:
+- "cartel para una marcha" → {"tipo":"plantilla","id":"cartel","params":{"texto":"...","W":50,"H":35}}
+- "florero lindo" → {"tipo":"piezas","nombre":"Florero","piezas":[
+  {"kind":"disco","mat":"cg2c","p":{"d":12},"pos":[0,0.1,0],"nombre":"Base"},
+  {"kind":"cilindro","mat":"cartulina","p":{"d":10,"h":24},"pos":[0,0.2,0],"color":"blanco","forro":{"mat":"crepe","color":"celeste"},"nombre":"Cuerpo"},
+  {"kind":"tubo","mat":"cartulina","p":{"d":10.4,"h":2,"v":1},"pos":[0,5,0],"color":"dorado","nombre":"Cinta de abajo"},
+  {"kind":"tubo","mat":"cartulina","p":{"d":10.4,"h":2,"v":1},"pos":[0,20,0],"color":"dorado","nombre":"Cinta de arriba"},
+  {"kind":"varilla","mat":"al22","p":{"len":14},"pos":[-1.5,18,0],"nombre":"Tallo 1"},
+  {"kind":"varilla","mat":"al22","p":{"len":16},"pos":[1.5,18,0],"nombre":"Tallo 2"},
+  {"kind":"racimo","mat":"crepe","p":{"r":3,"n":30,"b":3},"pos":[-1.5,33,0],"color":"rosa fuerte","nombre":"Flor 1"},
+  {"kind":"racimo","mat":"crepe","p":{"r":3,"n":30,"b":3},"pos":[1.5,35,0],"color":"amarillo","nombre":"Flor 2"}]}
+- "mesita de 20 cm" → disco de cartón gris 3 mm Ø 20 en y=20 (tapa), cuatro varillas var8 de 20 cm en (±7, 0, ±7) (patas) y un disco más chico abajo como estante en y=8.
+- "corona de cumpleaños" → tubo de cartulina dorada (d 18, h 6) y 6 conos de cartulina dorada (r 1.5, h 4) repartidos arriba del borde, con racimos chiquitos de glasé en las puntas.`;
 }
 function armiContexto(){
   const pr = state.project; const tp = pr.template;
@@ -2305,7 +2326,9 @@ function piezaSegura(raw){
   if (raw.nombre) p.nombre = String(raw.nombre).slice(0, 40);
   const num3 = (a, d) => Array.isArray(a) && a.length===3 ? a.map(x=>{ const n = parseFloat(x); return isFinite(n) ? clamp(n, -500, 500) : 0; }) : d;
   const pc = P(raw.kind, m.id, p, num3(raw.pos, [0,0,0]).map(r1), m.colorable ? {color: COLORES[raw.color] ? raw.color : (DEFCOL[m.id]||'blanco')} : {});
-  pc.rot = num3(raw.rot, [0,0,0]).map(v=>Math.round(v)); return pc;
+  pc.rot = num3(raw.rot, [0,0,0]).map(v=>Math.round(v));
+  const fo = raw.forro; if (fo && MAT[fo.mat] && ['fino','cartulina','aluminio','eva'].includes(MAT[fo.mat].grupo) && superficie(pc) > 0) pc.p.forro = {mat:fo.mat, color: COLORES[fo.color] ? fo.color : (DEFCOL[fo.mat]||'blanco')};
+  return pc;
 }
 function aplicarPlan(plan){
   const a = plan.accion || {}; let tid = null;

@@ -1,5 +1,10 @@
 # Cambios
 
+## 0.4.5 — 2026-10-26
+
+- Armi inteligente arma objetos más lindos: primero piensa las partes (estructura, forrado, detalles), sigue ejemplos y solo menciona lo que realmente puso.
+- Piezas con **forrado** de papel de color (crepé, seda, afiche, cartulina, glasé, aluminio, goma eva): cambia el color en el 3D y suma el papel a la compra.
+
 ## 0.4.4 — 2026-10-26
 
 - Servidor de Armi: usa primero los modelos “flash-lite” (los más rápidos) y si uno tarda más de 15 s pasa al siguiente.

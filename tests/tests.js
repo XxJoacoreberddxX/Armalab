@@ -261,6 +261,8 @@ const results = []; const ok = (n, c, d='') => { results.push({n, c:!!c, d}); };
   ok('105 Árbol de 3 m: ramas fusionadas (pocas piezas para dibujar)', perf.meshes <= 5, JSON.stringify(perf));
   const f0 = await E(() => renderer.info.render.frame); await pg.waitForTimeout(600); const f1 = await E(() => renderer.info.render.frame);
   ok('106 Sin movimiento no redibuja (ahorra batería)', f1 - f0 <= 2, `${f0} → ${f1}`);
+  const forr = await E(() => { const pc = piezaSegura({kind:'cilindro', mat:'cartulina', p:{d:10, h:24}, pos:[0,0,0], forro:{mat:'crepe', color:'celeste'}}); pc.id = 'F1'; const cs = cutsOf(pc); const f = cs.find(c=>c.nombre==='Forrado'); const o = buildPiece(pc); let col = null; o.traverse(c=>{ if (c.isMesh) col = '#'+c.material.color.getHexString(); }); return {forro:pc.p.forro, area:f && Math.round(f.area), col}; });
+  ok('106b Forrado: el cilindro forrado en crepé celeste suma el papel y se ve celeste', forr.forro && forr.forro.color==='celeste' && forr.area > 900 && forr.col==='#86c2e5', JSON.stringify(forr));
   ok('107 Sin errores de JavaScript en todas las pruebas', errs.length===0, errs.slice(0,3).join(' | '));
   const pass = results.filter(r=>r.c).length;
   results.forEach(r => console.log(`${r.c?'✅':'❌'} ${r.n}${r.c?'':'  → '+r.d}`));
