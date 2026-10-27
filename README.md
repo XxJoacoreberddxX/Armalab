@@ -11,7 +11,7 @@
 
 👉 **Probalo online:** https://xxjoacoreberddxx.github.io/Armalab/
 
-Versión actual: **0.4.0** (beta). Ver [CHANGELOG.md](CHANGELOG.md).
+Versión actual: **0.4.6** (beta). Ver [CHANGELOG.md](CHANGELOG.md).
 
 ## Qué podés hacer
 
@@ -47,7 +47,7 @@ Los proyectos se guardan solos en el navegador. Para pasarlos a otra compu: *Pro
 ```
 src/armalab.src.html   código fuente (único archivo: HTML + CSS + JS)
 build.py               genera index.html, ArmaLab-offline.html y dist/artifact.html
-tests/tests.js         105 pruebas automáticas (Playwright)
+tests/tests.js         108 pruebas automáticas (Playwright)
 worker/armi-proxy.js   servidor opcional de Armi (Cloudflare Worker)
 tests/capturas.js      capturas de las pantallas principales
 tests/smoke.js         recorre todas las plantillas y saca capturas
@@ -56,7 +56,7 @@ tests/smoke.js         recorre todas las plantillas y saca capturas
 ```bash
 npm install            # instala Playwright y Three.js 0.147 para el build
 npm run build          # python3 build.py node_modules/three
-npm test               # corre las 105 pruebas
+npm test               # corre las 108 pruebas
 ```
 
 ## Datos y límites

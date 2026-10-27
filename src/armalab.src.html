@@ -316,7 +316,7 @@ a.lnk{color:var(--kraft);font-weight:700;text-decoration:none} a.lnk:hover{text-
    ArmaLab — modelador de manualidades con materiales de librería
    Unidades internas: centímetros. Espesores del catálogo en mm.
    ========================================================= */
-const VERSION = '0.4.5';
+const VERSION = '0.4.6';
 // URL del servidor de Armi (Cloudflare Worker de /worker). Si queda vacío, cada persona puede usar su propia clave de Gemini.
 const ARMI_PROXY = 'https://armi.joacofermandez.workers.dev';
 const FONT_JSON = /*FONT_JSON*/null;
@@ -2247,7 +2247,8 @@ if (ARMI_PROXY && armiCfg.modo==='reglas' && !armiCfg.elegido) armiCfg.modo = 'p
 function armiSistema(){
   const tpl = Object.entries(TEMPLATES).map(([id,T])=>`- ${id} (${T.nombre}, ${T.escala}): ${T.desc} Parámetros: ${T.params.filter(q=>q.type!=='img').map(q=>q.type==='num'?`${q.k} ${q.min}–${q.max}${q.u?' '+q.u:''}`:q.type==='text'?`${q.k} texto`:`${q.k} ∈ {${q.opts.map(o=>o[0]).join('|')}}`).join('; ')}`).join('\n');
   const kin = Object.entries(KINDS).filter(([k,K])=>!K.soloPlantilla).map(([k,K])=>`- ${k} (${K.nom}): ${K.desc}. p: ${K.params.map(q=>q.opts?`${q.k} ∈ {${q.opts.map(o=>o[0]).join('|')}}`:`${q.k} ${q.min}–${q.max}`).join(', ')}. Materiales: ${MATS.filter(K.mats).map(m=>m.id).join(', ')}`).join('\n');
-  const mats = MATS.map(m=>`${m.id}: ${m.nombre}${m.colorable?' (con color)':''}`).join('\n');
+  const mats = MATS.map(m=>`${m.id}: ${m.nombre}${m.colorable?' (con color)':''}${m.esp>=0.5?`, ${m.esp} mm`:''}. ${(INFO[m.id]||{}).t || m.uso}`).join('\n');
+  const tec = TECFAQ.map(([re, txt])=>'- ' + txt.replace(/<[^>]+>/g,'')).join('\n');
   return `Sos Armi, el asistente de ArmaLab, una app argentina para diseñar manualidades con materiales de librería (cartón, papel, goma eva, alambre). Hablás en español rioplatense, con voseo, claro y cálido.
 Tu trabajo: interpretar lo que la persona quiere armar y devolver un plan que la app construye en 3D y convierte en piezas a cortar, compras y paso a paso.
 Respondé SOLO con JSON válido con esta forma:
@@ -2271,6 +2272,37 @@ ${kin}
 Materiales:
 ${mats}
 Colores válidos: ${Object.keys(COLORES).join(', ')}
+Geometría exacta de cada pieza (en cm):
+- placa: w × h, acostada (espesor hacia arriba). Parada de frente: rot [90,0,0]. Parada de costado: rot [0,0,90] (ahí w es el alto). pos = centro.
+- disco: Ø d, acostado. pos = centro (para que apoye en el piso, y = medio espesor).
+- cilindro / tubo: eje vertical, pos = centro de la base. tubo es hueco (cinta, aro, columna); cilindro tiene tapas.
+- prisma (caja): w (x) × d (z) × h (alto), pos = centro de la base. piramide: base b, alto h. prismaT: triángulo de lado a, largo l (eje z), apoyado en un lado. cono: radio r, alto h. Todos con pos = centro de la base.
+- varilla: vertical de largo len, pos = punta de abajo. Para acostarla: rot [0,0,90] o [90,0,0].
+- racimo: nube de bolitas de papel (flores, follaje, pompones), radio r, n bolitas, pos = centro.
+- esfera: papel maché de diámetro d y alto "alto", pos = centro.
+- arbol: árbol de alambre con flores (H, hebras), pos = base.
+Para apilar: si una pieza mide h y su base está en y=a, la de arriba va en y=a+h.
+Recetas de objetos comunes (adaptá medidas y colores al pedido):
+- maceta: cilindro o prisma de microcorrugado/cartulina forrado, con borde (tubo un poco más ancho arriba), base disco, y si tiene planta: varillas + racimos verdes.
+- florero: cilindro alto forrado + cintas (tubos finitos) + tallos (varilla al22) + flores (racimos de crepé).
+- portalápices: 2 o 3 cilindros de alturas distintas pegados, forrados de colores, sobre una base (disco o placa).
+- caja de regalo: prisma forrado + 2 tiras cruzadas (placas finitas de afiche) arriba + moño (racimo chico).
+- alcancía / chanchito: esfera de papel maché rosa + 4 cilindros chicos de patas + conos de orejas.
+- lámpara o farol: prisma o cilindro de cartulina con calados + base de cartón gris + techo pirámide.
+- casa / casita: usá la plantilla casita. Castillo: prismas (paredes) + cilindros (torres) + conos (techos de torres).
+- mesa: disco o placa de tapa + 4 varillas o cilindros de patas. Silla: placa asiento + placa respaldo parada + 4 patas.
+- auto: prisma de carrocería + prisma más chico arriba (cabina) + 4 discos parados (rot [90,0,0]) de ruedas.
+- robot: prismas apilados (cuerpo, cabeza) + cilindros (brazos, piernas) + discos chicos (ojos).
+- muñeco de nieve: 3 esferas o racimos blancos apilados (de mayor a menor) + cono naranja (nariz) + cilindro negro (sombrero).
+- árbol de navidad: 3 conos verdes apilados o pirámide verde + cilindro marrón de tronco + racimos de colores (adornos) + estrella (racimo amarillo) arriba.
+- cohete: cilindro + cono arriba + 3 prismas triangulares chicos de aletas abajo.
+- torre / faro: cilindro alto + tubos de franjas de color + cono de techo.
+- corona: tubo de cartulina dorada + conos chicos repartidos en el borde.
+- guirnalda o banderines: varilla acostada de soga + prismas triangulares finitos o placas colgando.
+- centro de mesa: disco base + cilindro/tubo + racimos de flores alrededor.
+- cartel: plantilla cartel. Letras: plantilla letras. Flor grande: plantilla flor. Piñata: plantilla mache. Árboles: sakura, encastre o arbolG.
+Técnicas que podés recomendar:
+${tec}
 Ejemplos:
 - "cartel para una marcha" → {"tipo":"plantilla","id":"cartel","params":{"texto":"...","W":50,"H":35}}
 - "florero lindo" → {"tipo":"piezas","nombre":"Florero","piezas":[
@@ -2330,6 +2362,17 @@ function piezaSegura(raw){
   const fo = raw.forro; if (fo && MAT[fo.mat] && ['fino','cartulina','aluminio','eva'].includes(MAT[fo.mat].grupo) && superficie(pc) > 0) pc.p.forro = {mat:fo.mat, color: COLORES[fo.color] ? fo.color : (DEFCOL[fo.mat]||'blanco')};
   return pc;
 }
+// Baja las piezas que quedaron flotando hasta que apoyen en otra pieza o en el piso.
+function asentar(pcs){
+  const cajas = pcs.map(pc=>{ const o = buildPiece(pc); return {pc, bb:new THREE.Box3().setFromObject(o)}; }).sort((a,b)=>a.bb.min.y - b.bb.min.y);
+  const hechas = [];
+  cajas.forEach(c=>{
+    let piso = 0; hechas.forEach(h=>{ const solapa = c.bb.min.x < h.bb.max.x - 0.2 && c.bb.max.x > h.bb.min.x + 0.2 && c.bb.min.z < h.bb.max.z - 0.2 && c.bb.max.z > h.bb.min.z + 0.2; if (solapa && h.bb.max.y <= c.bb.min.y + 0.5) piso = Math.max(piso, h.bb.max.y); });
+    const dy = c.bb.min.y - piso; if (c.pc.kind!=='racimo' && (dy > 0.3 || c.bb.min.y < -0.05)){ c.pc.pos[1] = r1(c.pc.pos[1] - dy); c.bb.min.y -= dy; c.bb.max.y -= dy; }
+    hechas.push(c);
+  });
+  return pcs;
+}
 function aplicarPlan(plan){
   const a = plan.accion || {}; let tid = null;
   if (a.tipo==='plantilla' && TEMPLATES[a.id]){
@@ -2342,7 +2385,7 @@ function aplicarPlan(plan){
   } else if (a.tipo==='piezas' && Array.isArray(a.piezas)){
     const pcs = a.piezas.slice(0, 40).map(piezaSegura).filter(Boolean); if (!pcs.length) return null;
     const proj = {nombre:String(a.nombre||'Diseño de Armi').slice(0,40), template:null, pieces:[], next:1, modificado:false, v:VERSION};
-    state.project = proj; pcs.forEach(pc=>{ pc.id = newId(); proj.pieces.push(pc); }); setProject(proj);
+    state.project = proj; pcs.forEach(pc=>{ pc.id = newId(); proj.pieces.push(pc); }); asentar(proj.pieces); setProject(proj);
   } else return null;
   const N = parseInt(plan.unidades, 10); if (N > 1){ state.N = clamp(N, 1, 500); LS.set('armalab.N', state.N); renderCompras(); }
   state.tabR = 'piezas'; showTabs();

@@ -1,8 +1,8 @@
 // Servidor de Armi para ArmaLab (Cloudflare Worker, plan gratis).
 // Guarda la clave de Gemini en secreto y le responde a la página, así nadie más necesita clave.
 // Variables a configurar en Cloudflare: GEMINI_KEY (secreto), ORIGEN (ej. https://xxjoacoreberddxx.github.io), MODELO (opcional).
-// Si no configuraste MODELO, arma una lista de modelos rápidos: primero los “flash-lite” (los más veloces),
-// después los “flash”, del más nuevo al más viejo. Si uno tarda, se pasa al siguiente.
+// Si no configuraste MODELO, arma una lista: primero los “flash” (más inteligentes) y de respaldo los “flash-lite”
+// (más rápidos). Si uno está saturado o tarda más de 15 s, se pasa al siguiente.
 let modelosCache = null;
 async function elegirModelos(key) {
   if (modelosCache) return modelosCache;
@@ -12,10 +12,12 @@ async function elegirModelos(key) {
     if (!r.ok) throw new Error((j.error && j.error.message) || 'no pude listar modelos');
     const ver = n => parseFloat((n.match(/gemini-(\d+(?:\.\d+)?)/) || [0, 0])[1]);
     const ms = (j.models || []).filter(m => (m.supportedGenerationMethods || []).includes('generateContent') && /gemini-[\d.]+-flash/.test(m.name) && !/(image|tts|live|audio|thinking|exp|embed|preview)/.test(m.name));
-    ms.sort((a, b) => (/lite/.test(b.name) - /lite/.test(a.name)) || ver(b.name) - ver(a.name));
-    modelosCache = ms.slice(0, 4).map(m => m.name.replace('models/', ''));
-    if (!modelosCache.length) modelosCache = ['gemini-2.5-flash-lite', 'gemini-2.5-flash'];
-  } catch (e) { return ['gemini-2.5-flash-lite', 'gemini-2.5-flash']; }
+    // Orden: los “flash” completos (más inteligentes), del más nuevo al más viejo; al final los “lite” (más rápidos) de respaldo.
+    const full = ms.filter(m => !/lite/.test(m.name)).sort((a, b) => ver(b.name) - ver(a.name));
+    const lite = ms.filter(m => /lite/.test(m.name)).sort((a, b) => ver(b.name) - ver(a.name));
+    modelosCache = [...full.slice(0, 3), ...lite.slice(0, 2)].map(m => m.name.replace('models/', ''));
+    if (!modelosCache.length) modelosCache = ['gemini-2.5-flash', 'gemini-2.5-flash-lite'];
+  } catch (e) { return ['gemini-2.5-flash', 'gemini-2.5-flash-lite']; }
   return modelosCache;
 }
 
@@ -39,7 +41,7 @@ export default {
     }
     let body; try { body = await req.json(); } catch { return json({ error: 'Pedido inválido' }, 400); }
     const { system, prompt } = body || {};
-    if (typeof prompt !== 'string' || !prompt || prompt.length > 12000 || (system && system.length > 30000)) return json({ error: 'Pedido inválido' }, 400);
+    if (typeof prompt !== 'string' || !prompt || prompt.length > 12000 || (system && system.length > 60000)) return json({ error: 'Pedido inválido' }, 400);
     const modelos = env.MODELO ? [env.MODELO] : await elegirModelos(env.GEMINI_KEY);
     const res = await consultar(env, modelos, String(system || ''), prompt);
     if (res.error) return json({ error: res.error }, res.status || 502);

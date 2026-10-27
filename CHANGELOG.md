@@ -1,5 +1,11 @@
 # Cambios
 
+## 0.4.6 — 2026-10-26
+
+- Armi sabe mucho más: fichas de todos los materiales, técnicas, geometría exacta de cada pieza y recetas de más de 20 objetos comunes (maceta, florero, portalápices, auto, robot, castillo, muñeco de nieve…).
+- Las piezas que la IA deja flotando se bajan solas hasta apoyar.
+- Servidor: usa primero el modelo “flash” completo (más inteligente) y el “lite” solo de respaldo.
+
 ## 0.4.5 — 2026-10-26
 
 - Armi inteligente arma objetos más lindos: primero piensa las partes (estructura, forrado, detalles), sigue ejemplos y solo menciona lo que realmente puso.
