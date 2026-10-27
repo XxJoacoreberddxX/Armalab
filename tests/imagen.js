@@ -1,0 +1,13 @@
+const { chromium } = require('playwright'); const path = require('path');
+(async () => { const b = await chromium.launch({args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist']}); const pg = await b.newPage({viewport:{width:1440,height:900}}); const errs=[];
+  pg.on('pageerror', e => errs.push(e.message)); await pg.route('https://**', r => r.abort());
+  await pg.goto('file://' + path.resolve(__dirname, '../ArmaLab-offline.html')); await pg.waitForTimeout(1200);
+  await pg.click('[data-tpl="standee"]'); await pg.waitForTimeout(500);
+  await pg.setInputFiles('#tp-img', '/tmp/claude-0/test.png'); await pg.waitForTimeout(800);
+  await pg.selectOption('#tp-mosaico', 'si'); await pg.waitForTimeout(800);
+  await pg.click('.tabs[data-group="R"] [data-tab="plantillas"]'); await pg.waitForTimeout(500);
+  await pg.screenshot({path:'shots/standee-img.png'});
+  console.log(await pg.evaluate(()=>allPagesSVG(true).length), errs);
+  await pg.emulateMedia({colorScheme:'dark'}); await pg.click('[data-tpl="flor"]'); await pg.waitForTimeout(600); await pg.screenshot({path:'shots/dark.png'});
+  await pg.setViewportSize({width:400,height:850}); await pg.waitForTimeout(500); await pg.screenshot({path:'shots/mobile.png'}); console.log('sw', await pg.evaluate(()=>document.documentElement.scrollWidth));
+  await b.close(); })();

@@ -1,0 +1,13 @@
+{
+  "name": "armalab",
+  "version": "0.2.0",
+  "description": "Modelador 3D de manualidades con materiales de librería",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "build": "python3 build.py node_modules/three",
+    "test": "node tests/tests.js",
+    "smoke": "node tests/smoke.js"
+  },
+  "devDependencies": { "playwright": "^1.40.0", "three": "0.147.0" }
+}
