@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.4.4 — 2026-10-26
+
+- Servidor de Armi: usa primero los modelos “flash-lite” (los más rápidos) y si uno tarda más de 15 s pasa al siguiente.
+
 ## 0.4.3 — 2026-10-26
 
 - Servidor de Armi: prueba varios ajustes para que Gemini conteste sin razonar de más, informa qué modelo y modo usó, y tiene una prueba rápida en `?probar`.
