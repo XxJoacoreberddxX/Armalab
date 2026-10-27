@@ -8,7 +8,7 @@ const { chromium } = require('playwright'); const path = require('path');
   for (const t of ['sakura','encastre','casita','caja','flor','standee','arbolG','mache','letras']){
     await pg.click(`[data-tpl="${t}"]`); await pg.waitForTimeout(700);
     await pg.screenshot({path:`shots/${t}.png`});
-    const info = await pg.evaluate(() => ({stats: document.querySelector('#stats').innerText.replace(/\n/g,' | '), n: state.project.pieces.length}));
+    const info = await pg.evaluate(() => ({stats: document.querySelector('#hud').innerText.replace(/\n/g,' | '), n: state.project.pieces.length}));
     console.log(t, JSON.stringify(info));
   }
   for (const tab of ['compras','pasos','plantillas']) { await pg.click(`.tabs[data-group="R"] [data-tab="${tab}"]`); await pg.waitForTimeout(400); await pg.screenshot({path:`shots/letras-${tab}.png`}); }

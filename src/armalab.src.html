@@ -49,7 +49,7 @@ aside{background:var(--panel);overflow:auto;min-width:0}
 aside#left{border-right:1px solid var(--line)}
 aside#right{border-left:1px solid var(--line)}
 .tabs{display:flex;position:sticky;top:0;z-index:2;background:var(--panel);border-bottom:1px solid var(--line)}
-.tabs button{flex:1;background:none;border:0;padding:12px 4px;cursor:pointer;color:var(--muted);font-weight:700;font-size:12.5px;border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button{flex:1;background:none;border:0;padding:12px 2px;cursor:pointer;color:var(--muted);font-weight:700;font-size:12px;border-bottom:2px solid transparent;white-space:nowrap}
 .tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
 .pane{padding:16px 16px 32px;display:flex;flex-direction:column;gap:14px}
 h2{font-family:var(--f-display);font-weight:800;font-size:18px;margin:0;letter-spacing:-.015em;text-wrap:balance}
@@ -149,6 +149,75 @@ details .in ul{margin:0;padding-left:18px}
 .seg{display:flex;gap:0;border:1px solid var(--line);border-radius:8px;overflow:hidden}
 .seg button{flex:1;border:0;background:var(--panel2);padding:6px 8px;font-size:12.5px;font-weight:700;cursor:pointer;color:var(--muted)}
 .seg button[aria-pressed="true"]{background:var(--fg);color:var(--panel)}
+header.top{display:grid;grid-template-columns:1fr auto 1fr}
+.hl{justify-self:start}.hr{justify-self:end}
+.brand svg{width:40px;height:40px}
+.ghl{font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--line);padding:3px 10px;border-radius:999px;white-space:nowrap}
+.ghl:hover{color:var(--fg);border-color:var(--kraft)}
+.hud{position:absolute;left:10px;bottom:34px;display:flex;flex-wrap:wrap;gap:6px;max-width:calc(100% - 130px);pointer-events:none}
+.hud span{background:rgba(8,22,17,.68);color:#eef5f1;border:1px solid rgba(255,255,255,.14);border-radius:9px;padding:6px 10px;font-family:var(--f-mono);font-size:12px;backdrop-filter:blur(4px);white-space:nowrap}
+.hud span small{display:block;font-size:9.5px;opacity:.75;letter-spacing:.06em;text-transform:uppercase;font-family:var(--f-body)}
+.hud b{font-weight:700;font-size:13.5px}
+.hud .ok{background:rgba(36,110,70,.92)} .hud .warn{background:rgba(150,92,12,.92)} .hud .bad{background:rgba(170,45,42,.92)}
+.fab{position:absolute;right:14px;bottom:14px;display:flex;align-items:center;gap:8px;background:var(--accent);color:#fff;border:0;border-radius:999px;padding:9px 16px 9px 10px;font-weight:800;font-family:var(--f-display);font-size:15px;cursor:pointer;box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.fab svg{width:28px;height:28px;background:#1d4538;border-radius:50%;padding:3px}
+.chat{position:absolute;right:14px;bottom:72px;width:min(380px,calc(100% - 28px));height:min(560px,calc(100% - 92px));background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 14px 40px rgba(0,0,0,.35);display:flex;flex-direction:column;overflow:hidden;z-index:6}
+.chat .ch{display:flex;gap:8px;align-items:center;padding:10px 12px;border-bottom:1px solid var(--line);background:var(--panel2)}
+.chat .ch b{font-family:var(--f-display);font-size:16px;display:block}.chat .ch span{font-size:11.5px;color:var(--muted)}
+.chat .ch .btn{padding:4px 8px;font-size:12px}
+.av{width:34px;height:34px;border-radius:50%;background:#1d4538;display:grid;place-items:center;flex:none}.av svg{width:24px;height:24px}
+.msgs{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.msg{max-width:90%;padding:9px 12px;border-radius:14px;font-size:13px;line-height:1.5}
+.msg.me{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:var(--panel2);border:1px solid var(--line);border-bottom-left-radius:4px}
+.msg ul{margin:5px 0;padding-left:17px}.msg li{margin:2px 0}
+.msg .acts{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.msg .acts button{background:var(--panel);border:1px solid var(--line);border-radius:999px;padding:3px 9px;font-size:12px;font-weight:700;cursor:pointer}
+.sug{display:flex;gap:6px;overflow-x:auto;padding:0 12px 8px}
+.sug button{flex:none;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:4px 10px;font-size:12px;cursor:pointer;white-space:nowrap}
+.chat form{display:flex;gap:6px;padding:10px;border-top:1px solid var(--line)}
+.chat input{flex:1;min-width:0;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 10px}
+.mgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.mt{position:relative;border:1px solid var(--line);border-radius:10px;background:var(--panel2);padding:5px 5px 6px;cursor:pointer;text-align:left;display:flex;flex-direction:column;gap:4px;font-size:11.5px;line-height:1.2;min-width:0}
+.mt svg{width:100%;height:auto;border-radius:7px;display:block}
+.mt .pr{font-family:var(--f-mono);font-size:10.5px;color:var(--kraft)}
+.mt[aria-pressed="true"]{border-color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent);background:var(--accent-soft)}
+.ib{position:absolute;top:8px;right:8px;width:21px;height:21px;border-radius:50%;background:rgba(255,255,255,.94);color:#1b231f;border:1px solid rgba(0,0,0,.12);font-weight:800;font-size:12px;cursor:pointer;line-height:19px;text-align:center;font-family:Georgia,serif;font-style:italic}
+.kgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.kc{border:1px solid var(--line);border-radius:10px;background:var(--panel2);padding:8px 6px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:4px;font-size:11.5px;font-weight:700;text-align:center;line-height:1.2}
+.kc svg{width:34px;height:34px;color:var(--fg)}
+.kc:hover{border-color:var(--kraft)}
+.grp{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--panel)}
+.grp .gh{display:flex;gap:10px;align-items:center;padding:8px 10px;background:var(--panel2);cursor:pointer}
+.grp .gh svg{width:54px;height:40px;border-radius:7px;flex:none}
+.grp .gh b{font-size:13px;display:block}.grp .gh span{font-size:11.5px;color:var(--muted)}
+.cut{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:9px;align-items:center;padding:8px 10px;border-top:1px solid var(--line)}
+.cut .m{font-family:var(--f-mono);font-size:12.5px;font-weight:600}
+.cut .n{font-size:12px;color:var(--muted);display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.q{font-family:var(--f-mono);font-weight:700;background:var(--accent-soft);border-radius:7px;padding:3px 8px;font-size:12.5px;white-space:nowrap}
+.tg{font-size:10.5px;border-radius:999px;padding:1px 7px;font-weight:700;background:var(--chip);color:var(--fg)}
+.tg.p{background:var(--ok-soft)} .tg.h{background:var(--kraft-soft)} .tg.r{background:var(--warn-soft)}
+.pidb{font-family:var(--f-mono);font-weight:700;font-size:11.5px;border-radius:6px;padding:2px 6px;background:var(--chip);border:0;cursor:pointer;color:var(--fg)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:4px;vertical-align:1px}.dot.ok{background:var(--ok)}.dot.warn{background:var(--warn)}
+.gal{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.gi{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--panel2);display:flex;flex-direction:column;min-width:0}
+.gi img,.gi video{width:100%;aspect-ratio:1;object-fit:cover;display:block;max-width:100%;background:#000}
+.gi .b{padding:7px 8px;display:flex;flex-direction:column;gap:5px;font-size:12px}
+.gi .b .row .btn{padding:3px 7px;font-size:11.5px}
+a.lnk{color:var(--kraft);font-weight:700;text-decoration:none} a.lnk:hover{text-decoration:underline}
+.offsel{width:100%;margin-top:5px;background:var(--panel2);border:1px solid var(--line);border-radius:6px;padding:3px 5px;font-size:11.5px}
+.shopc{border:1px solid var(--line);border-radius:12px;padding:9px 10px;display:grid;grid-template-columns:54px minmax(0,1fr) auto;gap:10px;align-items:start;background:var(--panel)}
+.shopc svg{width:54px;height:40px;border-radius:7px}
+.shopc .pr{font-family:var(--f-display);font-weight:800;font-size:16px;text-align:right;font-variant-numeric:tabular-nums}
+.shopc.off{opacity:.5}
+.shopc .cn{font-family:var(--f-mono);font-size:12px;font-weight:600}
+.mbig{display:grid;grid-template-columns:150px minmax(0,1fr);gap:14px;align-items:start}
+.mbig svg{width:100%;height:auto;border-radius:10px}
+.kv{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;font-size:13px}
+.kv dt{color:var(--muted)} .kv dd{margin:0;font-weight:700}
+.vhint{top:52px;bottom:auto}
+@media (max-width:1000px){ .chat{position:fixed;left:8px;right:8px;bottom:8px;width:auto;height:72vh} .hud{bottom:12px;max-width:calc(100% - 110px)} .hud span{padding:4px 7px;font-size:11px} .hud b{font-size:12px} .vhint{display:none} }
+@media (max-width:560px){ .ghl{display:none} .mbig{grid-template-columns:1fr} header.top{grid-template-columns:1fr;justify-items:center;gap:6px} .hl{order:2;justify-self:center} .hr{display:none} }
 #print{display:none}
 @media (max-width:1240px){ .app{grid-template-columns:310px minmax(0,1fr) 370px} }
 @media (max-width:1000px){
@@ -171,12 +240,17 @@ details .in ul{margin:0;padding-left:18px}
 </style>
 
 <header class="top">
+  <div class="hl"><button class="ver" id="verBtn" title="Novedades">v<b id="verTxt"></b> · novedades</button></div>
   <div class="brand">
-    <svg viewBox="0 0 40 40" aria-hidden="true"><rect x="1" y="1" width="38" height="38" rx="10" fill="var(--mat)"/><path d="M9 31 L20 8 L31 31 Z" fill="#f2a6c0"/><path d="M20 8 L31 31 L20 24 Z" fill="var(--accent)"/><path d="M14.5 24 L25.5 24" stroke="#fbfcf9" stroke-width="1.6" stroke-dasharray="2 1.6"/><circle cx="20" cy="8" r="2" fill="#fbfcf9"/></svg>
+    <svg viewBox="0 0 48 48" aria-hidden="true"><defs><linearGradient id="lgA" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2f6a56"/><stop offset="1" stop-color="#1d4538"/></linearGradient></defs>
+      <rect x="1" y="1" width="46" height="46" rx="13" fill="url(#lgA)"/>
+      <path d="M10 37 L24 9 L24 31 Z" fill="#f7c2d4"/><path d="M24 9 L38 37 L24 31 Z" fill="#d0336b"/><path d="M10 37 L24 31 L38 37 Z" fill="#b5844f"/>
+      <path d="M17.5 26 L30.5 26" stroke="#fff" stroke-width="1.6" stroke-dasharray="2.2 1.8" stroke-linecap="round"/>
+      <g transform="translate(36 11)"><ellipse cx="0" cy="-3.2" rx="2" ry="3.2" fill="#fff" transform="rotate(0)"/><ellipse cx="0" cy="-3.2" rx="2" ry="3.2" fill="#fff" transform="rotate(72)"/><ellipse cx="0" cy="-3.2" rx="2" ry="3.2" fill="#fff" transform="rotate(144)"/><ellipse cx="0" cy="-3.2" rx="2" ry="3.2" fill="#fff" transform="rotate(216)"/><ellipse cx="0" cy="-3.2" rx="2" ry="3.2" fill="#fff" transform="rotate(288)"/><circle r="1.5" fill="#f1c63e"/></g>
+    </svg>
     <div><div class="name">Arma<i>Lab</i></div><div class="tag">Modelá · cortá · armá</div></div>
   </div>
-  <button class="ver" id="verBtn" title="Novedades">v<b id="verTxt"></b> · novedades</button>
-  <div class="stats" id="stats"></div>
+  <div class="hr"><a class="ghl" href="https://github.com/XxJoacoreberddxX/Armalab" target="_blank" rel="noopener">Código abierto ↗</a></div>
 </header>
 
 <main class="app">
@@ -186,11 +260,13 @@ details .in ul{margin:0;padding-left:18px}
       <button role="tab" data-tab="modelar" aria-selected="false">Modelar</button>
       <button role="tab" data-tab="tecnicas" aria-selected="false">Técnicas</button>
       <button role="tab" data-tab="materiales" aria-selected="false">Precios</button>
+      <button role="tab" data-tab="comunidad" aria-selected="false">Comunidad</button>
     </div>
     <div id="L-proyecto" class="pane"></div>
     <div id="L-modelar" class="pane" hidden></div>
     <div id="L-tecnicas" class="pane" hidden></div>
     <div id="L-materiales" class="pane" hidden></div>
+    <div id="L-comunidad" class="pane" hidden></div>
   </aside>
 
   <section id="viewWrap" aria-label="Vista 3D">
@@ -205,6 +281,16 @@ details .in ul{margin:0;padding-left:18px}
       <button id="tHuman" aria-pressed="false">Persona 1,70 m</button>
     </div>
     <div class="vhint" id="vhint">Arrastrá para girar · rueda para zoom · clic en una pieza para editarla</div>
+    <div class="hud" id="hud" aria-live="polite"></div>
+    <button class="fab" id="fab" aria-label="Abrir a Armi, el asistente"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 25 L16 5 L16 21 Z" fill="#f7c2d4"/><path d="M16 5 L26 25 L16 21 Z" fill="#fff"/><path d="M6 25 L16 21 L26 25 Z" fill="#f1c63e"/></svg><span>Armi</span></button>
+    <section class="chat" id="chat" hidden aria-label="Armi, asistente de ArmaLab">
+      <div class="ch"><div class="av"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 25 L16 5 L16 21 Z" fill="#f7c2d4"/><path d="M16 5 L26 25 L16 21 Z" fill="#d0336b"/><path d="M6 25 L16 21 L26 25 Z" fill="#b5844f"/></svg></div>
+        <div style="flex:1;min-width:0"><b>Armi</b><span>Te armo el modelo, los materiales y el paso a paso</span></div>
+        <button class="btn" id="chatReset" title="Borrar conversación">Limpiar</button><button class="btn" id="chatClose" aria-label="Cerrar">✕</button></div>
+      <div class="msgs" id="msgs"></div>
+      <div class="sug" id="sug"></div>
+      <form id="chatForm" autocomplete="off"><input id="chatIn" placeholder="Ej: árbol sakura de 3 metros" aria-label="Escribile a Armi"><button class="btn primary" type="submit">Enviar</button></form>
+    </section>
   </section>
 
   <aside id="right" aria-label="Resultados">
@@ -230,7 +316,7 @@ details .in ul{margin:0;padding-left:18px}
    ArmaLab — modelador de manualidades con materiales de librería
    Unidades internas: centímetros. Espesores del catálogo en mm.
    ========================================================= */
-const VERSION = '0.2.0';
+const VERSION = '0.3.0';
 const FONT_JSON = /*FONT_JSON*/null;
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -322,6 +408,100 @@ const INSUMOS = [
   {id:'sierrita', nombre:'Sierrita / serrucho chico', precio:5000, cat:'herramienta', uso:'Varillas, tubos y caños.', est:true},
   {id:'pincel', nombre:'Pincel chato', precio:1000, cat:'herramienta', uso:'Pasar cola diluida o engrudo.', est:true},
 ];
+const INFO = {
+  cg1c:{q:'carton gris 1 mm', t:'Plancha gris y dura de papel reciclado prensado. La de 1 mm (N°25) se corta en 2–3 pasadas de cutter y se curva un poco sin quebrarse.', ideas:['Tapas de cajas','Tiras laterales de letras','Piezas chicas de maquetas']},
+  cg15:{q:'carton gris 1.5 mm', t:'Mismo cartón gris, más grueso (1,5 mm, N°16). Más firme que el de 1 mm y todavía fácil de cortar.', ideas:['Paredes de casitas medianas','Bases livianas']},
+  cg2c:{q:'carton gris 2 mm', t:'El clásico de encuadernación: gris, liso y muy parejo. Con 2 mm (N°12) aguanta piezas paradas de hasta ~16 cm sin doblarse.', ideas:['Árboles de encastre','Casitas','Bases y cajas firmes']},
+  cg2:{q:'carton gris 2 mm 70x100', t:'El cartón gris de 2 mm en pliego entero de 70 × 100 cm. Sale más barato por cm² si hacés varias unidades.', ideas:['Producción de varias unidades','Piezas grandes']},
+  cg3c:{q:'carton gris 3 mm', t:'Cartón gris de 3 mm (N°8): pesado y muy rígido. Cuesta cortarlo (6–8 pasadas) pero no se dobla.', ideas:['Bases que no se curven','Piezas altas']},
+  micro:{q:'carton microcorrugado', t:'Cartón finito con una onda chiquita adentro (1,5 mm). Liviano, se curva a favor de las ondas y por fuera se ve kraft o de color.', ideas:['Techos (parecen chapas o tejas)','Cajas y packaging','Tiras curvas']},
+  corrB:{q:'carton corrugado', t:'El de las cajas de embalaje: dos papeles con una onda en el medio (3 mm). Gratis si reciclás. El corte queda menos prolijo.', ideas:['Prototipos','Escenografía','Estructuras ocultas']},
+  corrD:{q:'carton corrugado doble 70x100', t:'Corrugado de doble onda (7 mm): dos ondas pegadas. Muy rígido y liviano para su tamaño: es el de las cajas de mudanza.', ideas:['Letras grandes','Paneles de 1–2 m','Caballetes']},
+  corrG:{q:'plancha carton corrugado 120x100', t:'Placa grande de corrugado doble (100 × 120 cm). Lo más barato por metro cuadrado para piezas gigantes.', ideas:['Standees','Escenografía escolar','Casitas de juguete']},
+  corrP:{q:'corrugado plastico 2x1', t:'Plástico con canales por dentro (2,4 mm). No le afecta el agua ni la humedad; se corta con cutter.', ideas:['Standees de exterior','Carteles reutilizables']},
+  foam:{q:'foamboard 5 mm 70x100', t:'Sándwich de dos cartulinas con espuma en el medio (5 mm). Súper recto y liviano; con hoja de cutter nueva queda un corte perfecto.', ideas:['Standees','Letras','Bases prolijas','Maquetas']},
+  telgo2:{q:'plancha telgopor 1x1 20mm', t:'Espuma blanca de bolitas (EPS). Se pinchan alambres y palitos fácil. Se derrite con silicona caliente y con aerosoles.', ideas:['Bases de arreglos','Relleno liviano','Esculturas talladas']},
+  crepe:{q:'papel crepe', t:'Papel con arruguitas finas (la “veta”). Se estira a lo largo de la veta y queda con la forma que le das: ideal para pétalos.', ideas:['Flores y pétalos','Forrar troncos','Flecos de piñata']},
+  crepeMet:{q:'papel crepe metalizado', t:'Crepé con cara brillante. Estira un poco menos que el común.', ideas:['Detalles dorados o plateados','Centros de flores']},
+  seda:{q:'papel seda', t:'Papel finísimo y translúcido (18 g/m²). No se sostiene solo, pero arrugado o plegado da mucho volumen con poco peso.', ideas:['Pompones','Copas de árboles grandes','Rellenos de color']},
+  afiche:{q:'papel afiche', t:'Papel de color liso, más firme que la seda. Se arruga mediano y el color puede marcarse en las crestas.', ideas:['Pétalos grandes','Fondos','Flecos']},
+  glase:{q:'papel glase', t:'Cuadraditos de 10 × 10 cm con una cara de color brillante. Pliegan muy bien.', ideas:['Origami','Flores chicas','Detalles']},
+  cartulina:{q:'cartulina 50x65', t:'Papel grueso (170 g/m²) de color. Pliega limpio si lo marcás antes y aguanta la forma.', ideas:['Cajas','Conos y cilindros','Tiras laterales']},
+  opalina:{q:'opalina a4 180 grs', t:'Cartulina blanca lisa tamaño A4 que entra en la impresora. Imprimís el molde directo y cortás.', ideas:['Cajitas impresas','Moldes resistentes','Papercraft']},
+  madera:{q:'papel madera', t:'Papel kraft marrón (80 g/m²), fuerte y fibroso. Retorcido o arrugado parece corteza.', ideas:['Troncos','Envoltorios','Papel maché fuerte']},
+  kraftR:{q:'bobina papel kraft', t:'El mismo kraft en rollo de 1 m de ancho. Mucho más barato por m² para piezas grandes.', ideas:['Troncos de árboles grandes','Cubrir escenografía']},
+  diario:{q:'papel de diario', t:'Papel fino que absorbe la cola y se ablanda: perfecto para papel maché. Gratis.', ideas:['Papel maché','Rellenos y bollos']},
+  alu:{q:'rollo papel aluminio', t:'Lámina de metal finita: queda exactamente con la forma que le das y no vuelve.', ideas:['Armazones livianos','Agua y detalles metálicos']},
+  celofan:{q:'papel celofan', t:'Film transparente de color que brilla. Recupera parte de la forma al arrugarlo.', ideas:['Agua y hielo','Vitrales','Envolver el producto']},
+  eva:{q:'goma eva 40x60', t:'Espuma de goma de 2 mm, flexible y lavable. Se corta con tijera y con calor (secador) se puede moldear.', ideas:['Hojas y pétalos firmes','Cosplay','Detalles de color']},
+  evaG:{q:'goma eva glitter', t:'Goma eva con brillantina en una cara. Un poco más rígida que la lisa.', ideas:['Terminaciones','Letras brillantes']},
+  al18:{q:'alambre forrado floreria 18', t:'Alambre de florista forrado en papel, grueso (~1 mm). Firme: sostiene troncos de 20–40 cm.', ideas:['Troncos firmes','Tallos largos']},
+  al22:{q:'alambre forrado floreria 22', t:'Alambre forrado de grosor medio (~0,7 mm). Se retuerce con la mano: el ideal para árboles de mesa.', ideas:['Árboles de 10–20 cm','Ramas']},
+  al26:{q:'alambre forrado floreria 26', t:'Alambre forrado fino (~0,45 mm). Muy maleable: para tallos de flores chicas y detalles.', ideas:['Tallos finos','Atar pompones']},
+  galv16:{q:'alambre galvanizado 16', t:'Alambre de acero galvanizado de 1,6 mm, sin forrar. Fuerte y barato por kilo.', ideas:['Ramas de árboles de 1–3 m','Armazones de papel maché']},
+  limpia:{q:'limpiapipas', t:'Alambre forrado con pelusa de colores, de 30 cm. Se dobla con la mano.', ideas:['Ramitas','Animalitos','Detalles peludos']},
+  brochette:{q:'palitos de brochette x100', t:'Palitos de madera de 30 cm y 3 mm. Rectos y baratos.', ideas:['Ejes','Pinchos para bases','Estructuras de prueba']},
+  var8:{q:'varilla madera 8 mm', t:'Varilla redonda de madera de 8 mm × 1 m. Firme y recta.', ideas:['Tallos de flores gigantes','Mástiles']},
+  tuboC:{q:'tubo de carton', t:'Tubo de cartón grueso (de rollos de tela o de papel). Gratis pidiéndolo en mercerías o textiles.', ideas:['Alma de troncos','Columnas']},
+  pvc40:{q:'caño pvc 40 mm', t:'Caño plástico de 40 mm. No se dobla ni se moja: el alma más firme para árboles de más de 2 m.', ideas:['Alma de árboles grandes','Mástiles desmontables']},
+};
+const slug = q => q.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+const mlURL = q => 'https://listado.mercadolibre.com.ar/' + slug(q);
+const gURL = q => 'https://www.google.com/search?q=' + encodeURIComponent(q + ' precio argentina');
+function ofertaURL(id, o){
+  const q = (INFO[id] && INFO[id].q) || (MAT[id] ? MAT[id].nombre : id);
+  if (!o) return mlURL(q);
+  if (/Leo/.test(o.t)) return 'https://libreriamayoristaleo.com.ar/?s=' + encodeURIComponent(q);
+  if (/Multienvases/.test(o.t)) return 'https://www.multienvasesonline.com.ar/';
+  if (/Garber/.test(o.t)) return 'https://www.hijosdegarber.com.ar/';
+  if (/Reciclado/.test(o.t)) return null;
+  return mlURL(q);
+}
+const PEGA = {carton:'Cola vinílica (o silicona para ir rápido)', foam:'Cola vinílica o silicona de baja temperatura', telgopor:'Silicona de BAJA temperatura o cola vinílica', fino:'Pegamento en barra o cola diluida; silicona para flores', cartulina:'Pegamento en barra o doble faz (la cola húmeda la ondula)', aluminio:'Cinta doble faz o UHU', eva:'Silicona o adhesivo de contacto', alambre:'Silicona, cinta floral o retorcido', madera:'Silicona o cola vinílica', plastico:'Silicona o doble faz fuerte'};
+const DEFCOL = {crepe:'rosa fuerte', crepeMet:'dorado', seda:'rosa claro', afiche:'celeste', glase:'amarillo', cartulina:'verde claro', celofan:'celeste', eva:'naranja', evaG:'fucsia', limpia:'violeta'};
+let swN = 0;
+function swatch(m, col){
+  const id = m.id, g = m.grupo, k = ++swN, rnd = rng(id.length*131 + id.charCodeAt(0)*7 + id.charCodeAt(id.length-1));
+  const c = col || (m.colorable ? COLORES[DEFCOL[id]||'rosa fuerte'] : m.color);
+  let s = `<svg viewBox="0 0 60 44" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="${esc(m.nombre)}">`;
+  const bg = f => `<rect width="60" height="44" fill="${f}"/>`;
+  const dots = (n, f, rmax) => { let o=''; for (let i=0;i<n;i++) o += `<circle cx="${(rnd()*60).toFixed(1)}" cy="${(rnd()*44).toFixed(1)}" r="${(0.3+rnd()*rmax).toFixed(2)}" fill="${f}"/>`; return o; };
+  const wave = (y, a, p, st, w) => { let d = `M0 ${y}`; for (let x=0;x<=60;x+=p/2) d += ` Q${x+p/4} ${y + ((x/(p/2))%2?a:-a)} ${x+p/2} ${y}`; return `<path d="${d}" fill="none" stroke="${st}" stroke-width="${w}"/>`; };
+  if (id.startsWith('cg')){ const e = Math.max(3, m.esp*3.4); s += bg(c) + dots(55,'rgba(255,255,255,.22)',0.7) + dots(40,'rgba(0,0,0,.12)',0.6) + `<rect y="${44-e}" width="60" height="${e}" fill="#6c6862"/><rect y="${44-e}" width="60" height="0.8" fill="#a9a59e"/>`; }
+  else if (['micro','corrB','corrD','corrG'].includes(id)){ const eh = id==='micro'?7:id==='corrD'?14:10; const p = id==='micro'?3.4:6; s += bg(c) + dots(30,'rgba(80,50,20,.12)',0.6) + `<rect y="${44-eh}" width="60" height="${eh}" fill="#a77b4c"/><rect y="${44-eh}" width="60" height="1" fill="#7c5631"/><rect y="43" width="60" height="1" fill="#7c5631"/>`;
+    if (id==='corrD'){ s += wave(44-eh*0.73, eh*0.2, p, '#6e4b2b', 1) + `<rect y="${44-eh/2}" width="60" height="0.8" fill="#7c5631"/>` + wave(44-eh*0.25, eh*0.2, p, '#6e4b2b', 1); } else s += wave(44-eh/2, eh*0.36, p, '#6e4b2b', 1); }
+  else if (id==='corrP'){ s += bg('#e9ecef'); for (let x=2;x<60;x+=3) s += `<rect x="${x}" width="0.7" height="44" fill="rgba(0,0,0,.08)"/>`; }
+  else if (id==='foam'){ s += bg('#fbfbf8') + `<rect y="31" width="60" height="13" fill="#e4edf2"/><rect y="31" width="60" height="1.2" fill="#cfd5d8"/><rect y="42.8" width="60" height="1.2" fill="#cfd5d8"/>` + dots(18,'rgba(160,180,190,.35)',0.6).replace(/cy="([\d.]+)"/g,(a,v)=>`cy="${(32+(+v)%10).toFixed(1)}"`); }
+  else if (g==='telgopor'){ s += bg('#ffffff'); for (let i=0;i<46;i++) s += `<circle cx="${(rnd()*60).toFixed(1)}" cy="${(rnd()*44).toFixed(1)}" r="${(1.6+rnd()*1.6).toFixed(1)}" fill="none" stroke="#e1e4e6" stroke-width="0.6"/>`; }
+  else if (id==='crepe' || id==='crepeMet'){ s += bg(c); for (let y=1.5;y<44;y+=2.2) s += wave(y, 0.5, 2.4+rnd(), 'rgba(0,0,0,.13)', 0.5); if (id==='crepeMet') s += `<defs><linearGradient id="g${k}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".55"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".4"/></linearGradient></defs><rect width="60" height="44" fill="url(#g${k})"/>`; }
+  else if (id==='seda'){ s += bg('#fbf7f8') + `<rect x="-6" y="6" width="44" height="34" fill="${c}" opacity=".5" transform="rotate(-8 20 20)"/><rect x="18" y="-4" width="46" height="34" fill="${c}" opacity=".45" transform="rotate(10 40 14)"/><rect x="8" y="18" width="40" height="30" fill="${c}" opacity=".35" transform="rotate(4 28 32)"/>`; }
+  else if (['afiche','cartulina','opalina','glase'].includes(id)){ s += bg(c) + `<defs><linearGradient id="g${k}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset=".6" stop-color="#fff" stop-opacity="0"/></linearGradient></defs><rect width="60" height="44" fill="url(#g${k})"/>`; if (id==='glase') s += `<path d="M44 0 L60 0 L60 16 Z" fill="#fff" opacity=".85"/><path d="M44 0 L60 16 L44 16 Z" fill="rgba(0,0,0,.12)"/>`; if (id==='opalina') s += `<rect x="6" y="6" width="48" height="32" fill="none" stroke="#d6d6d6" stroke-dasharray="2 2" stroke-width="0.8"/>`; }
+  else if (id==='madera' || id==='kraftR'){ s += bg('#b48a5c'); for (let i=0;i<70;i++){ const x = rnd()*60, y = rnd()*44; s += `<path d="M${x.toFixed(1)} ${y.toFixed(1)} l${(3+rnd()*5).toFixed(1)} ${(rnd()-0.5).toFixed(1)}" stroke="rgba(70,40,15,${(0.1+rnd()*0.15).toFixed(2)})" stroke-width="0.5"/>`; } if (id==='kraftR') s += `<ellipse cx="52" cy="22" rx="6" ry="20" fill="#9d7447"/><ellipse cx="52" cy="22" rx="2" ry="7" fill="#5d4024"/>`; }
+  else if (id==='diario'){ s += bg('#e9e5db'); for (let y=5;y<42;y+=3.2) for (let x=3;x<57;){ const w = 3+rnd()*8; s += `<rect x="${x.toFixed(1)}" y="${y}" width="${Math.min(w,57-x).toFixed(1)}" height="1.1" fill="#8d8a84" opacity=".55"/>`; x += w + 1.5; } s += `<rect x="3" y="2" width="30" height="2.4" fill="#4a4844" opacity=".7"/>`; }
+  else if (id==='alu'){ s += `<defs><linearGradient id="g${k}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#eef1f4"/><stop offset=".5" stop-color="#a9b0b8"/><stop offset="1" stop-color="#dfe3e7"/></linearGradient></defs><rect width="60" height="44" fill="url(#g${k})"/>`; for (let i=0;i<18;i++){ const x = rnd()*60, y = rnd()*44; s += `<path d="M${x.toFixed(1)} ${y.toFixed(1)} l${(rnd()*14-7).toFixed(1)} ${(rnd()*10-5).toFixed(1)} l${(rnd()*10-5).toFixed(1)} ${(rnd()*10).toFixed(1)}Z" fill="${rnd()<0.5?'#fff':'#7d858e'}" opacity=".35"/>`; } }
+  else if (id==='celofan'){ s += bg('#ffffff'); for (let x=0;x<60;x+=6) for (let y=0;y<44;y+=6) if (((x+y)/6)%2===0) s += `<rect x="${x}" y="${y}" width="6" height="6" fill="#eceff1"/>`; s += `<rect width="60" height="44" fill="${c}" opacity=".45"/><path d="M8 0 L18 0 L4 44 L-6 44Z" fill="#fff" opacity=".55"/><path d="M38 0 L42 0 L28 44 L24 44Z" fill="#fff" opacity=".45"/>`; }
+  else if (g==='eva'){ s += bg(c) + dots(70,'rgba(0,0,0,.1)',0.45) + `<rect y="40" width="60" height="4" fill="rgba(0,0,0,.18)"/>`; if (id==='evaG') s += dots(60,'rgba(255,255,255,.85)',0.6); }
+  else if (id==='limpia'){ s += bg('#f3f1ec') + `<path d="M4 34 C16 8, 30 40, 56 10" fill="none" stroke="${c}" stroke-width="7" stroke-linecap="round"/><path d="M4 34 C16 8, 30 40, 56 10" fill="none" stroke="rgba(255,255,255,.4)" stroke-width="7" stroke-dasharray="0.6 1.4" stroke-linecap="round"/>`; }
+  else if (id==='brochette' || id==='var8'){ const w = id==='var8'?3.6:2.2; s += bg('#f1efe9'); for (let i=0;i<4;i++) s += `<path d="M${6+i*9} 40 L${22+i*9} 4" stroke="#d6b27f" stroke-width="${w}" stroke-linecap="round"/><path d="M${6+i*9} 40 L${22+i*9} 4" stroke="rgba(120,80,30,.25)" stroke-width="${w/3}"/>`; }
+  else if (id==='tuboC' || id==='pvc40'){ const f = id==='pvc40' ? '#dfe3e6' : '#a98257'; s += bg('#f1efe9') + `<rect x="8" y="14" width="40" height="16" fill="${f}"/><ellipse cx="48" cy="22" rx="5" ry="8" fill="${id==='pvc40'?'#c3c9ce':'#8f6b45'}"/><ellipse cx="48" cy="22" rx="3.2" ry="5.6" fill="${id==='pvc40'?'#8f979e':'#5d4024'}"/><ellipse cx="8" cy="22" rx="5" ry="8" fill="${f}"/>`; }
+  else if (g==='alambre'){ s += bg('#f1f3ef'); for (let i=0;i<5;i++) s += `<ellipse cx="${24+i*2.5}" cy="22" rx="${16-i*0.6}" ry="${12-i*0.4}" fill="none" stroke="${m.color}" stroke-width="${Math.max(0.8, (m.diam||0.5)*2.2)}"/>`; s += `<path d="M40 24 L56 36" stroke="${m.color}" stroke-width="${Math.max(0.8,(m.diam||0.5)*2.2)}"/>`; }
+  else s += bg(c);
+  return s + '</svg>';
+}
+const KICON = {
+  placa:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 20 16 14l12 6-12 6z" fill="#c9c4bb"/><path d="M4 20v2l12 6 12-6v-2"/></svg>',
+  disco:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="16" cy="17" rx="12" ry="6" fill="#c9c4bb"/><path d="M4 17v2c0 3.3 5.4 6 12 6s12-2.7 12-6v-2"/></svg>',
+  tubo:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><ellipse cx="16" cy="7" rx="6" ry="2.5"/><path d="M10 7v18c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V7" fill="#e7d9c3"/></svg>',
+  cono:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 4 6 25c0 1.7 4.5 3 10 3s10-1.3 10-3z" fill="#f2c9a0"/></svg>',
+  esfera:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="16" cy="16" r="11" fill="#d9d4c7"/><path d="M6 13c6 2 14 2 20 0M6 19c6 2 14 2 20 0" stroke-dasharray="2 2"/></svg>',
+  varilla:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 27 26 5" stroke="#b48a5c"/></svg>',
+  racimo:'<svg viewBox="0 0 32 32">'+[[12,12],[19,10],[22,17],[15,19],[10,19],[17,24],[24,24]].map(([x,y],i)=>`<circle cx="${x}" cy="${y}" r="4" fill="${i%2?'#e0517e':'#f5b8cb'}"/>`).join('')+'</svg>',
+  arbol:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 28v-9l-5-5m5 5 5-6" stroke="#6e4b34" stroke-width="2"/><circle cx="10" cy="11" r="4.5" fill="#f5b8cb" stroke="none"/><circle cx="18" cy="8" r="5" fill="#e0517e" stroke="none"/><circle cx="22" cy="14" r="4" fill="#f5b8cb" stroke="none"/></svg>',
+  prisma:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 10 16 5l11 5v13l-11 5-11-5z" fill="#f1e4d3"/><path d="M5 10l11 5 11-5M16 15v13"/></svg>',
+  cilindro:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 8v16c0 2 4 3.5 9 3.5s9-1.5 9-3.5V8" fill="#cfe3f3"/><ellipse cx="16" cy="8" rx="9" ry="3.5" fill="#e6f0f8"/></svg>',
+  piramide:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 4 4 24l12 4 12-4z" fill="#f2c9a0"/><path d="M16 4v24"/></svg>',
+  prismaT:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 24 10 10l18 4-4 13z" fill="#d7e8cf"/><path d="M10 10l-6 14 20 3M10 10l4 14"/></svg>',
+};
 const MAT = Object.fromEntries(MATS.map(m => [m.id, m]));
 const INS = Object.fromEntries(INSUMOS.map(m => [m.id, m]));
 let precios = LS.get('armalab.precios', {});
@@ -360,6 +540,10 @@ const KINDS = {
   varilla:{nom:'Varilla / alambre', desc:'Tramo recto (ramas, ejes, tallos)', params:[P_('len','Largo',0.5,300,0.5,10)], mats:m=>m.cat==='Alambres y varillas'},
   racimo: {nom:'Racimo de bolitas', desc:'Bolitas de papel arrugado (flores, follaje)', params:[P_('r','Radio del racimo',0.3,40,0.1,2),P_('n','Cantidad de bolitas',1,1500,1,20,''),P_('b','Lado del cuadradito',1,15,0.5,3)], mats:m=>['crepe','crepeMet','seda','afiche','glase','alu','celofan','diario'].includes(m.id)},
   arbol:  {nom:'Árbol de alambre', desc:'Tronco retorcido con flores de crepé (5–40 cm)', params:[P_('H','Altura',5,40,0.5,12),P_('hebras','Hebras',4,32,1,12,''),P_('dens','Densidad de flores',0,2,0.1,1,''),P_('seed','Variante (forma)',1,999,1,7,'')], mats:m=>m.grupo==='alambre' && m.tipo==='rollo' && m.id!=='galv16'},
+  prisma: {nom:'Caja / cubo', desc:'Prisma rectangular con tapa (troquel)', params:[P_('w','Ancho',1,60,0.5,8),P_('d','Profundidad',1,60,0.5,8),P_('h','Alto',1,60,0.5,8)], mats:m=>m.tipo==='hoja' && m.esp<=1.5 && m.esp>=0.15},
+  cilindro:{nom:'Cilindro', desc:'Tubo con tapas (latas, torres, columnas)', params:[P_('d','Diámetro',1,60,0.5,6),P_('h','Alto',1,100,0.5,10)], mats:m=>m.tipo==='hoja' && m.esp<=1.5 && m.esp>=0.15},
+  piramide:{nom:'Pirámide', desc:'Base cuadrada y 4 caras (techos, pinos)', params:[P_('b','Lado de la base',1,60,0.5,8),P_('h','Alto',1,80,0.5,10)], mats:m=>m.tipo==='hoja' && m.esp<=1.5 && m.esp>=0.15},
+  prismaT:{nom:'Prisma triangular', desc:'Techo a dos aguas, carpita, packaging', params:[P_('a','Lado del triángulo',1,40,0.5,6),P_('l','Largo',1,80,0.5,15)], mats:m=>m.tipo==='hoja' && m.esp<=1.5 && m.esp>=0.15},
   perfil: {nom:'Perfil recortado', params:[], mats:m=>m.tipo==='hoja', soloPlantilla:true},
   arbolG: {nom:'Árbol grande', params:[], mats:m=>m.id==='galv16', soloPlantilla:true},
 };
@@ -367,7 +551,7 @@ const KINDS = {
 /* ---------- Estado ---------- */
 let state = {
   project:null, sel:null, tabL:'proyecto', tabR:'piezas', matSel:'cg2c', tmode:'translate', ruler:true, human:false,
-  tengo:new Set(LS.get('armalab.tengo', [])), N:LS.get('armalab.N', 1), transfer:LS.get('armalab.transfer', true), modo:LS.get('armalab.modo','barato'),
+  tengo:new Set(LS.get('armalab.tengo', [])), ofSel:LS.get('armalab.ofSel', {}), chatOpen:false, N:LS.get('armalab.N', 1), transfer:LS.get('armalab.transfer', true), modo:LS.get('armalab.modo2','barato'),
   img:null, imgURL:null,
 };
 function newId(){ const p = state.project; p.next = (p.next||1); return 'P' + (p.next++); }
@@ -500,6 +684,29 @@ function ovalo(W, H){ const pts=[]; for (let i=0;i<48;i++){ const t=i/48*Math.PI
 function petalo(L, w){ const pts = []; const N = 14;
   for (let i=0;i<=N;i++){ const s = i/N; pts.push([ (w/2)*(0.16 + 0.84*Math.pow(Math.sin(Math.PI*Math.min(1,s*0.92+0.04)),0.85)) * (s>0.85? Math.cos((s-0.85)/0.15*Math.PI/2)*0.98+0.02 : 1), s*L ]); }
   return pts.concat(pts.slice(0,-1).reverse().map(([x,y])=>[-x,y]));
+}
+function bboxP(pts){ let x0=1e9,x1=-1e9,y0=1e9,y1=-1e9; pts.forEach(([x,y])=>{x0=Math.min(x0,x);x1=Math.max(x1,x);y0=Math.min(y0,y);y1=Math.max(y1,y);}); return {w:x1-x0, h:y1-y0, x0, y0}; }
+function netPrisma(W, D, H){
+  const t = Math.min(1.5, H*0.45), e = Math.min(0.3, H*0.1), f = Math.min(2, D*0.35);
+  const pts = [[-W/2+0.3,D/2+H+D+f],[W/2-0.3,D/2+H+D+f],[W/2,D/2+H+D],[W/2,D/2],[W/2+e,D/2+t],[W/2+H-e,D/2+t],[W/2+H,D/2],[W/2+H,-D/2],[W/2+H-e,-D/2-t],[W/2+e,-D/2-t],[W/2,-D/2],
+    [W/2,-D/2-H],[-W/2,-D/2-H],[-W/2,-D/2],[-W/2-e,-D/2-t],[-W/2-H+e,-D/2-t],[-W/2-H,-D/2],[-W/2-H,D/2],[-W/2-H+e,D/2+t],[-W/2-e,D/2+t],[-W/2,D/2],[-W/2,D/2+H+D]];
+  const folds = [[[-W/2,D/2],[W/2,D/2]],[[-W/2,-D/2],[W/2,-D/2]],[[W/2,-D/2],[W/2,D/2]],[[-W/2,-D/2],[-W/2,D/2]],[[W/2,D/2],[W/2+H,D/2]],[[W/2,-D/2],[W/2+H,-D/2]],[[-W/2,D/2],[-W/2-H,D/2]],[[-W/2,-D/2],[-W/2-H,-D/2]],[[-W/2,D/2+H],[W/2,D/2+H]],[[-W/2,D/2+H+D],[W/2,D/2+H+D]]];
+  return {pts, folds};
+}
+function pestana(a, b, T){ const dx = b[0]-a[0], dy = b[1]-a[1], L = Math.hypot(dx,dy), ux = dx/L, uy = dy/L, nx = uy, ny = -ux;
+  return [[a[0]+ux*L*0.18+nx*T, a[1]+uy*L*0.18+ny*T], [a[0]+ux*L*0.82+nx*T, a[1]+uy*L*0.82+ny*T]]; }
+function netPiramide(b, h){
+  const s = Math.hypot(h, b/2), T = Math.min(1.2, s*0.15);
+  const sq = [[-b/2,-b/2],[b/2,-b/2],[b/2,b/2],[-b/2,b/2]], ap = [[0,-b/2-s],[b/2+s,0],[0,b/2+s],[-b/2-s,0]];
+  const pts = [], folds = [];
+  for (let i=0;i<4;i++){ const c = sq[i], a = ap[i], n = sq[(i+1)%4]; pts.push(c, a, ...pestana(a, n, T)); folds.push([c, n], [a, n]); }
+  return {pts, folds};
+}
+function netPrismaT(a, L){
+  const h = a*Math.sqrt(3)/2, T = Math.min(1.2, a*0.3), o = Math.min(0.6, L*0.1), X = x => x - 1.5*a;
+  const pts = [[X(0),0],[X(a),0],[X(1.5*a),-h],[X(2*a),0],[X(3*a),0],[X(3*a)+T,o],[X(3*a)+T,L-o],[X(3*a),L],[X(2*a),L],[X(1.5*a),L+h],[X(a),L],[X(0),L]];
+  const folds = [[[X(a),0],[X(a),L]],[[X(2*a),0],[X(2*a),L]],[[X(3*a),0],[X(3*a),L]],[[X(a),0],[X(2*a),0]],[[X(a),L],[X(2*a),L]]];
+  return {pts, folds};
 }
 function polyPerim(pts){ let s=0; for (let i=0;i<pts.length;i++){ const a=pts[i], b=pts[(i+1)%pts.length]; s+=Math.hypot(b[0]-a[0], b[1]-a[1]); } return s; }
 function polyArea(pts){ let s=0; for (let i=0;i<pts.length;i++){ const a=pts[i], b=pts[(i+1)%pts.length]; s+=a[0]*b[1]-b[0]*a[1]; } return Math.abs(s/2); }
@@ -969,6 +1176,14 @@ function cutsOf(pc){
       C.push({pid:pc.id, ins:'globo', qty:1});
       if (pc.p.term==='pintura') C.push({pid:pc.id, ins:'latex', qty:1}, {pid:pc.id, ins:'acril', qty:1});
       break; }
+    case 'prisma': case 'piramide': case 'prismaT': {
+      const n = pc.kind==='prisma' ? netPrisma(pc.p.w, pc.p.d, pc.p.h) : pc.kind==='piramide' ? netPiramide(pc.p.b, pc.p.h) : netPrismaT(pc.p.a, pc.p.l);
+      const bb = bboxP(n.pts);
+      const med = pc.kind==='prisma' ? `${nf(pc.p.w)}×${nf(pc.p.d)}×${nf(pc.p.h)} cm armada` : pc.kind==='piramide' ? `base ${nf(pc.p.b)} cm, alto ${nf(pc.p.h)} cm` : `triángulo de ${nf(pc.p.a)} cm, largo ${nf(pc.p.l)} cm`;
+      C.push({...base, shape:'poly', pts:n.pts, folds:n.folds, ...bb, medida:`troquel ${fmtL(bb.w)} × ${fmtL(bb.h)} · ${med}`}); break; }
+    case 'cilindro': { const L = r1(Math.PI*pc.p.d + 1);
+      C.push({...base, nombre:'Tapas del cilindro', shape:'circle', d:pc.p.d, w:pc.p.d, h:pc.p.d, qty:2*(pc.p.qty||1), medida:`Ø ${fmtL(pc.p.d)}`});
+      C.push({...base, nombre:'Tira lateral', shape:'rect', w:L, h:r1(pc.p.h+2), medida:`${fmtL(L)} × ${fmtL(pc.p.h+2)} (1 cm de pestañas arriba y abajo)`, curva:true}); break; }
     case 'varilla': C.push({...base, mano:true, len:pc.p.len, medida:fmtL(pc.p.len)}); break;
     case 'racimo': C.push({...base, mano:true, qty:pc.p.n, area:pc.p.n*pc.p.b*pc.p.b, medida:`cuadraditos de ${nf(pc.p.b)} × ${nf(pc.p.b)} cm`, nombre:'Bolitas de papel'}); break;
     case 'arbol': { const c = arbolCalc(pc.p); const n1 = Math.round(c.flores/2);
@@ -1054,10 +1269,15 @@ function shelfPack(items, W, H, gap){
 
 /* ---------- Lista de compras (N unidades, minorista vs mayorista) ---------- */
 function mejorOferta(id, n, transfer){
-  const of = ofertas(id); let best = null, retail = null;
-  of.forEach(o=>{ const packs = Math.ceil(n/o.q - 1e-9); const cost = packs*o.pr*(transfer ? 1 - o.tr/100 : 1);
-    const r = {o, packs, cost, sobra:packs*o.q - n}; if (!best || cost < best.cost - 0.5) best = r; if (o.q===1 && (!retail || cost < retail.cost)) retail = r; });
-  return {best, retail: retail || best};
+  const rs = ofertas(id).map((o, i) => { const packs = Math.ceil(n/o.q - 1e-9); return {o, i, packs, cost:packs*o.pr*(transfer ? 1 - o.tr/100 : 1), sobra:packs*o.q - n}; });
+  const by = arr => arr.slice().sort((a,b)=>a.cost-b.cost)[0];
+  const retail = by(rs.filter(r=>r.o.q===1)) || by(rs);
+  let pool = rs;
+  if (state.modo==='suelto'){ const f = rs.filter(r=>r.o.q===1); if (f.length) pool = f; }
+  if (state.modo==='mayor'){ const f = rs.filter(r=>r.o.q>1); if (f.length) pool = f; }
+  let best = by(pool);
+  const ov = state.ofSel[id]; if (ov != null && rs[ov]) best = rs[ov];
+  return {best, retail, all:rs};
 }
 function computeBOM(N, transfer){
   N = N || state.N || 1; if (transfer === undefined) transfer = state.transfer;
@@ -1088,7 +1308,8 @@ function computeBOM(N, transfer){
     } else if (m.tipo==='rollo'){ n = Math.ceil(g.len*1.02/m.len); unidadBase = m.id==='galv16' ? 'kg (≈60 m)' : 'rollo de 5 m'; det = `Necesitás ${nf(g.len/100)} m`; }
     else { n = Math.max(1, Math.ceil(g.units/m.pack)); unidadBase = m.pack>1 ? `paquete x${m.pack}` : `unidad de ${fmtL(m.len)}`; det = `${g.units} pieza(s) de ${fmtL(m.len)}`; }
     const {best, retail} = mejorOferta(m.id, n, transfer);
-    lines.push({id:g.key, mid:m.id, nombre:m.nombre + (g.color?` · ${g.color}`:''), sw:g.color?COLORES[g.color]:m.color, n, unidadBase, det, best, retail, sub:best.cost, ahorro:Math.max(0, retail.cost - best.cost), cat:'material'});
+    const all = mejorOferta(m.id, n, transfer).all;
+    lines.push({id:g.key, mid:m.id, color:g.color, nombre:m.nombre + (g.color?` · ${g.color}`:''), sw:g.color?COLORES[g.color]:m.color, n, unidadBase, det, best, retail, all, sub:best.cost, ahorro:Math.max(0, retail.cost - best.cost), cat:'material'});
   }
   // adhesivos y herramientas
   const grupos = new Set(cuts.filter(c=>!c.ins).map(c=>MAT[c.mat].grupo)); const kinds = new Set(pcs.map(p=>p.kind));
@@ -1135,6 +1356,7 @@ function aguanta(pc, obj){
   }
   if (pc.kind==='arbolG'){ const v = vuelco(); if (v.sem==='bad') return {ok:false, msg:'Se puede volcar: usá una base más pesada o más ancha.'}; return {ok:true, msg:'Alma + base con lastre'}; }
   if (pc.kind==='racimo') return {ok:true, msg:'Decorativo'};
+  if (['prisma','cilindro','piramide','prismaT'].includes(pc.kind)){ const big = Math.max(...Object.values(pc.p).filter(v=>typeof v==='number')); if (big > 30 && m.esp < 0.5) return {ok:false, msg:'Para más de 30 cm usá microcorrugado o cartón 1 mm: la cartulina se deforma.'}; return {ok:true, msg:'Firme por sus pliegues'}; }
   if (pc.kind==='esfera') return pc.p.capas < 3 && pc.p.term!=='flecos' ? {ok:false, msg:'Con menos de 3 capas queda frágil.'} : {ok:true, msg:`${pc.p.capas} capas`};
   if (pc.kind==='varilla'){
     if (pc.mat==='al26' && pc.p.len > 8) return {ok:false, msg:'Alambre fino y largo: se dobla. Usá N°18 o un palito.'};
@@ -1162,7 +1384,7 @@ function tiempoMin(){
     if (pc.p.noCut) return; const m = MAT[pc.mat]; const f = m.corte==='cutter' ? (1 + m.esp/3) : 1; const q = pc.p.qty||1;
     const big = c => c.shape ? Math.max(1, (c.w*c.h)/600) : 1;
     if (pc.kind==='placa') t += 3*f*Math.sqrt(big(cutsOf(pc)[0]||{})); else if (pc.kind==='disco') t += 5*f; else if (pc.kind==='perfil') t += (pc.p.qty>2?4:12)*f*q*Math.sqrt(big(cutsOf(pc)[0])) + (pc.p.ranura?6:0);
-    else if (pc.kind==='tubo' || pc.kind==='cono') t += 6; else if (pc.kind==='varilla') t += 2; else if (pc.kind==='racimo') t += pc.p.n*0.3;
+    else if (pc.kind==='tubo' || pc.kind==='cono') t += 6; else if (['prisma','piramide','prismaT','cilindro'].includes(pc.kind)) t += 12; else if (pc.kind==='varilla') t += 2; else if (pc.kind==='racimo') t += pc.p.n*0.3;
     else if (pc.kind==='arbol') t += 70 + arbolCalc(pc.p).flores*0.3;
     else if (pc.kind==='arbolG') t += 240 + arbolGCalc(pc.p).flores*(pc.p.flor==='seda'?3:1.5);
     else if (pc.kind==='esfera') t += 40*pc.p.capas*Math.max(1, pc.p.d/40) + (pc.p.term==='flecos'?60*Math.max(1,pc.p.d/40):30);
@@ -1259,6 +1481,10 @@ function buildPiece(pc){
       } else o = new THREE.Mesh(g, mat);
       break; }
     case 'tubo': { const r = pc.p.d/2; const g = new THREE.CylinderGeometry(r, r, pc.p.h, 28, Math.max(1, Math.round(pc.p.h/0.8)), true); if (tex.a && fino) arrugar(g, tex.a, 1.6); g.translate(0,pc.p.h/2,0); o = new THREE.Mesh(g, stdMat(hex,{side:THREE.DoubleSide})); break; }
+    case 'prisma': { const g = new THREE.BoxGeometry(pc.p.w, pc.p.h, pc.p.d); g.translate(0, pc.p.h/2, 0); o = new THREE.Mesh(g, mat); break; }
+    case 'cilindro': { const g = new THREE.CylinderGeometry(pc.p.d/2, pc.p.d/2, pc.p.h, 40); g.translate(0, pc.p.h/2, 0); o = new THREE.Mesh(g, mat); break; }
+    case 'piramide': { const g = new THREE.ConeGeometry(pc.p.b/Math.SQRT2, pc.p.h, 4); g.rotateY(Math.PI/4); g.translate(0, pc.p.h/2, 0); o = new THREE.Mesh(g, mat); break; }
+    case 'prismaT': { const a = pc.p.a; const g = new THREE.ExtrudeGeometry(shapeFrom([[-a/2,0],[a/2,0],[0,a*Math.sqrt(3)/2]]), {depth:pc.p.l, bevelEnabled:false}); g.translate(0,0,-pc.p.l/2); o = new THREE.Mesh(g, mat); break; }
     case 'cono': { const g = new THREE.ConeGeometry(pc.p.r, pc.p.h, 36, 1, true); g.translate(0,pc.p.h/2,0); o = new THREE.Mesh(g, stdMat(hex,{side:THREE.DoubleSide})); break; }
     case 'esfera': {
       const g = new THREE.SphereGeometry(pc.p.d/2, 48, 32); g.scale(1, pc.p.alto/pc.p.d, 1);
@@ -1421,22 +1647,37 @@ function renderProyecto(){
     <textarea id="impTxt" placeholder="Pegá acá un código de proyecto…"></textarea>
     <div class="row"><button class="btn" id="imp">Abrir código pegado</button><span id="impMsg" class="small muted"></span></div>
   </div></details>
-  <p class="small muted">ArmaLab v${VERSION} · Mel · las reglas de cantidades son estimaciones a calibrar con prototipos.</p>`;
+  <p class="small muted">ArmaLab v${VERSION} · hecho en Buenos Aires por Joaco, con Claude · las cantidades son estimaciones a calibrar con prototipos.</p>`;
   $('#L-proyecto').innerHTML = h;
 }
 function renderModelar(){
-  const pr = state.project; const ms = MAT[state.matSel];
+  const pr = state.project; const ms = MAT[state.matSel]; const inf = INFO[ms.id] || {};
   const cats = [...new Set(MATS.map(m=>m.cat))];
-  let h = `<div><h2>1. ¿Qué material?</h2></div>
-  ${cats.map(c=>`<div class="catgrp"><h3>${esc(c)}</h3><div class="chips">${MATS.filter(m=>m.cat===c).map(m=>`<button class="chip" data-mat="${m.id}" aria-pressed="${m.id===state.matSel}"><span class="sw" style="background:${m.colorable?'linear-gradient(135deg,#f5b8cb,#86c2e5,#9ccc7c)':m.color}"></span>${esc(m.nombre.replace(/ \(.*\)$/,''))}</button>`).join('')}</div></div>`).join('')}
-  <div class="note info small"><b>${esc(ms.nombre)}</b> · ~${money(precioU(ms.id))} c/u${ms.g?` · ${ms.g} g/m²`:''}<br>${esc(ms.uso)}</div>
-  <div><h2>2. ¿Qué forma?</h2></div>
-  <div class="cards">${Object.entries(KINDS).filter(([k,K])=>!K.soloPlantilla && K.mats(ms)).map(([k,K])=>`<button class="card" data-add="${k}"><b>+ ${esc(K.nom)}</b><span>${esc(K.desc)}</span></button>`).join('') || '<p class="muted small">Este material no tiene formas libres todavía.</p>'}</div>
+  const kinds = Object.entries(KINDS).filter(([k,K])=>!K.soloPlantilla && K.mats(ms));
+  let h = `<div><h2>1. Elegí el material</h2><p class="muted small">Tocá la <b>i</b> para ver cómo es, para qué sirve y dónde comprarlo.</p></div>
+  ${cats.map(c=>`<div class="catgrp"><h3>${esc(c)}</h3><div class="mgrid">${MATS.filter(m=>m.cat===c).map(m=>`<div class="mt" role="button" tabindex="0" data-mat="${m.id}" aria-pressed="${m.id===state.matSel}">${swatch(m)}<span>${esc(m.nombre.replace(/ \(.*\)$/,'').replace(/ · .*$/,''))}${m.esp>=0.5 && m.tipo==='hoja'?` <b>${nf(m.esp)} mm</b>`:''}</span><span class="pr">${precioU(m.id)?money(precioU(m.id)):'gratis'}</span><button class="ib" data-info="${m.id}" aria-label="Ficha de ${esc(m.nombre)}">i</button></div>`).join('')}</div></div>`).join('')}
+  <div class="note info small"><b>${esc(ms.nombre)}</b>: ${esc(inf.t || ms.uso)}${inf.ideas?`<br><b>Ideas:</b> ${inf.ideas.map(esc).join(' · ')}`:''}</div>
+  <div><h2>2. Elegí la forma</h2><p class="muted small">${kinds.length} forma(s) posibles con ${esc(ms.nombre.split(' (')[0].split(' · ')[0].toLowerCase())}.</p></div>
+  <div class="kgrid">${kinds.map(([k,K])=>`<button class="kc" data-add="${k}" title="${esc(K.desc)}">${KICON[k]||''}${esc(K.nom)}</button>`).join('') || '<p class="muted small">Este material no tiene formas libres todavía.</p>'}</div>
   <div><h2>Piezas del modelo</h2><p class="muted small">${pr.pieces.length} pieza(s). Tocá una o hacé clic en la vista 3D.</p></div>
   <div class="plist">${pr.pieces.map(pc=>`<button data-sel="${pc.id}" aria-pressed="${pc.id===state.sel}"><span class="pid">${pc.id}</span><span class="sw" style="background:${colorHex(pc)}"></span><span style="flex:1;min-width:0">${esc(pieceLabel(pc))}${pc.p.qty>1?` ×${pc.p.qty}`:''}<br><span class="muted">${esc(MAT[pc.mat].nombre)}${pc.color&&MAT[pc.mat].colorable?' · '+esc(pc.color):''}</span></span></button>`).join('') || '<p class="muted small" style="padding:10px">Todavía no hay piezas.</p>'}</div>
   <div id="editor"></div>`;
   $('#L-modelar').innerHTML = h;
   renderEditor();
+}
+function showMaterial(id){
+  const m = MAT[id]; const inf = INFO[id] || {}; const of = ofertas(id);
+  const hoja = m.tipo==='hoja' ? `${m.w} × ${m.h} cm` : m.tipo==='rollo' ? `${fmtL(m.len)} por rollo` : `${fmtL(m.len)} c/u${m.pack>1?`, paquete x${m.pack}`:''}`;
+  const pesoHoja = m.tipo==='hoja' && m.g ? fmtW(m.w*m.h/1e4*m.g) : null;
+  const rig = id.startsWith('cg') ? rigidezRel(m.esp, 2) : null;
+  $('#modal').innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="${esc(m.nombre)}"><div class="row" style="justify-content:space-between"><h2>${esc(m.nombre)}</h2><button class="btn" id="closeModal">Cerrar</button></div>
+    <div class="mbig">${swatch(m)}<div style="display:flex;flex-direction:column;gap:8px"><p>${esc(inf.t || m.uso)}</p>${inf.ideas?`<p class="small"><b>Ideas:</b> ${inf.ideas.map(esc).join(' · ')}</p>`:''}</div></div>
+    <dl class="kv"><dt>Formato</dt><dd>${hoja}</dd>${m.esp?`<dt>Espesor</dt><dd>${nf(m.esp)} mm</dd>`:''}${m.g?`<dt>Gramaje</dt><dd>${m.g} g/m²${pesoHoja?` · la hoja pesa ${pesoHoja}`:''}</dd>`:''}${rig?`<dt>Rigidez</dt><dd>${rig>=1?nf(rig)+' veces':'el '+Math.round(rig*100)+' % de'} el cartón gris de 2 mm</dd>`:''}
+    <dt>Se corta con</dt><dd>${m.corte==='cutter'?'cutter y regla metálica':m.corte}</dd><dt>Se pega con</dt><dd>${PEGA[m.grupo]||'silicona'}</dd>${m.fibra?'<dt>Ojo</dt><dd>Tiene fibra/ondas: doblá y curvá a favor</dd>':''}${m.estira?`<dt>Estira</dt><dd>hasta ~${Math.round(m.estira*100)} % a lo largo de la veta</dd>`:''}</dl>
+    <h3>Dónde comprar</h3><div class="tw"><table><tbody>${of.map(o=>{ const u = ofertaURL(id, o); return `<tr><td>${u?`<a class="lnk" href="${u}" target="_blank" rel="noopener">${esc(o.t)} ↗</a>`:esc(o.t)}${o.nota?`<br><span class="muted small">${esc(o.nota)}</span>`:''}</td><td class="num">${o.q>1?`x${o.q}`:'suelto'}</td><td class="num">${money(o.pr)}${o.tr?`<br><span class="small ok-t">−${o.tr}% transf.</span>`:''}</td></tr>`; }).join('')}</tbody></table></div>
+    <div class="row"><a class="btn" href="${mlURL(inf.q||m.nombre)}" target="_blank" rel="noopener">Buscar en Mercado Libre ↗</a><a class="btn" href="${gURL(inf.q||m.nombre)}" target="_blank" rel="noopener">Buscar en Google ↗</a><button class="btn primary" data-usemat="${id}">Usar este material</button></div>
+    <p class="small muted">Precios relevados a fines de octubre de 2026. Pueden haber cambiado.</p></div>`;
+  $('#modal').hidden = false;
 }
 function renderEditor(){
   const el = $('#editor'); if (!el) return; const pc = getPiece(state.sel);
@@ -1507,7 +1748,16 @@ function renderTecnicas(){
   <details><summary>Uniones y piezas grandes</summary><div class="in">
     <p>De más débil a más fuerte: cinta de papel &lt; silicona &lt; cola con solape de 3–5 cm &lt; lengüeta + cola &lt; precinto o tornillo con arandela de cartón.</p>
     <ul><li>Piezas más grandes que la placa: uní a tope y pegá atrás una tira de 10 cm (cubrejunta). Alterná las juntas como ladrillos.</li><li>Standee: caballete = 75 % de la altura, ondas verticales.</li><li>Transporte: módulos de hasta 1 × 2 m; uniones desmontables (tubo dentro de tubo, encastres, precintos).</li></ul>
-  </div></details>`;
+  </div></details>
+  <h3>Más técnicas</h3>
+  <details><summary>Pompones de papel seda</summary><div class="in"><ol><li>Apilá 6–8 hojas de seda y cortalas en rectángulos (15 × 30 cm para un pompón de 10 cm).</li><li>Plegalas en acordeón de 1,5–2 cm.</li><li>Atá el centro con alambre fino N°26.</li><li>Redondeá o hacé punta en los extremos con tijera.</li><li>Abrí capa por capa tirando hacia el centro, despacio: la seda se rompe fácil.</li></ol></div></details>
+  <details><summary>Pétalos de crepé con forma de copa</summary><div class="in"><ul><li>Cortá con la veta a lo largo del pétalo.</li><li>Tomalo del centro con los dos pulgares y estirá hacia afuera: se ahueca.</li><li>Enrollá la punta sobre un lápiz o brochette para que se curve.</li><li>Para un borde ondulado, estirá el borde entre los dedos.</li></ul></div></details>
+  <details><summary>Cortes perfectos con cutter</summary><div class="in"><ul><li>Hoja nueva (o partí la punta gastada): es la mitad del secreto.</li><li>Regla metálica del lado de la pieza que te queda; si el cutter se escapa, arruina el sobrante.</li><li>Primera pasada suave para marcar el surco; las siguientes siguen solas.</li><li>Cutter casi vertical en foam; en cartón gris un poco inclinado.</li><li>Calados (ventanas, puertas): primero los de adentro, después el contorno.</li></ul></div></details>
+  <details><summary>Pasar un molde al material</summary><div class="in"><ul><li><b>Pegar el molde:</b> pegamento en barra solo en los bordes; después se despega.</li><li><b>Calcar:</b> pintá con lápiz blando el dorso del molde y repasá el contorno.</li><li><b>Pinchar:</b> marcá las esquinas con un alfiler y uní los puntos con regla.</li><li><b>Plantilla rígida:</b> si vas a hacer muchas, pasala primero a cartón gris y usala de molde.</li></ul></div></details>
+  <details><summary>Encastres que entran justo</summary><div class="in"><p>Ranura = espesor del cartón + 0,25 mm. Más angosta: no entra o rompe el cartón. Más ancha: queda floja. Probá primero con dos retazos del mismo cartón.</p><p>Las ranuras se cortan antes que el contorno, mientras la pieza todavía está firme.</p></div></details>
+  <details><summary>Endurecer papel y tela</summary><div class="in"><ul><li><b>Cola diluida (1:1):</b> pincelá el papel arrugado y dejalo secar con la forma: queda duro.</li><li><b>Engrudo:</b> lo mismo, más barato, para piezas grandes.</li><li><b>Látex:</b> una mano de látex sella y endurece el papel maché.</li></ul></div></details>
+  <details><summary>Pintar cartón sin que se deforme</summary><div class="in"><ul><li>Acrílico o látex con poca agua: el agua es lo que curva el cartón.</li><li>Manos finas y secado entre manos.</li><li>Si se curvó, pintá también el dorso y dejalo con peso.</li><li>Sobre foamboard: nada de aerosoles con solvente (derriten la espuma).</li></ul></div></details>
+  <details><summary>Quilling (tiras enrolladas)</summary><div class="in"><p>Tiras de cartulina o papel de 3–5 mm enrolladas en un palillo, aflojadas y pegadas en la punta. Se aprietan con los dedos para hacer gotas, ojos o hojas. Sirve para detalles finos en tarjetas y cajas.</p></div></details>`;
   calcTec();
 }
 function calcTec(){
@@ -1522,48 +1772,55 @@ function calcTec(){
 }
 function renderMateriales(){
   const cats = [...new Set(MATS.map(m=>m.cat))];
-  let h = `<div><h2>Precios y dónde comprar</h2><p class="muted small">Relevados en Mercado Libre, librerías y mayoristas argentinos (fines de octubre 2026). Cambiá el precio unitario por el de tu librería y se recalcula todo.</p></div>
+  let h = `<div><h2>Precios y dónde comprar</h2><p class="muted small">Relevados en Mercado Libre, librerías y mayoristas (fines de octubre 2026). Tocá una tienda para abrirla. Cambiá el precio unitario por el de tu librería y se recalcula todo.</p></div>
   <div class="note info small"><b>Tip:</b> Librería Mayorista Leo da 20 % por transferencia en papeles; El Poli tiene el foam y el cartón gris más baratos sueltos. Los packs no siempre convienen: la app compara por unidad.</div>`;
-  cats.forEach(c=>{ h += `<div class="catgrp"><h3>${esc(c)}</h3>${MATS.filter(m=>m.cat===c).map(m=>`<div class="matrow"><div><div class="n">${esc(m.nombre)}</div><div class="u">${m.of.map(o=>`${esc(o.t)}: ${money(o.pr)}${o.q>1?` (${money(o.pr/o.q)} c/u)`:''}${o.tr?` · −${o.tr}% transf.`:''}${o.nota?` · ${esc(o.nota)}`:''}`).join('<br>')}</div></div><input aria-label="Precio ${esc(m.nombre)}" type="number" min="0" step="50" data-precio="${m.id}" value="${Math.round(precioU(m.id))}"></div>`).join('')}</div>`; });
-  h += `<div class="catgrp"><h3>Pegamentos, insumos y herramientas</h3>${INSUMOS.map(m=>`<div class="matrow"><div><div class="n">${esc(m.nombre)}${m.est?' <span class="muted">(estimado)</span>':''}</div><div class="u">${esc(m.uso)}</div></div><input aria-label="Precio ${esc(m.nombre)}" type="number" min="0" step="50" data-precio="${m.id}" value="${precioU(m.id)}"></div>`).join('')}</div>
+  cats.forEach(c=>{ h += `<div class="catgrp"><h3>${esc(c)}</h3>${MATS.filter(m=>m.cat===c).map(m=>`<div class="matrow"><div style="display:flex;gap:9px;align-items:flex-start;min-width:0"><div style="width:46px;flex:none;cursor:pointer" data-info="${m.id}">${swatch(m)}</div><div style="min-width:0"><div class="n">${esc(m.nombre)}</div><div class="u">${m.of.map(o=>{ const u = ofertaURL(m.id, o); return `${u?`<a class="lnk" href="${u}" target="_blank" rel="noopener">${esc(o.t)} ↗</a>`:esc(o.t)}: ${money(o.pr)}${o.q>1?` (${money(o.pr/o.q)} c/u)`:''}${o.tr?` · −${o.tr}% transf.`:''}${o.nota?` · ${esc(o.nota)}`:''}`; }).join('<br>')}<br><a class="lnk" href="${mlURL((INFO[m.id]||{}).q||m.nombre)}" target="_blank" rel="noopener">Ver más en Mercado Libre ↗</a></div></div></div><input aria-label="Precio ${esc(m.nombre)}" type="number" min="0" step="50" data-precio="${m.id}" value="${Math.round(precioU(m.id))}"></div>`).join('')}</div>`; });
+  h += `<div class="catgrp"><h3>Pegamentos, insumos y herramientas</h3>${INSUMOS.map(m=>`<div class="matrow"><div><div class="n">${esc(m.nombre)}${m.est?' <span class="muted">(estimado)</span>':''}</div><div class="u">${esc(m.uso)} · <a class="lnk" href="${mlURL(m.nombre)}" target="_blank" rel="noopener">buscar ↗</a></div></div><input aria-label="Precio ${esc(m.nombre)}" type="number" min="0" step="50" data-precio="${m.id}" value="${precioU(m.id)}"></div>`).join('')}</div>
   <button class="btn" id="resetPrecios">Volver a los precios relevados</button>`;
   $('#L-materiales').innerHTML = h;
 }
-
 /* ---------- Panel derecho ---------- */
 function renderPiezas(){
-  const pr = state.project; const cuts = allCuts().filter(c=>!c.ins); const bom = computeBOM(1);
-  const bb = sceneBox(); const H = bb.isEmpty()?0:bb.max.y; const v = vuelco(); const peso = pesoTotal();
-  let h = `<div class="sum"><div><b>${fmtL(H)}</b><span>alto total</span></div><div><b>${fmtW(peso)}</b><span>peso estimado</span></div>
-    <div><b>${money(totalMat(bom))}</b><span>materiales (1 unidad)</span></div><div><b>${fmtT(tiempoMin())}</b><span>tiempo (1ª vez)</span></div>
-    ${v.th!=null?`<div class="${v.sem}" style="grid-column:1/-1"><b>${v.sem==='ok'?'Estable':v.sem==='warn'?'Cuidado':'Se puede caer'} · ${nf(v.th)}°</b><span>Ángulo de vuelco: lo que hay que inclinarlo para que se caiga. Centro de masa a ${fmtL(v.h)}, base de ${fmtL(v.base[0])} × ${fmtL(v.base[1])}. ${v.sem==='ok'?'':'Sumá lastre abajo, agrandá la base o anclalo.'}</span></div>`:''}</div>
-    <div><h2>Qué cortar</h2><p class="muted small">“Plantilla” = sale impresa en tamaño real. “A mano” = se mide y corta directo.</p></div>
-    <div class="tw"><table><thead><tr><th>Pieza</th><th>Material</th><th>Medida</th><th class="num">Cant.</th></tr></thead><tbody>`;
-  cuts.forEach(c=>{ const m = MAT[c.mat]; const big = c.shape && Math.min(c.w,c.h) > UW || Math.max(c.w||0,c.h||0) > UH; h += `<tr><td><span class="pid">${c.pid}</span> ${esc(c.nombre)}<br><span class="muted small">${!c.shape?'a mano':c.shape==='rect'&&big?'con regla':big?'molde en mosaico':'plantilla'}</span></td><td><span class="sw" style="background:${c.color?COLORES[c.color]:m.color}"></span> ${esc(m.nombre)}${c.color?' · '+esc(c.color):''}</td><td>${c.medida}</td><td class="num">${c.qty}</td></tr>`; });
-  h += `</tbody></table></div><div><h2>¿Aguanta la estructura?</h2></div><div class="tw"><table><tbody>`;
-  pr.pieces.filter(pc=>!pc.p.noCut).forEach(pc=>{ const a = aguanta(pc, objs.get(pc.id)); h += `<tr><td><span class="pid">${pc.id}</span> ${esc(pieceLabel(pc))}</td><td class="${a.ok?'ok-t':'warn-t'}">${a.ok?'✓':'⚠'} ${esc(a.msg)}</td></tr>`; });
-  h += `</tbody></table></div>`;
+  const pr = state.project; const cuts = allCuts().filter(c=>!c.ins); const v = vuelco();
+  const malos = pr.pieces.filter(pc=>!pc.p.noCut).map(pc=>({pc, a:aguanta(pc, objs.get(pc.id))})).filter(x=>!x.a.ok);
+  const estado = {}; pr.pieces.forEach(pc=>{ estado[pc.id] = aguanta(pc, objs.get(pc.id)).ok; });
+  const groups = new Map();
+  cuts.forEach(c=>{ const k = c.mat + '|' + (c.color||''); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(c); });
+  const tipo = c => { const big = c.shape && (Math.min(c.w,c.h) > UW || Math.max(c.w,c.h) > UH); return !c.shape ? ['h','✂ a mano'] : c.shape==='rect' && big ? ['r','📏 con regla'] : big ? ['p','🧩 molde en partes'] : ['p','🖨 plantilla']; };
+  let h = `<div><h2>Qué cortar</h2><p class="muted small">${cuts.reduce((a,c)=>a+c.qty,0)} cortes en ${groups.size} material(es). Tocá un material para ver su ficha.</p></div>`;
+  if (malos.length) h += `<div class="note warn small"><b>Revisá:</b> ${malos.map(x=>`<b>${x.pc.id}</b> ${esc(x.a.msg)}`).join(' · ')}</div>`;
+  if (v.th!=null && v.sem!=='ok') h += `<div class="note ${v.sem==='bad'?'bad':'warn'} small"><b>Estabilidad ${nf(v.th)}°:</b> ${v.sem==='bad'?'se puede caer con un empujón':'cuidado con empujones'}. Sumá lastre abajo, agrandá la base o anclalo.</div>`;
+  groups.forEach(cs=>{ const m = MAT[cs[0].mat]; const col = cs[0].color;
+    h += `<div class="grp"><div class="gh" data-info="${m.id}">${swatch(m, col?COLORES[col]:null)}<div style="min-width:0"><b>${esc(m.nombre.split(' (')[0])}${col?` · ${esc(col)}`:''}</b><span>${cs.reduce((a,c)=>a+c.qty,0)} pieza(s)${m.esp>=0.5&&m.tipo==='hoja'?` · ${nf(m.esp)} mm`:''}</span></div></div>
+    ${cs.map(c=>{ const [tk, tl] = tipo(c); return `<div class="cut"><button class="pidb" data-goto="${c.pid}"><span class="dot ${estado[c.pid]===false?'warn':'ok'}"></span>${c.pid}</button><div style="min-width:0"><div class="m">${esc(c.medida.replace(/<[^>]+>/g,'').split(' · ')[0])}</div><div class="n">${esc(c.nombre)} <span class="tg ${tk}">${tl}</span></div></div><span class="q">×${c.qty}</span></div>`; }).join('')}</div>`; });
+  if (!cuts.length) h += `<p class="muted">Todavía no hay piezas. Elegí un proyecto o pedíselo a Armi.</p>`;
   $('#R-piezas').innerHTML = h;
 }
 function renderCompras(){
   const b = computeBOM(); const {lines, avisos, N} = b;
-  const row = l => { const off = state.tengo.has(l.id)||l.opcional; return `<tr><td><label class="chk"><input type="checkbox" data-tengo="${esc(l.id)}"${state.tengo.has(l.id)?' checked':''}>tengo</label></td><td>${l.sw?`<span class="sw" style="background:${l.sw}"></span> `:''}<b>${esc(l.nombre)}</b>${l.opcional?' <span class="muted">(opcional)</span>':''}<br><span class="muted small">${l.det}</span>${l.cat==='material'?`<br><span class="shop">${esc(l.best.o.t)}${l.best.o.q>1?` · ${l.best.packs} × ${l.best.o.q}`:''}${l.best.sobra>0 && l.best.o.q>1?` (te sobran ${l.best.sobra})`:''}${l.ahorro>0?` · ahorrás ${money(l.ahorro)}`:''}</span>`:''}</td><td class="num">${l.cat==='material'?`${l.n} ${esc(l.unidadBase)}`:`${l.n} ${esc(l.unidadBase)}`}</td><td class="num"${off?' style="opacity:.45;text-decoration:line-through"':''}>${money(l.sub)}</td></tr>`; };
   const sum = arr => arr.filter(l=>!l.opcional && !state.tengo.has(l.id)).reduce((a,l)=>a+l.sub,0);
   const mats = lines.filter(l=>l.cat==='material'), adh = lines.filter(l=>l.cat==='adhesivo'), her = lines.filter(l=>l.cat==='herramienta');
   const tM = sum(mats)+sum(adh), tH = sum(her); const ah = mats.reduce((a,l)=>a+l.ahorro,0);
-  let h = `<div><h2>Lista de compras</h2><p class="muted small">Calculada en hojas, rollos y paquetes como se venden. Elige la presentación más barata para la cantidad que necesitás.</p></div>
+  const card = l => { const off = state.tengo.has(l.id)||l.opcional; const m = MAT[l.mid];
+    const img = m ? swatch(m, l.color?COLORES[l.color]:null) : `<svg viewBox="0 0 60 44"><rect width="60" height="44" rx="6" fill="var(--chip)"/><text x="30" y="27" text-anchor="middle" font-size="16">${l.cat==='herramienta'?'🛠':'🧴'}</text></svg>`;
+    const url = m ? ofertaURL(l.mid, l.best.o) : mlURL(l.nombre);
+    return `<div class="shopc${off?' off':''}">${img}<div style="min-width:0"><b style="font-size:13px">${esc(l.nombre)}</b>${l.opcional?' <span class="muted small">(opcional)</span>':''}
+      <div class="cn">${l.cat==='material' && l.best.o.q>1 ? `${l.best.packs} × pack de ${l.best.o.q}` : `${l.n} ${esc(l.unidadBase)}`}</div><div class="muted small">${l.det}</div>
+      ${m ? `<select class="offsel" data-of="${l.mid}" aria-label="Dónde comprar ${esc(l.nombre)}">${l.all.map(r=>`<option value="${r.i}"${r.i===l.best.i?' selected':''}>${esc(r.o.t)} · ${r.packs}× · ${money(r.cost)}</option>`).join('')}</select>` : ''}
+      <div class="row" style="margin-top:5px;gap:10px">${url?`<a class="lnk small" href="${url}" target="_blank" rel="noopener">Ver dónde comprar ↗</a>`:'<span class="small muted">Reciclado</span>'}<label class="chk"><input type="checkbox" data-tengo="${esc(l.id)}"${state.tengo.has(l.id)?' checked':''}> ya lo tengo</label></div>
+      ${l.ahorro>0?`<span class="small ok-t">Ahorrás ${money(l.ahorro)} vs. suelto</span>`:''}</div><div class="pr">${money(l.sub)}</div></div>`; };
+  let h = `<div><h2>Lista de compras</h2><p class="muted small">En hojas, rollos y paquetes como se venden. Elegí dónde comprar cada cosa.</p></div>
     <div class="form"><div class="field"><label for="cN">¿Cuántas unidades vas a hacer?</label><div class="unit"><input id="cN" type="number" min="1" max="500" step="1" value="${N}"><span>u.</span></div></div>
-    <label class="chk" style="color:var(--fg)"><input type="checkbox" id="cTr"${state.transfer?' checked':''}> Pago por transferencia (aplica descuentos de mayoristas)</label></div>
+    <div class="seg" role="group" aria-label="Cómo comprar">${[['barato','Lo más barato'],['suelto','Todo suelto'],['mayor','Mayorista']].map(([k,l])=>`<button data-modo="${k}" aria-pressed="${state.modo===k}">${l}</button>`).join('')}</div>
+    <label class="chk" style="color:var(--fg)"><input type="checkbox" id="cTr"${state.transfer?' checked':''}> Pago por transferencia (descuentos de mayoristas)</label></div>
     ${avisos.map(a=>`<div class="note warn small">${a}</div>`).join('')}
-    <div class="tw"><table><thead><tr><th></th><th>Producto</th><th class="num">Comprar</th><th class="num">$</th></tr></thead><tbody>
-    <tr><td colspan="4"><h3>Materiales</h3></td></tr>${mats.map(row).join('')}
-    <tr><td colspan="4"><h3>Pegamentos e insumos</h3></td></tr>${adh.map(row).join('')}
-    <tr><td colspan="4"><h3>Herramientas</h3></td></tr>${her.map(row).join('')}</tbody></table></div>
+    <h3>Materiales</h3>${mats.map(card).join('')}
+    <h3>Pegamentos e insumos</h3>${adh.map(card).join('')}
+    <h3>Herramientas (si no las tenés)</h3>${her.map(card).join('')}
     <div class="tot"><span>Materiales + pegamentos${N>1?` (${N} u.)`:''}</span><b>${money(tM)}</b></div>
     ${N>1?`<div class="tot" style="border-top-width:1px"><span>Costo por unidad</span><b>${money(tM/N)}</b></div>`:''}
-    <div class="tot" style="border-top-width:1px"><span>Herramientas (si no tenés)</span><b>${money(tH)}</b></div>
+    <div class="tot" style="border-top-width:1px"><span>Herramientas</span><b>${money(tH)}</b></div>
     ${ah>0?`<div class="note ok small">Comprando por pack o mayorista ahorrás <b>${money(ah)}</b> frente a comprar todo suelto.</div>`:''}
-    <div class="note info small">Precios aproximados (oct. 2026). Cambian seguido: cargá los de tu librería en “Precios”.</div>
     <div class="row"><button class="btn" id="copyList">Copiar lista para WhatsApp</button><span id="copyMsg" class="small muted"></span></div>
     <textarea id="copyTxt" hidden readonly></textarea>`;
   $('#R-compras').innerHTML = h;
@@ -1575,6 +1832,8 @@ function genericSteps(pcs){
   Object.entries(byMat).forEach(([mid, cs])=>{ const m = MAT[mid]; st.push({t:`Cortá las piezas de ${m.nombre}`, d:`${cs.map(c=>`<b>${c.pid}</b> ${esc(c.nombre)}: ${c.medida}`).join(' · ')}. ${tip(m)}`, pz:[...new Set(cs.map(c=>c.pid))]}); });
   pcs.filter(p=>p.p.tex && TEX[p.p.tex].f>1).forEach(p=>st.push({t:`Textura de ${p.id}: ${TEX[p.p.tex].n.toLowerCase()}`, d:'Arrugá el papel en una bola fuerte, abrilo y alisalo apenas antes de pegar. Pegalo con cola diluida (2:1) pasada con pincel.', pz:[p.id]}));
   pcs.filter(p=>p.kind==='tubo').forEach(p=>st.push({t:`Enrollá el tubo ${p.id}`, d:`Alrededor de un lápiz, fibrón o botella de Ø ${nf(p.p.d)} cm, ${p.p.v} vuelta(s). Solapa de 1 cm con ${MAT[p.mat].grupo==='fino'?'pegamento en barra':'cola vinílica'}; sostené con un clip mientras seca.`, pz:[p.id]}));
+  pcs.filter(p=>['prisma','piramide','prismaT'].includes(p.kind)).forEach(p=>st.push({t:`Armá ${KINDS[p.kind].nom.toLowerCase()} ${p.id}`, d:'Marcá las líneas azules punteadas con plegadera y regla, cortá el contorno, doblá todo hacia el mismo lado y pegá las pestañas por dentro con pegamento en barra o doble faz.', pz:[p.id]}));
+  pcs.filter(p=>p.kind==='cilindro').forEach(p=>st.push({t:`Armá el cilindro ${p.id}`, d:`Enrollá la tira sobre un frasco o botella de Ø ${nf(p.p.d)} cm y pegá el solape de 1 cm. Cortá pestañitas cada 1 cm en los bordes, doblalas hacia adentro y pegá encima las dos tapas.`, pz:[p.id]}));
   pcs.filter(p=>p.kind==='cono').forEach(p=>st.push({t:`Armá el cono ${p.id}`, d:'Marcá el sector con la plantilla, cortalo, curvalo y pegá la solapa de 1 cm por dentro.', pz:[p.id]}));
   pcs.filter(p=>p.kind==='varilla').forEach(p=>st.push({t:`Cortá ${p.id}: ${fmtL(p.p.len)} de ${MAT[p.mat].nombre}`, d:`Con ${MAT[p.mat].corte}. Doblá o cubrí las puntas para que no pinchen.`, pz:[p.id]}));
   pcs.filter(p=>p.kind==='racimo').forEach(p=>st.push({t:`Hacé ${p.p.n} bolitas (${p.id})`, d:`Cuadraditos de ${nf(p.p.b)} × ${nf(p.p.b)} cm, arrugados con los dedos. Pegalos con gotitas de ${p.mat==='alu'||p.mat==='celofan'?'UHU o doble faz':'silicona'}.`, pz:[p.id]}));
@@ -1701,24 +1960,195 @@ function renderPlantillas(){
 }
 function renderStats(){
   const bb = sceneBox(); const H = bb.isEmpty()?0:bb.max.y; const bom = computeBOM(1); const v = vuelco();
-  $('#stats').innerHTML = `<span class="stat">${esc(state.project.nombre)}</span><span class="stat">alto <b>${fmtL(H)}</b></span><span class="stat"><b>${fmtW(pesoTotal())}</b></span><span class="stat">≈ <b>${money(totalMat(bom))}</b></span><span class="stat">≈ <b>${fmtT(tiempoMin())}</b></span>${v.th!=null?`<span class="stat ${v.sem}">${v.sem==='ok'?'estable':v.sem==='warn'?'cuidado':'se cae'} <b>${nf(v.th)}°</b></span>`:''}`;
+  $('#hud').innerHTML = `<span><small>alto</small><b>${fmtL(H)}</b></span><span><small>peso</small><b>${fmtW(pesoTotal())}</b></span><span><small>materiales</small><b>${money(totalMat(bom))}</b></span><span><small>tiempo</small><b>${fmtT(tiempoMin())}</b></span>${v.th!=null?`<span class="${v.sem}"><small>estabilidad</small><b>${v.sem==='ok'?'estable':v.sem==='warn'?'cuidado':'se cae'} ${nf(v.th)}°</b></span>`:''}`;
+  document.title = `${state.project.nombre} · ArmaLab`;
 }
 function renderRight(){ renderPiezas(); renderCompras(); renderPasos(); renderPlantillas(); }
-function renderLeft(){ renderProyecto(); renderModelar(); renderTecnicas(); renderMateriales(); }
+function renderLeft(){ renderProyecto(); renderModelar(); renderTecnicas(); renderMateriales(); renderComunidad(); }
 function renderAll(){ renderLeft(); renderRight(); renderStats(); showTabs(); }
 function showTabs(){
-  ['proyecto','modelar','tecnicas','materiales'].forEach(t=>{ $('#L-'+t).hidden = t!==state.tabL; });
+  ['proyecto','modelar','tecnicas','materiales','comunidad'].forEach(t=>{ $('#L-'+t).hidden = t!==state.tabL; });
   ['piezas','compras','pasos','plantillas'].forEach(t=>{ $('#R-'+t).hidden = t!==state.tabR; });
   document.querySelectorAll('.tabs[data-group="L"] button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===state.tabL));
   document.querySelectorAll('.tabs[data-group="R"] button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===state.tabR));
 }
 const CHANGELOG = [
+  ['0.3.0', ['Armi: asistente que entiende pedidos como “árbol sakura de 3 metros”, arma el modelo solo y te recomienda materiales', 'Nuevo logo y encabezado centrado', 'Materiales con imagen y ficha: cómo es, para qué sirve, cómo se corta y pega, dónde comprarlo', 'Formas nuevas: caja/cubo, cilindro, pirámide y prisma triangular, con troquel y pliegues', '“Qué cortar” en tarjetas por material, con menos texto', 'Totales (alto, peso, costo, tiempo, estabilidad) abajo en la vista 3D', 'Compras: elegís la tienda de cada cosa, modo más barato / suelto / mayorista y links a Mercado Libre', 'Precios con links a cada tienda', 'Más técnicas: pompones, pétalos, cortes con cutter, moldes, encastres, endurecer, pintar, quilling', 'Comunidad: guardá fotos y videos de lo que armaste y compartilos']],
   ['0.2.0', ['Nuevo diseño e identidad de ArmaLab', 'Plantillas de gran escala: árbol de 0,8–3,5 m con estructura, standee de tamaño real con tu imagen, flor gigante, papel maché / piñata, letras 3D', 'Caja con tapa (troquel con pliegues) para packaging', 'Pestaña Técnicas: cómo arrugar cada papel, veta del crepé, fibra, rigidez, curvado, alabeo, papel maché, con calculadoras', 'Física: peso estimado, centro de masa y semáforo de vuelco; avisos de espesor por altura', 'Precios relevados oct. 2026: minorista vs mayorista/pack, descuento por transferencia y “¿cuántas unidades?” con costo por unidad', 'Moldes grandes en mosaico A4 (A1, A2…) y puntos clave para trazar sin imprimir', 'Modelador: conos, papel maché y texturas arrugadas; regla en metros y persona de 1,70 m de referencia']],
   ['0.1.0', ['Primera beta: sakura de alambre, árbol de encastre, casita, modelador libre, compras, paso a paso y plantillas 1:1']],
 ];
 function showChangelog(){
-  const m = $('#modal'); m.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="Novedades"><div class="row" style="justify-content:space-between"><h2>Novedades de ArmaLab</h2><button class="btn" id="closeModal">Cerrar</button></div>${CHANGELOG.map(([v,l])=>`<div><h3>v${v}</h3><ul>${l.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}<p class="small muted">Hecho en Argentina por Mel, con Claude. Código abierto (MIT).</p></div>`;
+  const m = $('#modal'); m.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="Novedades"><div class="row" style="justify-content:space-between"><h2>Novedades de ArmaLab</h2><button class="btn" id="closeModal">Cerrar</button></div>${CHANGELOG.map(([v,l])=>`<div><h3>v${v}</h3><ul>${l.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('')}<p class="small muted">Hecho en Buenos Aires, Argentina, por <b>Joaco</b>, con Claude. Código abierto (MIT): <a class="lnk" href="https://github.com/XxJoacoreberddxX/Armalab" target="_blank" rel="noopener">ver en GitHub ↗</a></p></div>`;
   m.hidden = false;
+}
+
+/* =========================================================
+   Comunidad: galería propia (IndexedDB) + compartir
+   ========================================================= */
+const REPO = 'https://github.com/XxJoacoreberddxX/Armalab';
+const SITE = 'https://xxjoacoreberddxx.github.io/Armalab/';
+const DB = { db:null, mem:[],
+  open(){ return new Promise(res=>{ try{ const rq = indexedDB.open('armalab', 1); rq.onupgradeneeded = () => rq.result.createObjectStore('creaciones', {keyPath:'id'}); rq.onsuccess = () => { DB.db = rq.result; res(); }; rq.onerror = () => res(); }catch(e){ res(); } }); },
+  all(){ return new Promise(res=>{ if (!DB.db) return res(DB.mem.slice()); try{ const rq = DB.db.transaction('creaciones').objectStore('creaciones').getAll(); rq.onsuccess = () => res(rq.result||[]); rq.onerror = () => res(DB.mem.slice()); }catch(e){ res(DB.mem.slice()); } }); },
+  put(o){ return new Promise(res=>{ if (!DB.db){ DB.mem = DB.mem.filter(x=>x.id!==o.id).concat(o); return res(); } try{ const tx = DB.db.transaction('creaciones','readwrite'); tx.objectStore('creaciones').put(o); tx.oncomplete = () => res(); tx.onerror = () => { DB.mem.push(o); res(); }; }catch(e){ DB.mem.push(o); res(); } }); },
+  del(id){ return new Promise(res=>{ DB.mem = DB.mem.filter(x=>x.id!==id); if (!DB.db) return res(); try{ const tx = DB.db.transaction('creaciones','readwrite'); tx.objectStore('creaciones').delete(id); tx.oncomplete = () => res(); tx.onerror = () => res(); }catch(e){ res(); } }); },
+};
+const dbReady = DB.open();
+const urls = new Map();
+function blobURL(id, blob){ if (!urls.has(id)) urls.set(id, URL.createObjectURL(blob)); return urls.get(id); }
+async function renderComunidad(){
+  await dbReady; const items = (await DB.all()).sort((a,b)=>b.fecha-a.fecha);
+  const el = $('#L-comunidad'); if (!el) return;
+  el.innerHTML = `<div><h2>Comunidad</h2><p class="muted small">Guardá fotos y videos de lo que armaste, con el proyecto adjunto, y compartilos.</p></div>
+  <div class="form" id="galForm">
+    <div class="field"><label for="galT">Título</label><input id="galT" maxlength="60" placeholder="Mi sakura de 15 cm"></div>
+    <div class="field"><label for="galF">Foto o video</label><input id="galF" type="file" accept="image/*,video/*"></div>
+    <div class="field"><label for="galV">o link de video</label><input id="galV" type="url" placeholder="YouTube, TikTok, Instagram…"></div>
+    <label class="chk" style="color:var(--fg)"><input type="checkbox" id="galP" checked> Adjuntar el proyecto actual (${esc(state.project.nombre)})</label>
+    <div class="row"><button class="btn primary" id="galSave">Guardar en mi galería</button><span id="galMsg" class="small muted"></span></div>
+  </div>
+  <div class="note info small">Tu galería queda guardada en este navegador. Para que la vea todo el mundo, tocá <b>Compartir</b>: se copia un texto con el link de ArmaLab para mandarlo o publicarlo con <b>#ArmaLab</b>, o subilo a las <a class="lnk" href="${REPO}/discussions" target="_blank" rel="noopener">Discusiones de GitHub ↗</a>.</div>
+  <h3>Mi galería (${items.length})</h3>
+  <div class="gal">${items.map(it=>{ const media = it.blob ? (it.tipo==='video' ? `<video src="${blobURL(it.id, it.blob)}" controls muted playsinline></video>` : `<img src="${blobURL(it.id, it.blob)}" alt="${esc(it.titulo)}">`) : `<div style="aspect-ratio:1;display:grid;place-items:center;background:var(--chip);font-size:28px">🎬</div>`;
+    return `<div class="gi">${media}<div class="b"><b>${esc(it.titulo||'Sin título')}</b><span class="muted">${new Date(it.fecha).toLocaleDateString('es-AR')}${it.proy?` · ${esc(it.proy.nombre)}`:''}</span>${it.video?`<a class="lnk" href="${esc(it.video)}" target="_blank" rel="noopener">Ver video ↗</a>`:''}
+      <div class="row">${it.proy?`<button class="btn" data-galopen="${it.id}">Abrir proyecto</button>`:''}<button class="btn" data-galshare="${it.id}">Compartir</button><button class="btn danger" data-galdel="${it.id}">Borrar</button></div></div></div>`; }).join('') || '<p class="muted small">Todavía no guardaste nada. ¡Subí tu primera creación!</p>'}</div>`;
+}
+function achicarImagen(file){ return new Promise((res, rej)=>{ const fr = new FileReader(); fr.onload = () => { const im = new Image(); im.onload = () => { const k = Math.min(1, 1000/Math.max(im.width, im.height)); const cv = document.createElement('canvas'); cv.width = Math.round(im.width*k); cv.height = Math.round(im.height*k); cv.getContext('2d').drawImage(im, 0, 0, cv.width, cv.height); cv.toBlob(b=>b?res(b):rej(), 'image/jpeg', 0.84); }; im.onerror = rej; im.src = fr.result; }; fr.onerror = rej; fr.readAsDataURL(file); }); }
+async function guardarCreacion(){
+  const f = $('#galF').files[0], v = $('#galV').value.trim(), t = $('#galT').value.trim(); const msg = $('#galMsg');
+  if (!f && !v){ msg.textContent = 'Elegí una foto o video, o pegá un link.'; return; }
+  const it = {id:'c'+Date.now(), titulo:t || state.project.nombre, fecha:Date.now(), video:v || null, proy:$('#galP').checked ? JSON.parse(JSON.stringify(state.project)) : null};
+  try{
+    if (f && f.type.startsWith('video/')){ if (f.size > 40e6){ msg.textContent = 'El video pesa más de 40 MB: subilo a YouTube o TikTok y pegá el link.'; return; } it.blob = f; it.tipo = 'video'; }
+    else if (f){ it.blob = await achicarImagen(f); it.tipo = 'foto'; }
+  }catch(e){ msg.textContent = 'No pude leer ese archivo. Probá con otra foto.'; return; }
+  await DB.put(it); renderComunidad();
+}
+async function compartirCreacion(id){
+  const it = (await DB.all()).find(x=>x.id===id); if (!it) return;
+  const txt = `Mirá lo que armé con ArmaLab: ${it.titulo}${it.video?` · ${it.video}`:''}\nArmá el tuyo: ${SITE} #ArmaLab`;
+  try{ if (navigator.share && !EN_FRAME){ const data = {title:'ArmaLab', text:txt}; if (it.blob && navigator.canShare && navigator.canShare({files:[new File([it.blob], 'armalab.'+(it.tipo==='video'?'mp4':'jpg'), {type:it.blob.type})]})) data.files = [new File([it.blob], 'armalab.'+(it.tipo==='video'?'mp4':'jpg'), {type:it.blob.type})]; await navigator.share(data); return; } }catch(e){}
+  try{ await navigator.clipboard.writeText(txt); $('#galMsg').textContent = 'Texto copiado: pegalo donde quieras compartirlo.'; }catch(e){ $('#galMsg').textContent = txt; }
+}
+
+/* =========================================================
+   Armi: asistente de ArmaLab (reglas locales, sin internet)
+   ========================================================= */
+const ARMI_SUG = ['Árbol sakura de 3 metros','Casita de 15 cm','Standee de 1,70 m','Flor gigante rosa de 1 m','Letras "KIZUNA" de 40 cm','20 cajitas de 8 cm','Piñata de 40 cm','¿Qué papel uso?','¿Cuánto sale?','¿Qué es el cartón gris N°25?','¿Cómo arrugo papel para un tronco?'];
+let chat = LS.get('armalab.chat', []);
+const nrm = t => (t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
+const NUMW = {un:1,uno:1,una:1,dos:2,tres:3,cuatro:4,cinco:5,seis:6,siete:7,ocho:8,nueve:9,diez:10};
+function armiMedida(t){
+  let m = t.match(/(\d+(?:[.,]\d+)?)\s*(metros?|mts?|m|centimetros?|cms?|cm|milimetros?|mm)(?![a-z])/);
+  if (m){ const v = parseFloat(m[1].replace(',','.')); const u = m[2]; if (/^mm|^mili/.test(u)) return v/10; if (/^c/.test(u)) return v; return v*100; }
+  m = t.match(/\b(un|uno|una|dos|tres|cuatro|cinco|seis|siete|ocho|nueve|diez)\s*(metros?|m)\b/); if (m) return NUMW[m[1]]*100;
+  m = t.match(/\b(\d)[.,](\d{1,2})\b/); if (m){ const v = parseFloat(m[1]+'.'+m[2]); if (v < 3.6) return Math.round(v*100); }
+  m = t.match(/\bde\s+(\d{1,3})\b(?!\s*(unidades|u\b))/); if (m) return +m[1];
+  return null;
+}
+function armiCantidad(t){
+  let m = t.match(/(\d+)\s*(unidades|u\b|arboles|arbolitos|cajas|cajitas|flores|casitas|piezas|standees|pinatas|letreros|copias|souvenirs)/); if (m) return +m[1];
+  m = t.match(/(?:hacer|vender|necesito|armar)\s+(\d+)\s/); if (m && +m[1] <= 500) return +m[1];
+  return null;
+}
+function armiColores(t){
+  const out = []; Object.keys(COLORES).sort((a,b)=>b.length-a.length).forEach(c=>{ const k = nrm(c); if (t.includes(k) && !out.some(o=>nrm(o).includes(k))) out.push(c); });
+  if (!out.length && /\brosa\b|rosad/.test(t)) out.push('rosa claro', 'rosa fuerte');
+  if (out.length===1 && out[0]==='rosa claro' && !/rosa claro/.test(t)) out.push('rosa fuerte');
+  return out.filter(c=>c!=='rosa fuerte' || /rosa|fuerte/.test(t)).slice(0,3);
+}
+function armiTexto(raw){
+  let m = raw.match(/["“”'«]([^"“”'»]{1,14})["“”'»]/); if (m) return m[1].toUpperCase();
+  m = raw.match(/que diga\s+([^\s,.]+)/i) || raw.match(/(?:letras|palabra|nombre|cartel)\s+(?:de\s+|con\s+|del?\s+nombre\s+)?([A-Za-zÁÉÍÓÚÑáéíóúñ]{2,14})/i);
+  if (m && !/^(de|con|del|para|grandes?|chicas?|3d)$/i.test(m[1])) return m[1].toUpperCase();
+  return null;
+}
+const MATKW = [['cg1c',/(n|numero|nro)\s*.?\s*25|carton gris (de )?1 ?mm/],['cg15',/(n|numero|nro)\s*.?\s*16|1[.,]5 ?mm/],['cg3c',/(n|numero|nro)\s*.?\s*8\b|carton gris (de )?3 ?mm/],['cg2c',/(n|numero|nro)\s*.?\s*12|carton gris/],['micro',/microcorrugado/],['corrP',/corrugado plastico|plastico corrugado/],['corrD',/corrugado doble|doble onda/],['corrB',/corrugado|carton de caja/],['foam',/foam/],['telgo2',/telgopor|tergopol/],['crepeMet',/metalizado/],['crepe',/crepe/],['seda',/seda/],['afiche',/afiche/],['glase',/glase|glace/],['cartulina',/cartulina/],['opalina',/opalina/],['kraftR',/kraft|papel madera/],['diario',/diario/],['alu',/aluminio/],['celofan',/celofan/],['evaG',/glitter|brillantina/],['eva',/goma eva/],['galv16',/galvanizado/],['al26',/alambre.*26|26.*alambre/],['al18',/alambre.*18|18.*alambre/],['al22',/alambre/],['limpia',/limpiapipa/],['brochette',/brochette|palito/],['var8',/varilla/],['tuboC',/tubo de carton/],['pvc40',/pvc|cano/]];
+const TECFAQ = [
+  [/arrug|corteza|tronco/, 'Para un tronco: <b>papel madera o kraft</b>. Hacé una bola fuerte, abrila y estirala (textura de corteza), o retorcé tiras como cordón y pegalas en vertical con cola diluida 1:1. Gasta 1,75–2,5 veces la superficie.'],
+  [/estir|copa|petalo|crepe/, 'El crepé se estira <b>a lo largo de la veta</b> (las arruguitas). El escolar estira hasta ~60 %: para ahuecar un pétalo usá un tercio o la mitad de eso, estirando desde el centro con los pulgares.'],
+  [/pompon/, 'Pompón: apilá 6–8 hojas de seda, plegá en acordeón de 1,5–2 cm, atá el centro con alambre fino y abrí capa por capa, despacio.'],
+  [/peg|cola|silicona|adhesiv/, 'Cartón con cartón: <b>cola vinílica</b> en capa fina y peso encima. Flores y alambre: <b>silicona</b>. Papel fino: pegamento en barra. Telgopor: silicona de <b>baja</b> temperatura. Aluminio y celofán: doble faz.'],
+  [/cort|cutter/, 'Hoja de cutter nueva, regla metálica y varias pasadas suaves (no una con fuerza). Primero los calados de adentro, después el contorno.'],
+  [/pleg|dobl|marc/, 'Marcá antes de doblar: pasá una birome sin tinta con regla por la línea. Aplasta las fibras y el pliegue sale justo, sin quebrarse.'],
+  [/curv|redond/, 'Para curvar cartón: cortes paralelos de medio espesor del lado de afuera (cada 0,5–1 cm), o humedecé la cara de afuera y atalo sobre un balde hasta que seque. El corrugado se curva solo si la curva va paralela a las ondas.'],
+  [/mache|engrudo|pinata/, 'Papel maché: engrudo de 1 parte de harina y 2 de agua (con una cucharada de sal), tiras rasgadas de diario, 3–5 capas cambiando de dirección y 24 h de secado entre tandas de 2–3 capas.'],
+  [/caer|cae|estab|lastre|vuelc/, 'Para que no se caiga: bajá el peso (lastre en la base: arena o yeso), agrandá la base o inclinala apenas hacia atrás. ArmaLab te muestra el ángulo de vuelco abajo en la vista 3D: verde ≥ 20°.'],
+  [/fibra|veta|grano/, 'La fibra es el sentido en que se fabricó el papel: a favor dobla fácil y rasga derecho. Probá doblándolo sin marcar en los dos sentidos: a favor ofrece menos resistencia.'],
+  [/pint/, 'Pintá el cartón con acrílico o látex con poca agua y en manos finas. Si se curva, pintá el dorso y dejalo con peso. En foam, nada de aerosoles con solvente.'],
+];
+function armiRecom(tid, pr){
+  const p = pr.template.params; const b = computeBOM(1); const v = vuelco(); const L = [];
+  const top = b.lines.filter(l=>l.cat==='material').sort((a,c)=>c.sub-a.sub).slice(0,3);
+  if (tid==='arbolG'){ const c = arbolGCalc(pr.pieces[0].p);
+    L.push(`<b>Flores:</b> ${p.flor==='seda'?`${c.flores} pompones de <b>papel seda</b>: pesa 18 g/m² (la copa queda liviana) y en mayorista sale ~$95 la hoja.`:`${c.flores} rosetones de <b>crepé</b>: más color y forma, pero la copa pesa más.`}`);
+    L.push(`<b>Ramas:</b> ${nf(c.alambreM)} m de alambre galvanizado N°16 (1 kg ≈ 60 m), retorcido en manojos.`);
+    L.push(`<b>Tronco:</b> alma de ${esc(MAT[p.alma].nombre.split(' (')[0].toLowerCase())}${p.H>200?' (para más de 2 m conviene caño PVC: no se dobla)':''} + ${nf(c.kraft/1e4)} m² de kraft ${p.tex==='retorcido'?'retorcido':'arrugado'}.`);
+    L.push(`<b>Base:</b> ${esc(c.B.n)}.`);
+  } else if (tid==='sakura'){ const ar = pr.pieces.find(x=>x.kind==='arbol'); const c = arbolCalc(ar.p);
+    L.push(`<b>Alambre ${esc(MAT[p.alambre].nombre.split(' (')[0].replace('Alambre forrado ',''))}:</b> ${ar.p.hebras} hebras de ${c.largo} cm. ${p.H>20?'Para más de 20 cm conviene el N°18.':'Se retuerce a mano.'}`);
+    L.push(`<b>Flores:</b> ${c.flores} bolitas de <b>crepé</b> de 3 × 3 cm en dos tonos: es lo que más volumen da en miniatura.`);
+    L.push('<b>Base:</b> cartón gris de 2 mm en 3 discos pegados: firme y barato.');
+  } else if (tid==='standee'){ L.push(`<b>Placa:</b> ${esc(MAT[p.mat].nombre)}. ${p.mat==='foam'?'Recto y liviano; para exterior pedime “standee para afuera” y uso corrugado plástico.':p.mat==='corrP'?'No le afecta la humedad.':'Barato por m².'}`); L.push(`<b>Caballete:</b> ${nf(p.H*0.75)} cm (75 % del alto), con las ondas verticales.`); L.push(`<b>Lastre:</b> ${nf(p.lastre)} kg en la base. Subí tu imagen en “Proyecto”.`); }
+  else if (tid==='flor'){ L.push(`<b>Pétalos:</b> ${esc(MAT[p.mat].nombre.split(' (')[0])}. ${p.mat==='crepe'?'El crepé se estira y queda con forma de copa: el más lindo para flores.':'La cartulina sostiene mejor pétalos grandes pero no se ahueca: curvala con una regla.'}`); L.push(`<b>Tamaño:</b> ${p.capas} capas de ${p.petalos} pétalos; el exterior mide ${nf(p.D/2)} cm.`); if (p.tallo==='no') L.push('Es <b>de pared</b>; si la querés parada pedime “con tallo”.'); }
+  else if (tid==='casita'){ const m = MAT[p.mat]; L.push(`<b>Paredes:</b> ${esc(m.nombre)}: aguanta bien paredes de ${nf(p.Hw)} cm.`); L.push('<b>Techo:</b> microcorrugado: con las ondas parece chapa o tejas.'); L.push(`Los laterales ya vienen ${nf(2*m.esp/10)} cm más cortos por el espesor.`); }
+  else if (tid==='caja'){ L.push(`<b>Material:</b> ${esc(MAT[p.mat].nombre)}. ${p.mat==='micro'?'Firme para regalos pesados.':'Liviana y fácil de plegar: marcá los pliegues antes.'}`); L.push('La tapa ya viene un poco más grande para que cierre justo.'); }
+  else if (tid==='mache'){ const c = macheCalc(pr.pieces[0].p); L.push(`<b>Papel:</b> diario reciclado, ${c.tiras} tiras de 3 × 15 cm.`); L.push(`<b>Pasta:</b> ${p.pasta==='engrudo'?`engrudo con ${c.harina} g de harina`:`${c.colaG} g de cola`}. Secado ~${c.horas} h.`); if (p.term==='flecos') L.push(`<b>Flecos:</b> crepé ${esc(p.color)}.`); }
+  else if (tid==='letras'){ L.push(`<b>Frente y fondo:</b> ${esc(MAT[p.mat].nombre)}${p.mat==='corrD'?': rígido y barato para letras grandes':''}.`); L.push(`<b>Tira lateral:</b> ${esc(MAT[p.lat].nombre.split(' (')[0])} (se curva en las letras redondas).`); }
+  else if (tid==='encastre'){ const m = MAT[p.mat]; L.push(`<b>Cartón:</b> ${esc(m.nombre)}, ranuras de ${nf(m.esp+0.25)} mm.`); if (p.H/m.esp > 8) L.push(`Para ${nf(p.H)} cm te conviene más grueso: pedime “con cartón de 3 mm”.`); }
+  const cost = totalMat(b);
+  return `<ul>${L.map(x=>`<li>${x}</li>`).join('')}</ul>Lo más caro: ${top.map(l=>`${esc(l.nombre.split(' (')[0])} (${money(l.sub)})`).join(', ')}.<br><b>Total ≈ ${money(cost)}</b>${state.N>1?` para ${state.N} unidades (${money(totalMat(computeBOM()))} en total)`:''} · ⏱ ${fmtT(tiempoMin())}${v.th!=null?` · ${v.sem==='ok'?'🟢 estable':v.sem==='warn'?'🟡 cuidado con empujones':'🔴 se puede caer'} (${nf(v.th)}°)`:''}`;
+}
+function armiDiseno(raw){
+  const t = nrm(raw); const cm = armiMedida(t); const cols = armiColores(t); const N = armiCantidad(t); const P = {}; let tid = null; const avisos = [];
+  const clampA = (k, v, a, b) => { const c = clamp(v, a, b); if (Math.abs(c - v) > 0.01) avisos.push(`La plantilla llega de ${fmtL(a)} a ${fmtL(b)}: la dejé en ${fmtL(c)}.`); P[k] = c; };
+  if (/letra|cartel|que diga|palabra|nombre/.test(t)){ tid = 'letras'; const tx = armiTexto(raw); if (tx) P.texto = limpiarTexto(tx); if (cm) clampA('alto', cm, 5, 100); if (/foam/.test(t)) P.mat = 'foam'; if (cols[0]) P.color = cols[0]; }
+  else if (/standee|tamano real|figura|silueta|cutout|recorte|persona|gigantograf|munec/.test(t)){ tid = 'standee'; clampA('H', cm || 170, 60, 220); if (/exterior|afuera|lluvia|patio/.test(t)) P.mat = 'corrP'; else if (/barat|economic/.test(t)) P.mat = 'corrG'; if (/ovalo/.test(t)) P.forma = 'oval'; else if (/rectang|cuadr/.test(t)) P.forma = 'rect'; }
+  else if (/pinata|mache|globo/.test(t)){ tid = 'mache'; if (cm){ clampA('D', cm, 15, 150); P.alto = clamp(Math.round(cm*1.15), 15, 200); } if (/pinata/.test(t)){ P.capas = 3; P.term = 'flecos'; } else if (/pint/.test(t)) P.term = 'pintura'; if (cols[0]) P.color = cols[0]; }
+  else if (/caja|cajita|packaging|envase|estuche|souvenir/.test(t)){ tid = 'caja'; if (cm){ clampA('W', cm, 3, 40); P.D = P.W; P.H = clamp(Math.round(P.W*0.6*2)/2, 2, 30); P.tapa = clamp(Math.round(P.H*0.4*2)/2, 1, 15); } if (/carton|resistente|firme|micro/.test(t)) P.mat = 'micro'; else if (/opalina|impres/.test(t)) P.mat = 'opalina'; if (cols[0]) P.color = cols[0]; }
+  else if (/casa|casita|maqueta/.test(t)){ tid = 'casita'; if (cm){ clampA('W', cm, 4, 40); P.D = r1(Math.round(P.W*0.85*2)/2); P.Hw = clamp(Math.round(P.W*0.7*2)/2, 3, 30); P.Hr = clamp(Math.round(P.W*0.35*2)/2, 1, 20); } if (/3 ?mm|firme/.test(t)) P.mat = 'cg3c'; if (/foam/.test(t)) P.mat = 'foam'; }
+  else if (/\bflor/.test(t)){ tid = 'flor'; if (cm) clampA('D', cm, 30, 150); if (cols.length){ P.c1 = cols[0]; P.c2 = cols[1] || cols[0]; } if (/cartulina/.test(t)) P.mat = 'cartulina'; else if (/afiche/.test(t)) P.mat = 'afiche'; else if (/goma eva/.test(t)) P.mat = 'eva'; if (/tallo|parad|piso|pie/.test(t)) P.tallo = (P.D||60) > 80 ? 'pvc40' : 'var8'; }
+  else if (/arbol|sakura|cerezo|bonsai|arbolito/.test(t)){
+    const H = cm || (/grande|gigante|enorme/.test(t) ? 250 : 15);
+    if (/encastre|silueta|carton/.test(t) && H <= 40){ tid = 'encastre'; clampA('H', H, 8, 40); P.W = r1(Math.round(P.H*0.8*2)/2); if (/3 ?mm/.test(t)) P.mat = 'cg3c'; }
+    else if (H < 55){ tid = 'sakura'; clampA('H', H, 8, 30); if (P.H > 20) P.alambre = 'al18'; }
+    else { tid = 'arbolG'; clampA('H', Math.round(H/10)*10, 80, 350); P.alma = P.H > 200 ? 'pvc40' : 'tuboC'; P.base = P.H >= 250 ? 'b20' : 'b10'; P.flor = /crepe/.test(t) ? 'crepe' : 'seda'; if (/lleno|tupid|frondos/.test(t)) P.dens = 1.4; }
+    if (cols.length){ P.c1 = cols[0]; P.c2 = cols[1] || cols[0]; }
+  }
+  if (!tid) return null;
+  fromTemplate(tid, P); setProject(state.project);
+  if (tid==='arbolG' && vuelco().sem==='bad'){ P.base = 'tabla'; fromTemplate(tid, P); setProject(state.project); avisos.push('Con balde se volcaba: le puse una base de tabla de 60 × 60 cm con 10 kg de lastre.'); }
+  if (N){ state.N = clamp(N, 1, 500); LS.set('armalab.N', state.N); renderCompras(); }
+  state.tabR = 'piezas'; showTabs();
+  return `Listo, armé <b>${esc(state.project.nombre)}</b> ${N?`(${state.N} unidades) `:''}👇${avisos.length?`<br><span class="small">${avisos.join(' ')}</span>`:''}${armiRecom(tid, state.project)}`;
+}
+function armiResponder(raw){
+  const t = nrm(raw);
+  if (/^(hola|buenas|hey|que tal)/.test(t)) return {html:'¡Hola! 🌸 Decime qué querés armar y de qué tamaño, por ejemplo <i>“árbol sakura de 3 metros”</i> o <i>“20 cajitas de 8 cm”</i>, y te lo armo con materiales, compras y paso a paso.'};
+  if (/gracias|genial|buenisimo|joya/.test(t)) return {html:'¡De nada! Si lo armás, subí una foto en <b>Comunidad</b> 📸.', acts:[['comunidad','Ir a Comunidad']]};
+  if (/(que|cual)\s+(es|son)|como es|para que sirve|diferencia/.test(t)){ for (const [id, re] of MATKW) if (re.test(t)){ const m = MAT[id], inf = INFO[id]||{}; return {html:`<b>${esc(m.nombre)}</b>: ${esc(inf.t||m.uso)}${inf.ideas?`<br>Ideas: ${inf.ideas.map(esc).join(' · ')}.`:''}<br>Desde ${money(precioU(id))}.`, acts:[['mat:'+id,'Ver ficha y dónde comprar']]}; } }
+  if (/\bcomo\b|tecnica|truco|consejo/.test(t) && !/\bde \d|\d+ ?(cm|m)\b/.test(t)){ for (const [re, txt] of TECFAQ) if (re.test(t)) return {html:txt, acts:[['tecnicas','Ver Técnicas']]}; }
+  const d = armiDiseno(raw); if (d) return {html:d, acts:[['compras','Ver compras'],['pasos','Paso a paso'],['plantillas','Plantillas']]};
+  if (/cuanto (sale|cuesta|gasto)|precio|presupuesto|costo/.test(t)){ const b = computeBOM(); const top = b.lines.filter(l=>l.cat==='material').sort((a,c)=>c.sub-a.sub).slice(0,4); return {html:`Para <b>${esc(state.project.nombre)}</b>${b.N>1?` (${b.N} u.)`:''}: materiales y pegamentos ≈ <b>${money(totalMat(b))}</b>${b.N>1?` (${money(totalMat(b)/b.N)} por unidad)`:''}.<ul>${top.map(l=>`<li>${esc(l.nombre)}: ${money(l.sub)} (${esc(l.best.o.t)})</li>`).join('')}</ul>Pagando por transferencia en mayoristas baja más.`, acts:[['compras','Ver compras']]}; }
+  if (/(que|cual)\s+(papel|material|carton)|recomend|conviene|uso\?|usar/.test(t)){ const tp = state.project.template; if (tp && !state.project.modificado) return {html:`Para <b>${esc(state.project.nombre)}</b> te recomiendo:${armiRecom(tp.id, state.project)}`, acts:[['compras','Ver compras']]}; return {html:'Contame qué querés armar y de qué tamaño y te recomiendo el papel. Ej: <i>“flor gigante de 1 m”</i>.'}; }
+  if (/barat|economic|ahorr/.test(t)){ state.modo = 'barato'; state.transfer = true; LS.set('armalab.modo2','barato'); LS.set('armalab.transfer', true); renderCompras(); renderStats(); return {html:'Puse las compras en <b>lo más barato</b> con pago por transferencia. Tip: el cartón de cajas recicladas y el diario son gratis.', acts:[['compras','Ver compras']]}; }
+  for (const [id, re] of MATKW) if (re.test(t)) return {html:`<b>${esc(MAT[id].nombre)}</b>: ${esc((INFO[id]||{}).t||MAT[id].uso)}`, acts:[['mat:'+id,'Ver ficha']]};
+  for (const [re, txt] of TECFAQ) if (re.test(t)) return {html:txt, acts:[['tecnicas','Ver Técnicas']]};
+  return {html:'Mmm, no te entendí del todo 😅. Soy un asistente de ArmaLab (no una IA general): entiendo pedidos de qué armar y de qué tamaño, preguntas sobre materiales y técnicas. Probá con alguno de estos:', sug:true};
+}
+function renderChat(){
+  const box = $('#msgs'); if (!box) return;
+  if (!chat.length) chat.push({who:'ai', html:'¡Hola! Soy <b>Armi</b> 🌸, el asistente de ArmaLab. Decime qué querés armar y de qué tamaño (por ejemplo <i>“árbol sakura de 3 metros”</i>) y te armo el modelo, te recomiendo los materiales y te dejo las compras y el paso a paso.<br><span class="small muted">Funciono sin internet con las reglas de ArmaLab.</span>'});
+  box.innerHTML = chat.map(m=>`<div class="msg ${m.who}">${m.html}${m.acts&&m.acts.length?`<div class="acts">${m.acts.map(([k,l])=>`<button data-armi="${k}">${esc(l)}</button>`).join('')}</div>`:''}</div>`).join('');
+  box.scrollTop = box.scrollHeight;
+  $('#sug').innerHTML = ARMI_SUG.map(s=>`<button data-say="${esc(s)}">${esc(s)}</button>`).join('');
+}
+function armiEnviar(txt){
+  txt = (txt||'').trim(); if (!txt) return;
+  chat.push({who:'me', html:esc(txt)});
+  let r; try{ r = armiResponder(txt); }catch(e){ r = {html:'Uy, algo salió mal armando eso. Probá con otras palabras.'}; }
+  chat.push({who:'ai', html:r.html, acts:r.acts});
+  chat = chat.slice(-40); LS.set('armalab.chat', chat); renderChat();
 }
 
 /* =========================================================
@@ -1751,19 +2181,32 @@ function regenTemplate(params){
   const w = document.querySelector('#L-proyecto .note.warn'); if (w) w.remove();
 }
 document.addEventListener('click', e=>{
+  const inf = e.target.closest('[data-info]'); if (inf){ e.stopPropagation(); showMaterial(inf.dataset.info); return; }
+  const mt = e.target.closest('[data-mat]'); if (mt){ state.matSel = mt.dataset.mat; renderModelar(); return; }
   const t = e.target.closest('button, [data-goto]'); if (!t) return;
+  if (t.dataset.usemat){ state.matSel = t.dataset.usemat; $('#modal').hidden = true; state.tabL = 'modelar'; showTabs(); renderModelar(); return; }
+  if (t.dataset.say){ armiEnviar(t.dataset.say); return; }
+  if (t.dataset.armi){ const a = t.dataset.armi; if (a.startsWith('mat:')) showMaterial(a.slice(4)); else if (['compras','pasos','plantillas','piezas'].includes(a)){ state.tabR = a; showTabs(); if (window.innerWidth < 1000){ $('#chat').hidden = true; $('#right').scrollIntoView({behavior:'smooth'}); } } else { state.tabL = a; showTabs(); } return; }
+  if (t.dataset.modo){ state.modo = t.dataset.modo; state.ofSel = {}; LS.set('armalab.ofSel', {}); LS.set('armalab.modo2', state.modo); renderCompras(); renderStats(); return; }
+  if (t.dataset.galopen){ DB.all().then(a=>{ const it = a.find(x=>x.id===t.dataset.galopen); if (it && it.proy) setProject(JSON.parse(JSON.stringify(it.proy))); }); return; }
+  if (t.dataset.galshare){ compartirCreacion(t.dataset.galshare); return; }
+  if (t.dataset.galdel){ if (t.dataset.sure){ DB.del(t.dataset.galdel).then(renderComunidad); } else { t.dataset.sure = '1'; t.textContent = '¿Seguro? Tocá de nuevo'; } return; }
   if (t.closest('.tabs')){ const g = t.closest('.tabs').dataset.group; if (g==='L') state.tabL = t.dataset.tab; else state.tabR = t.dataset.tab; showTabs(); highlight(); return; }
   if (t.dataset.tpl !== undefined){
     if (t.dataset.tpl===''){ setProject({nombre:'Mi proyecto', template:null, pieces:[], next:1, modificado:false, v:VERSION}); state.tabL='modelar'; showTabs(); return; }
     fromTemplate(t.dataset.tpl); setProject(state.project); return;
   }
-  if (t.dataset.mat){ state.matSel = t.dataset.mat; renderModelar(); return; }
+
   if (t.dataset.add){ addPiece(t.dataset.add); return; }
   if (t.dataset.sel){ select(t.dataset.sel); return; }
   if (t.dataset.goto){ state.tabL='modelar'; showTabs(); select(t.dataset.goto); return; }
   const pc = getPiece(state.sel);
   switch (t.id){
     case 'verBtn': showChangelog(); break;
+    case 'fab': { const c = $('#chat'); c.hidden = !c.hidden; if (!c.hidden){ renderChat(); $('#chatIn').focus(); } break; }
+    case 'chatClose': $('#chat').hidden = true; break;
+    case 'chatReset': chat = []; LS.set('armalab.chat', chat); renderChat(); break;
+    case 'galSave': guardarCreacion(); break;
     case 'closeModal': $('#modal').hidden = true; break;
     case 'e-del': if (pc){ state.project.pieces = state.project.pieces.filter(p=>p!==pc); state.sel = null; afterEdit(true); } break;
     case 'e-dup': if (pc){ const c = JSON.parse(JSON.stringify(pc)); c.id = newId(); c.pos = [r1(c.pos[0]+2), c.pos[1], r1(c.pos[2]+2)]; state.project.pieces.push(c); state.sel = c.id; afterEdit(true); } break;
@@ -1792,6 +2235,8 @@ document.addEventListener('click', e=>{
   }
 });
 $('#modal').addEventListener('click', e=>{ if (e.target.id==='modal') $('#modal').hidden = true; });
+$('#chatForm').addEventListener('submit', e=>{ e.preventDefault(); const i = $('#chatIn'); armiEnviar(i.value); i.value = ''; });
+document.addEventListener('keydown', e=>{ const mt = e.target.closest && e.target.closest('.mt'); if (mt && (e.key==='Enter' || e.key===' ')){ e.preventDefault(); state.matSel = mt.dataset.mat; renderModelar(); } });
 document.addEventListener('change', e=>{
   const t = e.target;
   if (t.dataset.img && t.files && t.files[0]){
@@ -1802,6 +2247,7 @@ document.addEventListener('change', e=>{
 document.addEventListener('input', e=>{
   const t = e.target;
   if (t.id && t.id.startsWith('k-')){ calcTec(); return; }
+  if (t.closest('#galForm') || t.id==='chatIn') return;
   if (t.closest('#tplForm') && t.dataset.k){
     const pr = state.project; const T = TEMPLATES[pr.template.id]; const q = T.params.find(x=>x.k===t.dataset.k); if (!q) return;
     let v = q.type==='num' ? parseFloat(t.value) : t.value; if (q.type==='num'){ if (isNaN(v)) return; v = clamp(v, q.min, q.max); }
@@ -1811,6 +2257,7 @@ document.addEventListener('input', e=>{
   }
   if (t.id==='pname'){ state.project.nombre = t.value || 'Mi proyecto'; save(); renderStats(); return; }
   if (t.id==='cN'){ const v = parseInt(t.value,10); if (!isNaN(v) && v>=1){ state.N = Math.min(500, v); LS.set('armalab.N', state.N); const pos = t.selectionStart; renderCompras(); const n = $('#cN'); n.focus(); try{ n.setSelectionRange(pos,pos); }catch(err){} } return; }
+  if (t.dataset.of){ state.ofSel[t.dataset.of] = +t.value; LS.set('armalab.ofSel', state.ofSel); renderCompras(); renderStats(); return; }
   if (t.id==='cTr'){ state.transfer = t.checked; LS.set('armalab.transfer', state.transfer); renderCompras(); renderStats(); renderPiezas(); return; }
   if (t.dataset.precio){ const v = parseFloat(t.value); if (!isNaN(v)){ precios[t.dataset.precio] = v; LS.set('armalab.precios', precios); renderRight(); renderStats(); } return; }
   if (t.dataset.tengo){ t.checked ? state.tengo.add(t.dataset.tengo) : state.tengo.delete(t.dataset.tengo); LS.set('armalab.tengo', [...state.tengo]); renderCompras(); renderPiezas(); renderStats(); return; }

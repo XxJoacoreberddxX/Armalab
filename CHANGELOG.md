@@ -1,5 +1,18 @@
 # Cambios
 
+## 0.3.0 — 2026-10-26
+
+- **Armi**, asistente integrado: entiende pedidos como “árbol sakura de 3 metros”, “20 cajitas de 8 cm” o “letras KIZUNA de 40 cm”, arma el modelo solo, recomienda materiales con el porqué, y responde sobre materiales, técnicas y costos.
+- Nuevo logo y encabezado centrado; créditos: hecho en Buenos Aires por Joaco, con Claude.
+- Materiales con imagen y ficha (cómo es, gramaje, peso, rigidez, corte, pegamento, dónde comprar con links a Mercado Libre y tiendas).
+- Formas nuevas en el modelador: caja/cubo, cilindro, pirámide y prisma triangular, con troqueles y líneas de pliegue.
+- “Qué cortar” en tarjetas por material, con menos texto y etiquetas de color.
+- Totales (alto, peso, costo, tiempo, estabilidad) abajo en la vista 3D.
+- Compras: tienda elegible por producto, modos “lo más barato / todo suelto / mayorista” y links.
+- Más técnicas: pompones, pétalos con copa, cortes con cutter, pasar moldes, encastres, endurecer papel, pintar cartón, quilling.
+- Comunidad: galería de fotos y videos con el proyecto adjunto, y compartir.
+- 96 pruebas automáticas.
+
 ## 0.2.0 — 2026-10-26
 
 - Nuevo diseño e identidad (logo, nombre, novedades por versión).
