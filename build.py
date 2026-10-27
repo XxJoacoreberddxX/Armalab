@@ -6,7 +6,7 @@
 import json, os, sys
 here = os.path.dirname(os.path.abspath(__file__))
 V = sys.argv[1] if len(sys.argv) > 1 else os.path.join(here, '..', 'vendor', 'package')
-FILES = ['build/three.min.js', 'examples/js/controls/OrbitControls.js', 'examples/js/controls/TransformControls.js', 'examples/js/loaders/FontLoader.js']
+FILES = ['build/three.min.js', 'examples/js/controls/OrbitControls.js', 'examples/js/controls/TransformControls.js', 'examples/js/loaders/FontLoader.js', 'examples/js/utils/BufferGeometryUtils.js']
 src = open(os.path.join(here, 'src', 'armalab.src.html'), encoding='utf-8').read()
 font = json.load(open(os.path.join(V, 'examples/fonts/helvetiker_bold.typeface.json')))
 src = src.replace('/*FONT_JSON*/null', json.dumps(font, separators=(',', ':')))

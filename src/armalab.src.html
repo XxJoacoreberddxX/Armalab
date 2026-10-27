@@ -285,8 +285,8 @@ a.lnk{color:var(--kraft);font-weight:700;text-decoration:none} a.lnk:hover{text-
     <button class="fab" id="fab" aria-label="Abrir a Armi, el asistente"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 25 L16 5 L16 21 Z" fill="#f7c2d4"/><path d="M16 5 L26 25 L16 21 Z" fill="#fff"/><path d="M6 25 L16 21 L26 25 Z" fill="#f1c63e"/></svg><span>Armi</span></button>
     <section class="chat" id="chat" hidden aria-label="Armi, asistente de ArmaLab">
       <div class="ch"><div class="av"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M6 25 L16 5 L16 21 Z" fill="#f7c2d4"/><path d="M16 5 L26 25 L16 21 Z" fill="#d0336b"/><path d="M6 25 L16 21 L26 25 Z" fill="#b5844f"/></svg></div>
-        <div style="flex:1;min-width:0"><b>Armi</b><span>Te armo el modelo, los materiales y el paso a paso</span></div>
-        <button class="btn" id="chatReset" title="Borrar conversación">Limpiar</button><button class="btn" id="chatClose" aria-label="Cerrar">✕</button></div>
+        <div style="flex:1;min-width:0"><b>Armi</b><span id="armiModo">Te armo el modelo, los materiales y el paso a paso</span></div>
+        <button class="btn" id="chatCfg" title="Modo de Armi" aria-label="Configurar a Armi">⚙</button><button class="btn" id="chatReset" title="Borrar conversación">Limpiar</button><button class="btn" id="chatClose" aria-label="Cerrar">✕</button></div>
       <div class="msgs" id="msgs"></div>
       <div class="sug" id="sug"></div>
       <form id="chatForm" autocomplete="off"><input id="chatIn" placeholder="Ej: árbol sakura de 3 metros" aria-label="Escribile a Armi"><button class="btn primary" type="submit">Enviar</button></form>
@@ -316,7 +316,9 @@ a.lnk{color:var(--kraft);font-weight:700;text-decoration:none} a.lnk:hover{text-
    ArmaLab — modelador de manualidades con materiales de librería
    Unidades internas: centímetros. Espesores del catálogo en mm.
    ========================================================= */
-const VERSION = '0.3.0';
+const VERSION = '0.4.0';
+// URL del servidor de Armi (Cloudflare Worker de /worker). Si queda vacío, cada persona puede usar su propia clave de Gemini.
+const ARMI_PROXY = '';
 const FONT_JSON = /*FONT_JSON*/null;
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -379,6 +381,7 @@ const MATS = [
   {id:'limpia', cat:'Alambres y varillas', nombre:'Limpiapipas (x10, 30 cm)', tipo:'unidad', len:30, pack:10, diam:0.6, gm:3, colorable:true, grupo:'alambre', corte:'alicate', uso:'Ramitas peludas, estructuras blandas.', of:[O('Librería de barrio',1,1500)]},
   {id:'brochette', cat:'Alambres y varillas', nombre:'Palitos de brochette (x100, 30 cm)', tipo:'unidad', len:30, pack:100, diam:0.35, gm:7, color:'#d8b98a', grupo:'madera', corte:'alicate', uso:'Ejes rectos, pinchos para la base.', of:[O('Mercado Libre',1,2849)]},
   {id:'var8', cat:'Alambres y varillas', nombre:'Varilla de madera Ø 8 mm (1 m)', tipo:'unidad', len:100, pack:1, diam:0.8, gm:35, color:'#d6b27f', grupo:'madera', corte:'sierrita', uso:'Tallos de flores gigantes, ejes de 1 m.', of:[O('Mercado Libre',1,2538)]},
+  {id:'liston', cat:'Alambres y varillas', nombre:'Listón de pino 2 × 2 cm (1 m)', tipo:'unidad', len:100, pack:1, diam:2, gm:220, color:'#e0c08f', grupo:'madera', corte:'sierrita', uso:'Palo de carteles de mano y estructuras livianas.', of:[O('Maderera / corralón (estimado)',1,2500,0,'precio estimado')]},
   {id:'tuboC', cat:'Alambres y varillas', nombre:'Tubo de cartón (rollo de tela, Ø 6 cm × 1,5 m)', tipo:'unidad', len:150, pack:1, diam:6, gm:180, color:'#a98257', grupo:'carton', corte:'sierrita', uso:'Alma de troncos de 1–2 m. Pedilo gratis en mercerías y textiles.', of:[O('Reciclado (mercerías de Once)',1,0)]},
   {id:'pvc40', cat:'Alambres y varillas', nombre:'Caño PVC Ø 40 mm (3 m)', tipo:'unidad', len:300, pack:1, diam:4, gm:450, color:'#dfe3e6', grupo:'plastico', corte:'sierrita', uso:'Alma firme para árboles de más de 2 m.', of:[O('Corralón (estimado)',1,8000,0,'precio estimado')]},
 ];
@@ -442,6 +445,7 @@ const INFO = {
   limpia:{q:'limpiapipas', t:'Alambre forrado con pelusa de colores, de 30 cm. Se dobla con la mano.', ideas:['Ramitas','Animalitos','Detalles peludos']},
   brochette:{q:'palitos de brochette x100', t:'Palitos de madera de 30 cm y 3 mm. Rectos y baratos.', ideas:['Ejes','Pinchos para bases','Estructuras de prueba']},
   var8:{q:'varilla madera 8 mm', t:'Varilla redonda de madera de 8 mm × 1 m. Firme y recta.', ideas:['Tallos de flores gigantes','Mástiles']},
+  liston:{q:'liston pino 2x2', t:'Varilla cuadrada de pino de 2 × 2 cm. Liviana y firme: el palo típico de los carteles de marcha.', ideas:['Palo de carteles','Marcos','Estructuras de escenografía']},
   tuboC:{q:'tubo de carton', t:'Tubo de cartón grueso (de rollos de tela o de papel). Gratis pidiéndolo en mercerías o textiles.', ideas:['Alma de troncos','Columnas']},
   pvc40:{q:'caño pvc 40 mm', t:'Caño plástico de 40 mm. No se dobla ni se moja: el alma más firme para árboles de más de 2 m.', ideas:['Alma de árboles grandes','Mástiles desmontables']},
 };
@@ -735,6 +739,7 @@ const ICON = {
   standee:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="13" cy="7" r="3" fill="#86c2e5"/><path d="M8 29V17l2-5h6l2 5v12" fill="#86c2e5"/><path d="M18 12l8 17" stroke-dasharray="2 1.5"/><path d="M5 29h22"/></svg>',
   arbolG:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M16 26V14m0 4-6-6m6 3 6-6" stroke="#6e4b34" stroke-width="2.4"/><circle cx="9" cy="9" r="5" fill="#f5b8cb" stroke="none"/><circle cx="16" cy="6" r="5" fill="#e0517e" stroke="none"/><circle cx="23" cy="9" r="5" fill="#f5b8cb" stroke="none"/><path d="M11 26h10l-1 4h-8z" fill="#9b9b9b"/></svg>',
   mache:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.4"><ellipse cx="16" cy="17" rx="10" ry="11" fill="#d9d4c7"/><path d="M7 13c6 2 12 2 18 0M6 19c6 2 14 2 20 0M9 25c5 1.5 9 1.5 14 0" stroke="#e0517e" stroke-width="2"/><path d="M16 6V2"/></svg>',
+  cartel:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="4" width="22" height="14" rx="1.5" fill="#f3f1ec"/><path d="M9 9h14M11 13h10" stroke="#d0336b"/><path d="M16 18v12" stroke="#b48a5c" stroke-width="2.6"/></svg>',
   letras:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 25 9 7h3l5 18M6 19h9" /><path d="M19 7h5a4.5 4.5 0 0 1 0 9h-5zm0 9h6a4.5 4.5 0 0 1 0 9h-6z" fill="#c39a69"/></svg>',
   caja:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 11 16 6l11 5v12l-11 5-11-5z" fill="#f1e4d3"/><path d="M5 11l11 5 11-5M16 16v12"/></svg>',
   libre:'<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="5" y="17" width="10" height="10" rx="1"/><circle cx="22" cy="21" r="5"/><path d="M10 5l6 9H4z"/><path d="M24 4v8M20 8h8" stroke="var(--accent)"/></svg>',
@@ -968,6 +973,38 @@ const TEMPLATES = {
       if (p.tallo!=='no') st.push({t:'Tallo', d:'Pegá la varilla atrás del disco con silicona gruesa y una tira de cinta de papel en cruz. Forrala con crepé verde. Para que se pare, clavala en una maceta con yeso o arena.'});
       st.push({t:'Colgado', d:'Para pared: dos tiras de doble faz o un alambre en forma de lazo atrás del disco.'});
       return st;
+    }
+  },
+  cartel: {
+    nombre:'Cartel de mano', corto:'Cartel', grupo:'grande', sinVuelco:true, escala:'20 cm – 1,2 m', desc:'Placa con palo para sostenerlo: marchas, eventos, fotos.', titulo:p=>`Cartel ${nf(p.W)}×${nf(p.H)} cm`,
+    params:[
+      {k:'texto', l:'Texto', type:'text', def:'KIZUNA', hint:'Lo que dice el cartel (podés dejarlo vacío).'},
+      {k:'W', l:'Ancho', type:'num', min:20, max:120, step:1, def:50, u:'cm'},
+      {k:'H', l:'Alto', type:'num', min:15, max:90, step:1, def:35, u:'cm'},
+      {k:'mat', l:'Placa', type:'sel', def:'corrD', opts:[['corrD','Corrugado doble 7 mm (barato y firme)'],['foam','Foamboard 5 mm (prolijo)'],['corrP','Corrugado plástico (lluvia)'],['cg3c','Cartón gris 3 mm (chico)']]},
+      {k:'palo', l:'Palo', type:'sel', def:'liston', opts:[['liston','Listón de pino 2 × 2 cm'],['var8','Varilla redonda 8 mm'],['tuboC','Tubo de cartón']]},
+      {k:'L', l:'Largo del palo', type:'num', min:40, max:150, step:5, def:90, u:'cm'},
+      {k:'ct', l:'Color del texto', type:'sel', def:'negro', opts:COLOR_OPTS},
+      {k:'fondo', l:'Fondo', type:'sel', def:'blanco', opts:COLOR_OPTS},
+    ],
+    build(p){
+      const m = MAT[p.mat], t = m.esp/10, pm = MAT[p.palo], r = (pm.diam||1)/2; const W = +p.W, H = +p.H, L = +p.L;
+      const yc = L - 0.2*H;
+      const pl = P('placa', p.mat, {w:W, h:H, nombre:'Cartel', texto:p.texto, ct:p.ct, fondo:p.fondo}, [0, yc, 0]); pl.rot = [90,0,0];
+      const palo = P('varilla', p.palo, {len:L, nombre:'Palo'}, [0, 0, -(t/2 + r)]);
+      const ref = P('placa', p.mat, {w:Math.max(6, r*2+4), h:r1(H*0.6), nombre:'Tira de refuerzo'}, [0, yc - H*0.15, -(t/2 + 2*r + t/2)]); ref.rot = [90,0,0];
+      return [pl, palo, ref];
+    },
+    steps(p, pcs){
+      const m = MAT[p.mat]; const pl = pcs[0], palo = pcs[1], ref = pcs[2];
+      return [
+        {t:'Cortá la placa', d:`${nf(p.W)} × ${nf(p.H)} cm de ${esc(m.nombre)}. ${m.fibra?'Poné las ondas del corrugado <b>verticales</b>: así no se dobla con el viento ni con el peso del palo.':'Cutter con hoja nueva y regla metálica.'}`, pz:[pl.id]},
+        {t:'Hacé el texto', d:`${p.texto?`“${esc(p.texto)}” en ${esc(p.ct)}. `:''}Opciones: marcador grueso o pintura acrílica; letras de goma eva; o imprimí el texto en hojas, recortalo y pegalo con pegamento en barra. Letras de al menos ${Math.max(5, Math.round(p.H/4))} cm de alto para que se lea de lejos.`},
+        {t:'Cortá el palo', d:`${esc(MAT[p.palo].nombre.split(' (')[0])} de ${nf(p.L)} cm. Abajo quedan ~${nf(p.L - p.H*0.7)} cm libres para agarrarlo cómodo. Lijá las puntas.`, pz:[palo.id]},
+        {t:'Fijá el palo', d:'Pegalo en el centro de la espalda con silicona gruesa. Después atá en dos puntos con precintos que atraviesen la placa (hacé los agujeros con un punzón) o envolvé con cinta de embalar.', pz:[palo.id]},
+        {t:'Tapá con la tira de refuerzo', d:`Pegá la tira de ${nf(ref.p.w)} × ${nf(ref.p.h)} cm encima del palo: el palo queda en “sándwich” y no se despega aunque lo muevas.`, pz:[ref.id]},
+        {t:'Para usarlo afuera', d:'Si hay viento, unos agujeros de 3–4 cm en zonas sin texto le sacan fuerza. Si puede llover, usá corrugado plástico o forrá la placa con film. Pesa ~' + fmtW(pesoTotal()) + ': cómodo para sostener un rato largo.'},
+      ];
     }
   },
   standee: {
@@ -1230,7 +1267,9 @@ function masasPieza(pc, obj){
   if (pc.p.lastre){ const bb = new THREE.Box3().setFromObject(obj); const c = bb.getCenter(new THREE.Vector3()); return [{m:g - pc.p.lastre*1000, p:c}, {m:pc.p.lastre*1000, p:new THREE.Vector3(c.x, 1.5, c.z - (bb.max.z-bb.min.z)*0.15)}]; }
   const bb = new THREE.Box3().setFromObject(obj); return [{m:g, p:bb.getCenter(new THREE.Vector3())}];
 }
-function vuelco(){
+let vCache = {ver:-1};
+function vuelco(){ if (vCache.ver === sceneVer) return vCache.r; const r = vuelcoCalc(); vCache = {ver:sceneVer, r}; return r; }
+function vuelcoCalc(){
   const pcs = state.project.pieces; if (!pcs.length || !objs.size) return {th:null};
   const tp = state.project.template; if (tp && !state.project.modificado && TEMPLATES[tp.id].sinVuelco) return {th:null};
   let M = 0; const cm = new THREE.Vector3(); let H = 0;
@@ -1398,15 +1437,16 @@ const fmtT = m => m < 60 ? `${m} min` : m < 60*24 ? `${Math.floor(m/60)} h${m%60
    ========================================================= */
 const canvas = $('#c');
 const renderer = new THREE.WebGLRenderer({canvas, antialias:true, alpha:true, preserveDrawingBuffer:false});
-renderer.setPixelRatio(Math.min(2, window.devicePixelRatio||1));
-renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+const LIVIANO = (window.matchMedia && matchMedia('(pointer: coarse)').matches) || window.innerWidth < 1000;
+renderer.setPixelRatio(Math.min(LIVIANO ? 1.25 : 2, window.devicePixelRatio||1));
+renderer.shadowMap.enabled = !LIVIANO; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 5000);
 camera.position.set(26, 22, 30);
 const orbit = new THREE.OrbitControls(camera, canvas);
 orbit.enableDamping = true; orbit.target.set(0,7,0);
 scene.add(new THREE.HemisphereLight(0xffffff, 0x2c4a3f, 0.75));
-const sun = new THREE.DirectionalLight(0xffffff, 0.85); sun.position.set(20, 40, 25); sun.castShadow = true; sun.shadow.mapSize.set(1024,1024);
+const sun = new THREE.DirectionalLight(0xffffff, LIVIANO ? 1 : 0.85); sun.position.set(20, 40, 25); sun.castShadow = true; sun.shadow.mapSize.set(1024,1024);
 scene.add(sun); scene.add(sun.target);
 let grids = new THREE.Group(); scene.add(grids); let gridSize = 0;
 function setGrid(S){
@@ -1445,7 +1485,17 @@ function shapeFrom(pts, holes){
   return s;
 }
 let imgTex = null;
-function getImgTex(){ if (!state.img) return null; if (!imgTex){ const im = new Image(); im.src = state.img; imgTex = new THREE.Texture(im); im.onload = () => { imgTex.needsUpdate = true; }; imgTex.colorSpace = THREE.SRGBColorSpace; if ('encoding' in imgTex) imgTex.encoding = THREE.sRGBEncoding; } return imgTex; }
+function textoTex(txt, w, h, col, fondo){
+  const k = 512/Math.max(w, h); const cv = document.createElement('canvas'); cv.width = Math.round(w*k); cv.height = Math.round(h*k); const x = cv.getContext('2d');
+  x.fillStyle = fondo; x.fillRect(0, 0, cv.width, cv.height); x.fillStyle = col; x.textAlign = 'center'; x.textBaseline = 'middle';
+  const words = String(txt||'').toUpperCase().split(/\s+/).filter(Boolean); let lines = [words.join(' ')];
+  if (words.length > 1 && lines[0].length > 10){ const half = Math.ceil(words.length/2); lines = [words.slice(0,half).join(' '), words.slice(half).join(' ')]; }
+  let fs = cv.height*0.42/lines.length; x.font = `800 ${fs}px Impact, "Arial Black", sans-serif`;
+  const maxW = Math.max(...lines.map(l=>x.measureText(l).width)); if (maxW > cv.width*0.88){ fs *= cv.width*0.88/maxW; x.font = `800 ${fs}px Impact, "Arial Black", sans-serif`; }
+  lines.forEach((l,i)=>x.fillText(l, cv.width/2, cv.height/2 + (i - (lines.length-1)/2)*fs*1.1));
+  const tx = new THREE.CanvasTexture(cv); if ('encoding' in tx) tx.encoding = THREE.sRGBEncoding; return tx;
+}
+function getImgTex(){ if (!state.img) return null; if (!imgTex){ const im = new Image(); im.src = state.img; imgTex = new THREE.Texture(im); im.onload = () => { imgTex.needsUpdate = true; invalidate(); }; imgTex.colorSpace = THREE.SRGBColorSpace; if ('encoding' in imgTex) imgTex.encoding = THREE.sRGBEncoding; } return imgTex; }
 function buildPiece(pc){
   const m = MAT[pc.mat]; const hex = colorHex(pc); const t = Math.max(m.esp/10, 0.03);
   const isMetal = pc.mat==='alu'; const mat = stdMat(hex, isMetal?{metalness:0.6, roughness:0.35}: pc.mat==='celofan'?{transparent:true, opacity:0.55}: pc.p.noCut?{transparent:true, opacity:0.92}:null);
@@ -1453,6 +1503,7 @@ function buildPiece(pc){
   let o;
   switch (pc.kind){
     case 'placa': {
+      if (pc.p.texto !== undefined){ const g = new THREE.BoxGeometry(pc.p.w, t, pc.p.h); o = new THREE.Mesh(g, [mat, mat, new THREE.MeshStandardMaterial({map:textoTex(pc.p.texto, pc.p.w, pc.p.h, COLORES[pc.p.ct]||'#111', COLORES[pc.p.fondo]||'#fff'), roughness:0.85}), mat, mat, mat]); break; }
       if (tex.a && fino){ const sw = Math.min(80, Math.ceil(pc.p.w/0.6)), sh = Math.min(80, Math.ceil(pc.p.h/0.6)); const g = new THREE.BoxGeometry(pc.p.w, t, pc.p.h, sw, 1, sh); arrugar(g, tex.a, 1.6); o = new THREE.Mesh(g, mat); }
       else o = new THREE.Mesh(new THREE.BoxGeometry(pc.p.w, t, pc.p.h), mat);
       break; }
@@ -1502,25 +1553,44 @@ function buildPiece(pc){
         d.position.set(c[0]+v.x, c[1]+v.y, c[2]+v.z); d.rotation.set(rnd()*6,rnd()*6,rnd()*6); d.scale.setScalar(sc*(0.8+rnd()*0.4)); d.updateMatrix(); im.setMatrixAt(i, d.matrix); }
       im.castShadow = true; o = new THREE.Group(); o.add(im); break; }
     case 'arbol': case 'arbolG': {
-      const big = pc.kind==='arbolG'; let A, c;
-      if (big){ c = arbolGCalc(pc.p); const sh = c.B.tipo==='balde' ? c.B.h*0.8 : c.B.h; A = genArbol({H:pc.p.H - sh, hebras:24, seed:pc.p.seed}, {n:c.flores, copa:c.copa, spread:0.09, sinRaiz:true}); }
+      const big = pc.kind==='arbolG'; let A, c, sh = 0;
+      if (big){ c = arbolGCalc(pc.p); sh = c.B.tipo==='balde' ? c.B.h*0.8 : c.B.h; A = genArbol({H:pc.p.H - sh, hebras:24, seed:pc.p.seed}, {n:c.flores, copa:c.copa, spread:0.09, sinRaiz:true}); }
       else A = genArbol(pc.p);
-      o = new THREE.Group(); const brown = stdMat(big ? COLORES.kraft : COLORES['marrón']);
+      o = new THREE.Group(); const rnd = rng(pc.p.seed*13 + 5); const V = THREE.Vector3;
+      const rad = n => big ? Math.max(0.45, (c.dT/2)*Math.sqrt(n/24)) : 0.03 + 0.035*Math.sqrt(n);
+      const geos = []; const seg = LIVIANO ? 6 : 9; const up = new V(0,1,0);
+      const tubo = (a, b, r0, r1v) => { const dir = b.clone().sub(a); const L = dir.length(); if (L < 1e-4) return; const g = new THREE.CylinderGeometry(r1v, r0, L, seg, 1, true);
+        const q = new THREE.Quaternion().setFromUnitVectors(up, dir.normalize()); const m4 = new THREE.Matrix4().compose(a.clone().addScaledVector(dir, L/2), q, new V(1,1,1)); g.applyMatrix4(m4); geos.push(g);
+        const j = new THREE.SphereGeometry(r1v, seg, Math.max(3, seg-3)); j.translate(b.x, b.y, b.z); geos.push(j); };
       A.segs.forEach(sg=>{
-        const r = big ? Math.max(0.5, (c.dT/2)*Math.sqrt(sg.n/24)*(sg.depth===0?1:0.75)) : (0.035*Math.sqrt(sg.n) + 0.03) * (sg.depth===0?1.7:1);
-        const dir = sg.b.clone().sub(sg.a); const L = dir.length();
-        const g = new THREE.CylinderGeometry(r*0.85, r, L, big?10:7); const ms = new THREE.Mesh(g, brown);
-        ms.position.copy(sg.a).addScaledVector(dir, 0.5); ms.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), dir.normalize()); ms.castShadow = true; o.add(ms);
-        const j = new THREE.Mesh(new THREE.SphereGeometry(r*0.85, 7, 5), brown); j.position.copy(sg.b); o.add(j);
+        const r0 = rad(sg.n)*(sg.depth===0 ? 1.45 : 1), r2 = sg.depth>=9 ? rad(1)*0.6 : rad(Math.max(1, sg.n*0.62));
+        const dir = sg.b.clone().sub(sg.a), L = dir.length(); const side = new V(rnd()-0.5, 0, rnd()-0.5).normalize().multiplyScalar(L*0.07*(sg.depth===0?0.4:1));
+        const mid = sg.a.clone().addScaledVector(dir, 0.5).add(side); const rm = (r0 + r2)/2;
+        tubo(sg.a, mid, r0, rm); tubo(mid, sg.b, rm, r2);
       });
-      const fs = big ? FLORG[pc.p.flor].r/0.42 : 1;
-      const f1 = A.flores.filter(f=>!f.c2), f2 = A.flores.filter(f=>f.c2); const d = new THREE.Object3D(); const rnd = rng(pc.p.seed+3);
-      [[f1, pc.p.c1],[f2, pc.p.c2]].forEach(([arr, col])=>{ if (!arr.length) return; const im = new THREE.InstancedMesh(bolitaGeo, stdMat(COLORES[col]||'#f5b8cb'), arr.length);
-        arr.forEach((f,i)=>{ d.position.copy(f.pos); d.rotation.set(rnd()*6,rnd()*6,rnd()*6); d.scale.setScalar(fs*(0.85+rnd()*0.35)); d.updateMatrix(); im.setMatrixAt(i, d.matrix); }); im.castShadow = true; o.add(im); });
+      const BGU = THREE.BufferGeometryUtils; let tronco;
+      try{ tronco = new THREE.Mesh(BGU.mergeBufferGeometries ? BGU.mergeBufferGeometries(geos) : BGU.mergeGeometries(geos), stdMat(big ? '#9b7650' : '#6a4630')); }
+      catch(err){ tronco = new THREE.Group(); geos.forEach(g=>tronco.add(new THREE.Mesh(g, stdMat(big ? '#9b7650' : '#6a4630')))); }
+      o.add(tronco);
+      // copa: flores con color propio (mezcla de los dos tonos) + “nubes” que rellenan los huecos
+      const C1 = new THREE.Color(COLORES[pc.p.c1]||'#f5b8cb'), C2 = new THREE.Color(COLORES[pc.p.c2]||'#e0517e'), BL = new THREE.Color('#ffffff');
+      const cap = LIVIANO ? 420 : 1600; const fl = A.flores.length > cap ? A.flores.filter((_,i)=>i % Math.ceil(A.flores.length/cap)===0) : A.flores;
+      const fsz = big ? FLORG[pc.p.flor].r/0.42*(A.flores.length > cap ? Math.cbrt(A.flores.length/fl.length) : 1) : 1;
+      const fgeo = new THREE.IcosahedronGeometry(0.42, LIVIANO ? 0 : 1); fgeo.scale(1, 0.72, 1);
+      const im = new THREE.InstancedMesh(fgeo, new THREE.MeshStandardMaterial({roughness:0.75, color:'#ffffff'}), fl.length); const d = new THREE.Object3D(); const col = new THREE.Color();
+      fl.forEach((f,i)=>{ d.position.copy(f.pos); d.rotation.set(rnd()*6, rnd()*6, rnd()*6); d.scale.setScalar(fsz*(0.8+rnd()*0.45)); d.updateMatrix(); im.setMatrixAt(i, d.matrix);
+        col.copy(f.c2 ? C2 : C1).lerp(f.c2 ? C1 : C2, rnd()*0.35).lerp(BL, rnd()<0.12 ? 0.5 : rnd()*0.12); im.setColorAt(i, col); });
+      if (im.instanceColor) im.instanceColor.needsUpdate = true; o.add(im);
+      const tips = A.tips.filter((_,i)=>i % (LIVIANO ? 2 : 1)===0); const spread = (big ? 0.09 : 0.11)*(pc.p.H - sh);
+      const ng = new THREE.IcosahedronGeometry(1, LIVIANO ? 0 : 1); const nub = new THREE.InstancedMesh(ng, new THREE.MeshStandardMaterial({roughness:0.95, color:'#ffffff'}), tips.length);
+      tips.forEach((t,i)=>{ d.position.copy(t).add(new V(0, spread*0.15, 0)); d.rotation.set(rnd()*6, rnd()*6, rnd()*6); d.scale.set(spread*(0.42+rnd()*0.18), spread*(0.32+rnd()*0.12), spread*(0.42+rnd()*0.18)); d.updateMatrix(); nub.setMatrixAt(i, d.matrix); col.copy(C1).lerp(C2, 0.45 + rnd()*0.3).multiplyScalar(0.92); nub.setColorAt(i, col); });
+      if (nub.instanceColor) nub.instanceColor.needsUpdate = true; o.add(nub);
+      if (!big && !LIVIANO){ const pg = new THREE.CircleGeometry(0.35, 5); pg.rotateX(-Math.PI/2); const n = 26; const pi = new THREE.InstancedMesh(pg, new THREE.MeshStandardMaterial({color:'#ffffff', side:THREE.DoubleSide}), n);
+        for (let i=0;i<n;i++){ const a = rnd()*Math.PI*2, rr = 0.6 + rnd()*pc.p.H*0.3; d.position.set(Math.cos(a)*rr, 0.03, Math.sin(a)*rr); d.rotation.set(0, rnd()*6, 0); d.scale.setScalar(0.6+rnd()*0.6); d.updateMatrix(); pi.setMatrixAt(i, d.matrix); pi.setColorAt(i, col.copy(rnd()<0.5?C1:C2)); }
+        if (pi.instanceColor) pi.instanceColor.needsUpdate = true; o.add(pi); }
       if (big){ const B = c.B;
         const bm = new THREE.Mesh(B.tipo==='balde' ? new THREE.CylinderGeometry(B.d/2, B.d/2*0.8, B.h, 32) : new THREE.BoxGeometry(B.d, B.h, B.d), stdMat('#8e979c'));
-        bm.position.y = B.h/2; bm.castShadow = true; bm.receiveShadow = true; o.add(bm);
-        o.children.forEach(ch=>{ if (ch!==bm) ch.position.y += B.tipo==='balde' ? B.h*0.8 : B.h; });
+        bm.position.y = B.h/2; o.children.forEach(ch=>{ ch.position.y += sh; }); o.add(bm);
       }
       break; }
   }
@@ -1531,7 +1601,9 @@ function buildPiece(pc){
   return o;
 }
 const objs = new Map();
+let sceneVer = 0;
 function rebuildScene(){
+  sceneVer++; invalidate();
   root.clear(); objs.clear(); tctl.detach();
   state.project.pieces.forEach(pc=>{ const o = buildPiece(pc); objs.set(pc.id, o); root.add(o); });
   const bb = sceneBox(); const S = bb.isEmpty() ? 60 : Math.max(60, Math.ceil(Math.max(bb.max.x-bb.min.x, bb.max.z-bb.min.z, bb.max.y)*2.4/20)*20);
@@ -1539,6 +1611,7 @@ function rebuildScene(){
   highlight(); drawRuler(); drawHuman();
 }
 function highlight(){
+  invalidate();
   objs.forEach((o,id)=>{ o.traverse(c=>{ if (c.isMesh && !c.isInstancedMesh && !Array.isArray(c.material)){
     if (id===state.sel){ if (!c.userData.orig){ c.userData.orig = c.material; c.material = c.material.clone(); c.material.emissive = new THREE.Color(0xd0336b); c.material.emissiveIntensity = 0.28; } }
     else if (c.userData.orig){ c.material = c.userData.orig; delete c.userData.orig; } } }); });
@@ -1554,7 +1627,7 @@ function textSprite(txt){
   const sp = new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(cv), depthTest:false})); sp.renderOrder = 10; sp.userData.ar = W/256; return sp;
 }
 function drawRuler(){
-  rulerG.clear(); if (!state.ruler || !root.children.length) return;
+  invalidate(); rulerG.clear(); if (!state.ruler || !root.children.length) return;
   const bb = sceneBox(); if (bb.isEmpty()) return;
   const H = bb.max.y, W = bb.max.x - bb.min.x, D = bb.max.z - bb.min.z;
   const k = clamp(Math.max(W,H,D)/16, 0.45, 25);
@@ -1568,7 +1641,7 @@ function drawRuler(){
   const sp2 = textSprite(`${fmtL(W)} × ${fmtL(D)}`); sp2.scale.set(4.4*k*sp2.userData.ar,1.1*k,1); sp2.position.set((bb.min.x+bb.max.x)/2, -0.2, bb.max.z + 2*k); rulerG.add(sp2);
 }
 function drawHuman(){
-  humanG.clear(); if (!state.human) return;
+  invalidate(); humanG.clear(); if (!state.human) return;
   const bb = sceneBox(); const x = (bb.isEmpty()?0:bb.min.x) - 35; const m = stdMat('#c9d6e3', {transparent:true, opacity:0.75});
   const add = (g, y) => { const ms = new THREE.Mesh(g, m); ms.position.set(x, y, 0); ms.castShadow = true; humanG.add(ms); };
   add(new THREE.CapsuleGeometry ? new THREE.CapsuleGeometry(7, 70, 6, 12) : new THREE.CylinderGeometry(7,7,84,12), 85);
@@ -1580,11 +1653,13 @@ function fit(dir){
   const bb = sceneBox(); const c = bb.isEmpty() ? new THREE.Vector3(0,5,0) : bb.getCenter(new THREE.Vector3());
   const size = bb.isEmpty() ? 15 : Math.max(bb.max.x-bb.min.x, bb.max.y-bb.min.y, bb.max.z-bb.min.z, 6);
   const dist = size*2.5 + 6; const d = (dir || new THREE.Vector3(0.7,0.5,0.85)).clone().normalize();
-  orbit.target.copy(c); camera.position.copy(c).addScaledVector(d, dist); camera.near = Math.max(0.1, size/200); camera.updateProjectionMatrix();
+  orbit.target.copy(c); camera.position.copy(c).addScaledVector(d, dist); camera.near = Math.max(0.1, size/200); camera.updateProjectionMatrix(); invalidate();
 }
-function resize(){ const w = canvas.parentElement.clientWidth, h = canvas.parentElement.clientHeight; if (!w||!h) return; renderer.setSize(w, h, false); camera.aspect = w/h; camera.updateProjectionMatrix(); }
+function resize(){ const w = canvas.parentElement.clientWidth, h = canvas.parentElement.clientHeight; if (!w||!h) return; renderer.setSize(w, h, false); camera.aspect = w/h; camera.updateProjectionMatrix(); invalidate(); }
 new ResizeObserver(resize).observe(canvas.parentElement);
-(function loop(){ orbit.update(); renderer.render(scene, camera); requestAnimationFrame(loop); })();
+let needs = true; const invalidate = () => { needs = true; };
+orbit.addEventListener('change', invalidate); tctl.addEventListener('change', invalidate);
+(function loop(){ const moved = orbit.update(); if (moved || needs){ renderer.render(scene, camera); needs = false; } requestAnimationFrame(loop); })();
 
 let down = null;
 canvas.addEventListener('pointerdown', e => { down = [e.clientX, e.clientY]; });
@@ -1598,7 +1673,7 @@ canvas.addEventListener('pointerup', e => {
 });
 function afterDrag(){
   const o = objs.get(state.sel); const pc = getPiece(state.sel); if (!o || !pc) return;
-  pc.pos = o.position.toArray().map(r1); pc.rot = [o.rotation.x,o.rotation.y,o.rotation.z].map(v=>Math.round(THREE.MathUtils.radToDeg(v)));
+  pc.pos = o.position.toArray().map(r1); pc.rot = [o.rotation.x,o.rotation.y,o.rotation.z].map(v=>Math.round(THREE.MathUtils.radToDeg(v))); sceneVer++;
   state.project.modificado = !!state.project.template; save(); renderEditorValues(); renderRight(); renderStats(); drawRuler();
 }
 
@@ -1973,6 +2048,7 @@ function showTabs(){
   document.querySelectorAll('.tabs[data-group="R"] button').forEach(b=>b.setAttribute('aria-selected', b.dataset.tab===state.tabR));
 }
 const CHANGELOG = [
+  ['0.4.0', ['Armi inteligente (opcional, con internet): entiende cualquier pedido y arma objetos nuevos combinando piezas; si no hay conexión usa las reglas', 'Armi sin internet entiende carteles, “más grande”, “más chico” y cambios de color', 'Plantilla nueva: cartel de mano con palo (marchas, eventos), con el texto en el 3D', 'Árboles más lindos: ramas continuas que se afinan y copa esponjosa con flores de dos tonos', 'Más rápido: dibuja solo cuando algo cambia, ramas fusionadas y modo liviano en celulares']],
   ['0.3.0', ['Armi: asistente que entiende pedidos como “árbol sakura de 3 metros”, arma el modelo solo y te recomienda materiales', 'Nuevo logo y encabezado centrado', 'Materiales con imagen y ficha: cómo es, para qué sirve, cómo se corta y pega, dónde comprarlo', 'Formas nuevas: caja/cubo, cilindro, pirámide y prisma triangular, con troquel y pliegues', '“Qué cortar” en tarjetas por material, con menos texto', 'Totales (alto, peso, costo, tiempo, estabilidad) abajo en la vista 3D', 'Compras: elegís la tienda de cada cosa, modo más barato / suelto / mayorista y links a Mercado Libre', 'Precios con links a cada tienda', 'Más técnicas: pompones, pétalos, cortes con cutter, moldes, encastres, endurecer, pintar, quilling', 'Comunidad: guardá fotos y videos de lo que armaste y compartilos']],
   ['0.2.0', ['Nuevo diseño e identidad de ArmaLab', 'Plantillas de gran escala: árbol de 0,8–3,5 m con estructura, standee de tamaño real con tu imagen, flor gigante, papel maché / piñata, letras 3D', 'Caja con tapa (troquel con pliegues) para packaging', 'Pestaña Técnicas: cómo arrugar cada papel, veta del crepé, fibra, rigidez, curvado, alabeo, papel maché, con calculadoras', 'Física: peso estimado, centro de masa y semáforo de vuelco; avisos de espesor por altura', 'Precios relevados oct. 2026: minorista vs mayorista/pack, descuento por transferencia y “¿cuántas unidades?” con costo por unidad', 'Moldes grandes en mosaico A4 (A1, A2…) y puntos clave para trazar sin imprimir', 'Modelador: conos, papel maché y texturas arrugadas; regla en metros y persona de 1,70 m de referencia']],
   ['0.1.0', ['Primera beta: sakura de alambre, árbol de encastre, casita, modelador libre, compras, paso a paso y plantillas 1:1']],
@@ -2034,7 +2110,7 @@ async function compartirCreacion(id){
 /* =========================================================
    Armi: asistente de ArmaLab (reglas locales, sin internet)
    ========================================================= */
-const ARMI_SUG = ['Árbol sakura de 3 metros','Casita de 15 cm','Standee de 1,70 m','Flor gigante rosa de 1 m','Letras "KIZUNA" de 40 cm','20 cajitas de 8 cm','Piñata de 40 cm','¿Qué papel uso?','¿Cuánto sale?','¿Qué es el cartón gris N°25?','¿Cómo arrugo papel para un tronco?'];
+const ARMI_SUG = ['Cartel con palo para una marcha','Árbol sakura de 3 metros','Casita de 15 cm','Standee de 1,70 m','Flor gigante rosa de 1 m','Letras "KIZUNA" de 40 cm','20 cajitas de 8 cm','Piñata de 40 cm','¿Qué papel uso?','¿Cuánto sale?','¿Qué es el cartón gris N°25?','¿Cómo arrugo papel para un tronco?'];
 let chat = LS.get('armalab.chat', []);
 const nrm = t => (t||'').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g,'');
 const NUMW = {un:1,uno:1,una:1,dos:2,tres:3,cuatro:4,cinco:5,seis:6,siete:7,ocho:8,nueve:9,diez:10};
@@ -2095,6 +2171,7 @@ function armiRecom(tid, pr){
   else if (tid==='caja'){ L.push(`<b>Material:</b> ${esc(MAT[p.mat].nombre)}. ${p.mat==='micro'?'Firme para regalos pesados.':'Liviana y fácil de plegar: marcá los pliegues antes.'}`); L.push('La tapa ya viene un poco más grande para que cierre justo.'); }
   else if (tid==='mache'){ const c = macheCalc(pr.pieces[0].p); L.push(`<b>Papel:</b> diario reciclado, ${c.tiras} tiras de 3 × 15 cm.`); L.push(`<b>Pasta:</b> ${p.pasta==='engrudo'?`engrudo con ${c.harina} g de harina`:`${c.colaG} g de cola`}. Secado ~${c.horas} h.`); if (p.term==='flecos') L.push(`<b>Flecos:</b> crepé ${esc(p.color)}.`); }
   else if (tid==='letras'){ L.push(`<b>Frente y fondo:</b> ${esc(MAT[p.mat].nombre)}${p.mat==='corrD'?': rígido y barato para letras grandes':''}.`); L.push(`<b>Tira lateral:</b> ${esc(MAT[p.lat].nombre.split(' (')[0])} (se curva en las letras redondas).`); }
+  else if (tid==='cartel'){ L.push(`<b>Placa:</b> ${esc(MAT[p.mat].nombre)}${p.mat==='corrD'?': barata, liviana y no se dobla si ponés las ondas verticales':p.mat==='corrP'?': aguanta lluvia':''}.`); L.push(`<b>Palo:</b> ${esc(MAT[p.palo].nombre.split(' (')[0])} de ${nf(p.L)} cm, pegado con silicona y precintos, tapado con una tira de refuerzo.`); L.push('<b>Texto:</b> marcador grueso, acrílico o letras de goma eva.'); }
   else if (tid==='encastre'){ const m = MAT[p.mat]; L.push(`<b>Cartón:</b> ${esc(m.nombre)}, ranuras de ${nf(m.esp+0.25)} mm.`); if (p.H/m.esp > 8) L.push(`Para ${nf(p.H)} cm te conviene más grueso: pedime “con cartón de 3 mm”.`); }
   const cost = totalMat(b);
   return `<ul>${L.map(x=>`<li>${x}</li>`).join('')}</ul>Lo más caro: ${top.map(l=>`${esc(l.nombre.split(' (')[0])} (${money(l.sub)})`).join(', ')}.<br><b>Total ≈ ${money(cost)}</b>${state.N>1?` para ${state.N} unidades (${money(totalMat(computeBOM()))} en total)`:''} · ⏱ ${fmtT(tiempoMin())}${v.th!=null?` · ${v.sem==='ok'?'🟢 estable':v.sem==='warn'?'🟡 cuidado con empujones':'🔴 se puede caer'} (${nf(v.th)}°)`:''}`;
@@ -2102,7 +2179,11 @@ function armiRecom(tid, pr){
 function armiDiseno(raw){
   const t = nrm(raw); const cm = armiMedida(t); const cols = armiColores(t); const N = armiCantidad(t); const P = {}; let tid = null; const avisos = [];
   const clampA = (k, v, a, b) => { const c = clamp(v, a, b); if (Math.abs(c - v) > 0.01) avisos.push(`La plantilla llega de ${fmtL(a)} a ${fmtL(b)}: la dejé en ${fmtL(c)}.`); P[k] = c; };
-  if (/letra|cartel|que diga|palabra|nombre/.test(t)){ tid = 'letras'; const tx = armiTexto(raw); if (tx) P.texto = limpiarTexto(tx); if (cm) clampA('alto', cm, 5, 100); if (/foam/.test(t)) P.mat = 'foam'; if (cols[0]) P.color = cols[0]; }
+  if (/cartel|pancarta|letrero|protesta|marcha|manifestaci|carteles/.test(t) && !/letras? (3d|corporea|de carton|grandes?)/.test(t)){ tid = 'cartel'; const tx = armiTexto(raw); if (tx) P.texto = tx.slice(0, 30); if (cm){ clampA('W', cm, 20, 120); P.H = clamp(Math.round(P.W*0.7), 15, 90); }
+    const dims = t.match(/(\d+)\s*(?:x|por)\s*(\d+)/); if (dims){ clampA('W', +dims[1], 20, 120); clampA('H', +dims[2], 15, 90); }
+    if (/lluvia|agua|afuera/.test(t)) P.mat = 'corrP'; else if (/foam|prolij/.test(t)) P.mat = 'foam'; if (/varilla|redond/.test(t)) P.palo = 'var8'; else if (/tubo/.test(t)) P.palo = 'tuboC';
+    if (cols[0]) P.fondo = cols[0]; if (cols[1]) P.ct = cols[1]; }
+  else if (/letra|que diga|palabra|nombre/.test(t)){ tid = 'letras'; const tx = armiTexto(raw); if (tx) P.texto = limpiarTexto(tx); if (cm) clampA('alto', cm, 5, 100); if (/foam/.test(t)) P.mat = 'foam'; if (cols[0]) P.color = cols[0]; }
   else if (/standee|tamano real|figura|silueta|cutout|recorte|persona|gigantograf|munec/.test(t)){ tid = 'standee'; clampA('H', cm || 170, 60, 220); if (/exterior|afuera|lluvia|patio/.test(t)) P.mat = 'corrP'; else if (/barat|economic/.test(t)) P.mat = 'corrG'; if (/ovalo/.test(t)) P.forma = 'oval'; else if (/rectang|cuadr/.test(t)) P.forma = 'rect'; }
   else if (/pinata|mache|globo/.test(t)){ tid = 'mache'; if (cm){ clampA('D', cm, 15, 150); P.alto = clamp(Math.round(cm*1.15), 15, 200); } if (/pinata/.test(t)){ P.capas = 3; P.term = 'flecos'; } else if (/pint/.test(t)) P.term = 'pintura'; if (cols[0]) P.color = cols[0]; }
   else if (/caja|cajita|packaging|envase|estuche|souvenir/.test(t)){ tid = 'caja'; if (cm){ clampA('W', cm, 3, 40); P.D = P.W; P.H = clamp(Math.round(P.W*0.6*2)/2, 2, 30); P.tapa = clamp(Math.round(P.H*0.4*2)/2, 1, 15); } if (/carton|resistente|firme|micro/.test(t)) P.mat = 'micro'; else if (/opalina|impres/.test(t)) P.mat = 'opalina'; if (cols[0]) P.color = cols[0]; }
@@ -2115,7 +2196,17 @@ function armiDiseno(raw){
     else { tid = 'arbolG'; clampA('H', Math.round(H/10)*10, 80, 350); P.alma = P.H > 200 ? 'pvc40' : 'tuboC'; P.base = P.H >= 250 ? 'b20' : 'b10'; P.flor = /crepe/.test(t) ? 'crepe' : 'seda'; if (/lleno|tupid|frondos/.test(t)) P.dens = 1.4; }
     if (cols.length){ P.c1 = cols[0]; P.c2 = cols[1] || cols[0]; }
   }
-  if (!tid) return null;
+  if (!tid){
+    const tp = state.project.template; if (!tp) return null;
+    const T = TEMPLATES[tp.id]; const q = T.params.find(x=>x.type==='num' && /^(H|D|W|alto)$/.test(x.k)); const np = Object.assign({}, tp.params); let cambio = '';
+    if (q && /mas grande|agrandal|mas alto|el doble/.test(t)){ np[q.k] = clamp(r1(np[q.k]*(/doble/.test(t)?2:1.5)), q.min, q.max); cambio = `lo agrandé a ${fmtL(np[q.k])}`; }
+    else if (q && /mas chic|achical|mas bajo|la mitad/.test(t)){ np[q.k] = clamp(r1(np[q.k]*(/mitad/.test(t)?0.5:0.67)), q.min, q.max); cambio = `lo achiqué a ${fmtL(np[q.k])}`; }
+    else if (q && cm && /(cambi|hacelo|ponele|que mida|de)\b/.test(t)){ np[q.k] = clamp(cm, q.min, q.max); cambio = `ahora mide ${fmtL(np[q.k])}`; }
+    else if (cols.length && /(cambi|ponele|hacelo|en |color)/.test(t)){ const ks = T.params.filter(x=>x.opts===COLOR_OPTS).map(x=>x.k); if (!ks.length) return null; ks.forEach((k,i)=>{ np[k] = cols[i] || cols[0]; }); cambio = `le cambié el color a ${cols.join(' y ')}`; }
+    if (!cambio) return null;
+    const nombre = state.project.nombre; fromTemplate(tp.id, np); state.project.nombre = nombre; setProject(state.project);
+    return `Listo, ${cambio} 👇${armiRecom(tp.id, state.project)}`;
+  }
   fromTemplate(tid, P); setProject(state.project);
   if (tid==='arbolG' && vuelco().sem==='bad'){ P.base = 'tabla'; fromTemplate(tid, P); setProject(state.project); avisos.push('Con balde se volcaba: le puse una base de tabla de 60 × 60 cm con 10 kg de lastre.'); }
   if (N){ state.N = clamp(N, 1, 500); LS.set('armalab.N', state.N); renderCompras(); }
@@ -2134,24 +2225,139 @@ function armiResponder(raw){
   if (/barat|economic|ahorr/.test(t)){ state.modo = 'barato'; state.transfer = true; LS.set('armalab.modo2','barato'); LS.set('armalab.transfer', true); renderCompras(); renderStats(); return {html:'Puse las compras en <b>lo más barato</b> con pago por transferencia. Tip: el cartón de cajas recicladas y el diario son gratis.', acts:[['compras','Ver compras']]}; }
   for (const [id, re] of MATKW) if (re.test(t)) return {html:`<b>${esc(MAT[id].nombre)}</b>: ${esc((INFO[id]||{}).t||MAT[id].uso)}`, acts:[['mat:'+id,'Ver ficha']]};
   for (const [re, txt] of TECFAQ) if (re.test(t)) return {html:txt, acts:[['tecnicas','Ver Técnicas']]};
-  return {html:'Mmm, no te entendí del todo 😅. Soy un asistente de ArmaLab (no una IA general): entiendo pedidos de qué armar y de qué tamaño, preguntas sobre materiales y técnicas. Probá con alguno de estos:', sug:true};
+  return {html:`Mmm, no te entendí del todo 😅. En el modo sin internet entiendo pedidos de qué armar y de qué tamaño, y preguntas sobre materiales y técnicas.${armiCfg.modo==='reglas'?' Para que entienda cualquier cosa (y arme objetos nuevos con piezas), activá el <b>modo inteligente</b> en ⚙.':''}`, acts:armiCfg.modo==='reglas'?[['config','Activar modo inteligente']]:[]};
 }
 function renderChat(){
   const box = $('#msgs'); if (!box) return;
   if (!chat.length) chat.push({who:'ai', html:'¡Hola! Soy <b>Armi</b> 🌸, el asistente de ArmaLab. Decime qué querés armar y de qué tamaño (por ejemplo <i>“árbol sakura de 3 metros”</i>) y te armo el modelo, te recomiendo los materiales y te dejo las compras y el paso a paso.<br><span class="small muted">Funciono sin internet con las reglas de ArmaLab.</span>'});
   box.innerHTML = chat.map(m=>`<div class="msg ${m.who}">${m.html}${m.acts&&m.acts.length?`<div class="acts">${m.acts.map(([k,l])=>`<button data-armi="${k}">${esc(l)}</button>`).join('')}</div>`:''}</div>`).join('');
   box.scrollTop = box.scrollHeight;
+  const am = $('#armiModo'); if (am) am.textContent = armiCfg.modo==='reglas' ? 'Modo sin internet · ⚙ para el inteligente' : 'Modo inteligente 🧠';
   $('#sug').innerHTML = ARMI_SUG.map(s=>`<button data-say="${esc(s)}">${esc(s)}</button>`).join('');
 }
-function armiEnviar(txt){
-  txt = (txt||'').trim(); if (!txt) return;
+/* ---------- Modo inteligente: un modelo de lenguaje interpreta el pedido y devuelve un plan en JSON ---------- */
+let armiCfg = LS.get('armalab.armiCfg', null) || {modo: ARMI_PROXY ? 'proxy' : 'reglas', key:'', model:''};
+if (ARMI_PROXY && armiCfg.modo==='reglas' && !armiCfg.elegido) armiCfg.modo = 'proxy';
+function armiSistema(){
+  const tpl = Object.entries(TEMPLATES).map(([id,T])=>`- ${id} (${T.nombre}, ${T.escala}): ${T.desc} Parámetros: ${T.params.filter(q=>q.type!=='img').map(q=>q.type==='num'?`${q.k} ${q.min}–${q.max}${q.u?' '+q.u:''}`:q.type==='text'?`${q.k} texto`:`${q.k} ∈ {${q.opts.map(o=>o[0]).join('|')}}`).join('; ')}`).join('\n');
+  const kin = Object.entries(KINDS).filter(([k,K])=>!K.soloPlantilla).map(([k,K])=>`- ${k} (${K.nom}): ${K.desc}. p: ${K.params.map(q=>q.opts?`${q.k} ∈ {${q.opts.map(o=>o[0]).join('|')}}`:`${q.k} ${q.min}–${q.max}`).join(', ')}. Materiales: ${MATS.filter(K.mats).map(m=>m.id).join(', ')}`).join('\n');
+  const mats = MATS.map(m=>`${m.id}: ${m.nombre}${m.colorable?' (con color)':''}`).join('\n');
+  return `Sos Armi, el asistente de ArmaLab, una app argentina para diseñar manualidades con materiales de librería (cartón, papel, goma eva, alambre). Hablás en español rioplatense, con voseo, claro y cálido.
+Tu trabajo: interpretar lo que la persona quiere armar y devolver un plan que la app construye en 3D y convierte en piezas a cortar, compras y paso a paso.
+Respondé SOLO con JSON válido con esta forma:
+{"respuesta": "2 a 5 oraciones: qué armaste, qué materiales elegiste y por qué, y un consejo práctico",
+ "accion": {"tipo":"plantilla","id":"<id>","params":{...}} o {"tipo":"piezas","nombre":"<nombre corto>","piezas":[{"kind":"<kind>","mat":"<material>","p":{...},"pos":[x,y,z],"rot":[rx,ry,rz],"color":"<color>","nombre":"<nombre de la pieza>"}]} o {"tipo":"ninguna"},
+ "unidades": número de unidades si lo pidió, o null}
+Reglas:
+1. Si una plantilla sirve, usala (son las más completas). Si no, armá el objeto combinando piezas (máximo 30) para que se parezca de verdad a lo pedido.
+2. Unidades en centímetros. y es la altura, el piso es y=0. Rotaciones en grados.
+3. "placa": caja de w (eje x) × espesor (eje y) × h (eje z), acostada; pos es su centro. Para pararla de frente usá rot [90,0,0]: queda w de ancho y h de alto. "disco": acostado, pos es su centro.
+4. "varilla", "tubo", "cilindro", "prisma", "piramide", "cono", "arbol": parados, pos es el centro de la base. "racimo" y "esfera": pos es el centro.
+5. Elegí materiales que aguanten: placas paradas de más de 50 cm en corrugado doble (corrD) o foam; palos con liston o var8; cajas y cilindros en cartulina, opalina o micro. Si el pedido trae colores, usalos (solo en materiales con color).
+6. Si es una pregunta (no un pedido de armar), contestala en "respuesta" y usá {"tipo":"ninguna"}. Si pide cambiar el proyecto actual, devolvé el proyecto completo cambiado.
+Plantillas:
+${tpl}
+Piezas sueltas:
+${kin}
+Materiales:
+${mats}
+Colores válidos: ${Object.keys(COLORES).join(', ')}
+Ejemplo de composición: "cartel de protesta" → plantilla cartel. "mesita de 20 cm" → piezas: un disco de cartón gris 3 mm de Ø 20 en y=20 y cuatro varillas var8 de 20 cm en las esquinas.`;
+}
+function armiContexto(){
+  const pr = state.project; const tp = pr.template;
+  const proy = tp ? `plantilla ${tp.id} con params ${JSON.stringify(tp.params)}` : `piezas: ${JSON.stringify(pr.pieces.slice(0,30).map(p=>({kind:p.kind, mat:p.mat, p:Object.fromEntries(Object.entries(p.p).filter(([k,v])=>typeof v!=='object')), pos:p.pos, rot:p.rot, color:p.color})))}`;
+  const hist = chat.slice(-7, -1).map(m=>`${m.who==='me'?'Persona':'Armi'}: ${m.html.replace(/<[^>]+>/g,'').slice(0,300)}`).join('\n');
+  return `Proyecto actual: "${pr.nombre}", ${proy}\nConversación reciente:\n${hist}`;
+}
+async function geminiModelo(key){
+  if (armiCfg.model) return armiCfg.model;
+  const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models?pageSize=200&key=${encodeURIComponent(key)}`);
+  if (!r.ok) throw new Error(r.status===400||r.status===403 ? 'La clave de Gemini no es válida.' : 'No pude conectarme con Gemini.');
+  const j = await r.json(); const ver = n => { const m = n.match(/gemini-(\d+(?:\.\d+)?)/); return m ? parseFloat(m[1]) : 0; };
+  const ms = (j.models||[]).filter(m=>(m.supportedGenerationMethods||[]).includes('generateContent') && /gemini-[\d.]+-flash/.test(m.name) && !/(image|tts|live|audio|thinking|exp|embed|preview)/.test(m.name));
+  ms.sort((a,b)=> ver(b.name) - ver(a.name) || (/lite/.test(a.name) - /lite/.test(b.name)));
+  armiCfg.model = ms[0] ? ms[0].name : 'models/gemini-2.5-flash'; LS.set('armalab.armiCfg', armiCfg); return armiCfg.model;
+}
+async function llamarIA(system, prompt){
+  if (armiCfg.modo==='gemini'){
+    if (!armiCfg.key) throw new Error('Falta la clave de Gemini.');
+    const model = await geminiModelo(armiCfg.key);
+    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/${model}:generateContent?key=${encodeURIComponent(armiCfg.key)}`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({systemInstruction:{parts:[{text:system}]}, contents:[{role:'user', parts:[{text:prompt}]}], generationConfig:{temperature:0.35, responseMimeType:'application/json'}})});
+    const j = await r.json().catch(()=>({})); if (!r.ok){ if (r.status===404){ armiCfg.model = ''; LS.set('armalab.armiCfg', armiCfg); } throw new Error((j.error && j.error.message) || 'Gemini no respondió.'); }
+    return ((j.candidates||[])[0]?.content?.parts||[]).map(p=>p.text||'').join('');
+  }
+  const url = ARMI_PROXY || armiCfg.url; if (!url) throw new Error('Falta la dirección del servidor de Armi.');
+  const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({system, prompt})});
+  const j = await r.json().catch(()=>({})); if (!r.ok || j.error) throw new Error(j.error || 'El servidor de Armi no respondió.'); return j.text || '';
+}
+function leerJSON(txt){ const m = String(txt).replace(/```json|```/g,'').match(/\{[\s\S]*\}/); if (!m) throw new Error('respuesta sin JSON'); return JSON.parse(m[0]); }
+function piezaSegura(raw){
+  const K = KINDS[raw && raw.kind]; if (!K || K.soloPlantilla) return null;
+  let m = MAT[raw.mat]; if (!m || !K.mats(m)) m = MATS.find(K.mats); if (!m) return null;
+  const p = {}; K.params.forEach(q=>{ const v = raw.p ? raw.p[q.k] : undefined; if (q.opts) p[q.k] = q.opts.some(o=>o[0]===v) ? v : q.def; else { const n = parseFloat(v); p[q.k] = isFinite(n) ? clamp(n, q.min, q.max) : q.def; } });
+  if (raw.kind==='arbol'){ p.c1 = COLORES[raw.p && raw.p.c1] ? raw.p.c1 : 'rosa claro'; p.c2 = COLORES[raw.p && raw.p.c2] ? raw.p.c2 : 'rosa fuerte'; }
+  if (raw.kind==='esfera'){ p.pasta = 'engrudo'; p.term = 'nada'; p.tcolor = 'blanco'; p.hum = 1; }
+  if (raw.nombre) p.nombre = String(raw.nombre).slice(0, 40);
+  const num3 = (a, d) => Array.isArray(a) && a.length===3 ? a.map(x=>{ const n = parseFloat(x); return isFinite(n) ? clamp(n, -500, 500) : 0; }) : d;
+  const pc = P(raw.kind, m.id, p, num3(raw.pos, [0,0,0]).map(r1), m.colorable ? {color: COLORES[raw.color] ? raw.color : (DEFCOL[m.id]||'blanco')} : {});
+  pc.rot = num3(raw.rot, [0,0,0]).map(v=>Math.round(v)); return pc;
+}
+function aplicarPlan(plan){
+  const a = plan.accion || {}; let tid = null;
+  if (a.tipo==='plantilla' && TEMPLATES[a.id]){
+    tid = a.id; const T = TEMPLATES[a.id]; const P2 = {};
+    T.params.forEach(q=>{ if (!a.params || a.params[q.k]==null || q.type==='img') return; const v = a.params[q.k];
+      if (q.type==='num'){ const n = parseFloat(v); if (isFinite(n)) P2[q.k] = clamp(n, q.min, q.max); }
+      else if (q.type==='text') P2[q.k] = limpiarTexto(String(v)) || q.def;
+      else if (q.opts.some(o=>String(o[0])===String(v))) P2[q.k] = typeof q.def==='number' ? parseFloat(v) : v; });
+    fromTemplate(tid, P2); setProject(state.project);
+  } else if (a.tipo==='piezas' && Array.isArray(a.piezas)){
+    const pcs = a.piezas.slice(0, 40).map(piezaSegura).filter(Boolean); if (!pcs.length) return null;
+    const proj = {nombre:String(a.nombre||'Diseño de Armi').slice(0,40), template:null, pieces:[], next:1, modificado:false, v:VERSION};
+    state.project = proj; pcs.forEach(pc=>{ pc.id = newId(); proj.pieces.push(pc); }); setProject(proj);
+  } else return null;
+  const N = parseInt(plan.unidades, 10); if (N > 1){ state.N = clamp(N, 1, 500); LS.set('armalab.N', state.N); renderCompras(); }
+  state.tabR = 'piezas'; showTabs();
+  return tid || 'libre';
+}
+function resumenLibre(){ const b = computeBOM(); const top = b.lines.filter(l=>l.cat==='material').sort((a,c)=>c.sub-a.sub).slice(0,3); const v = vuelco();
+  return `<br><b>${state.project.pieces.length} piezas</b> · total ≈ <b>${money(totalMat(b))}</b> · ⏱ ${fmtT(tiempoMin())}${v.th!=null?` · ${v.sem==='ok'?'🟢 estable':v.sem==='warn'?'🟡 cuidado':'🔴 se puede caer'}`:''}${top.length?`<br>Lo más caro: ${top.map(l=>`${esc(l.nombre.split(' (')[0])} (${money(l.sub)})`).join(', ')}.`:''}<br><span class="small muted">Podés mover y ajustar cada pieza en “Modelar”.</span>`; }
+let pensando = false;
+async function armiEnviar(txt){
+  txt = (txt||'').trim(); if (!txt || pensando) return;
   chat.push({who:'me', html:esc(txt)});
-  let r; try{ r = armiResponder(txt); }catch(e){ r = {html:'Uy, algo salió mal armando eso. Probá con otras palabras.'}; }
+  let r = null;
+  if (armiCfg.modo !== 'reglas'){
+    pensando = true; chat.push({who:'ai', html:'<span class="muted">Pensando… 🌸</span>'}); renderChat();
+    try{
+      const plan = leerJSON(await llamarIA(armiSistema(), `${armiContexto()}\n\nPedido nuevo: ${txt}`));
+      const tid = aplicarPlan(plan);
+      const extra = tid && tid!=='libre' ? armiRecom(tid, state.project).replace(/^<ul>[\s\S]*?<\/ul>/, '') : tid==='libre' ? resumenLibre() : '';
+      r = {html:`${esc(plan.respuesta||'Listo.')}${extra?'<br>'+extra:''}`, acts: tid ? [['compras','Ver compras'],['pasos','Paso a paso'],['plantillas','Plantillas']] : []};
+    }catch(e){ const loc = (()=>{ try{ return armiResponder(txt); }catch(err){ return {html:'No pude armar eso.'}; } })(); r = {html:`<span class="small muted">No pude usar el modo inteligente (${esc(e.message||'sin conexión')}), te respondo sin internet:</span><br>${loc.html}`, acts:loc.acts}; }
+    chat.pop(); pensando = false;
+  } else { try{ r = armiResponder(txt); }catch(e){ r = {html:'Uy, algo salió mal armando eso. Probá con otras palabras.'}; } }
   chat.push({who:'ai', html:r.html, acts:r.acts});
   chat = chat.slice(-40); LS.set('armalab.chat', chat); renderChat();
 }
+function renderArmiCfg(){
+  const m = $('#modal'); const sinRed = EN_FRAME;
+  m.innerHTML = `<div class="modal" role="dialog" aria-modal="true" aria-label="Modo de Armi"><div class="row" style="justify-content:space-between"><h2>¿Cómo piensa Armi?</h2><button class="btn" id="closeModal">Cerrar</button></div>
+  ${sinRed?'<div class="note warn small">En esta vista previa no hay internet. El modo inteligente funciona en la página de GitHub y en el archivo para la PC.</div>':''}
+  <div class="form">
+    <label class="chk" style="color:var(--fg)"><input type="radio" name="am" value="reglas"${armiCfg.modo==='reglas'?' checked':''}> <b>Sin internet (reglas)</b> · rápido y gratis; entiende las plantillas de ArmaLab</label>
+    ${ARMI_PROXY?`<label class="chk" style="color:var(--fg)"><input type="radio" name="am" value="proxy"${armiCfg.modo==='proxy'?' checked':''}> <b>Inteligente (servidor de ArmaLab)</b> · no necesitás nada</label>`:''}
+    <label class="chk" style="color:var(--fg)"><input type="radio" name="am" value="gemini"${armiCfg.modo==='gemini'?' checked':''}> <b>Inteligente con tu clave de Gemini</b> · entiende cualquier pedido y arma objetos nuevos</label>
+    <div class="field"><label for="amKey">Clave de Gemini</label><input id="amKey" type="password" autocomplete="off" value="${esc(armiCfg.key||'')}" placeholder="AIza…"></div>
+    <p class="small muted">Sacala gratis en <a class="lnk" href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">Google AI Studio ↗</a> (iniciá sesión con Google → <i>Create API key</i>). Queda guardada solo en este navegador. En el plan gratis Google puede usar los pedidos para mejorar sus modelos: no escribas datos personales.</p>
+    <div class="row"><button class="btn primary" id="amSave">Guardar</button><button class="btn" id="amTest">Probar conexión</button><span id="amMsg" class="small muted"></span></div>
+  </div></div>`;
+  m.hidden = false;
+}
 
 /* =========================================================
+   Acciones/* =========================================================
    Acciones
    ========================================================= */
 function select(id, fromView){
@@ -2186,7 +2392,7 @@ document.addEventListener('click', e=>{
   const t = e.target.closest('button, [data-goto]'); if (!t) return;
   if (t.dataset.usemat){ state.matSel = t.dataset.usemat; $('#modal').hidden = true; state.tabL = 'modelar'; showTabs(); renderModelar(); return; }
   if (t.dataset.say){ armiEnviar(t.dataset.say); return; }
-  if (t.dataset.armi){ const a = t.dataset.armi; if (a.startsWith('mat:')) showMaterial(a.slice(4)); else if (['compras','pasos','plantillas','piezas'].includes(a)){ state.tabR = a; showTabs(); if (window.innerWidth < 1000){ $('#chat').hidden = true; $('#right').scrollIntoView({behavior:'smooth'}); } } else { state.tabL = a; showTabs(); } return; }
+  if (t.dataset.armi){ const a = t.dataset.armi; if (a==='config'){ renderArmiCfg(); return; } if (a.startsWith('mat:')) showMaterial(a.slice(4)); else if (['compras','pasos','plantillas','piezas'].includes(a)){ state.tabR = a; showTabs(); if (window.innerWidth < 1000){ $('#chat').hidden = true; $('#right').scrollIntoView({behavior:'smooth'}); } } else { state.tabL = a; showTabs(); } return; }
   if (t.dataset.modo){ state.modo = t.dataset.modo; state.ofSel = {}; LS.set('armalab.ofSel', {}); LS.set('armalab.modo2', state.modo); renderCompras(); renderStats(); return; }
   if (t.dataset.galopen){ DB.all().then(a=>{ const it = a.find(x=>x.id===t.dataset.galopen); if (it && it.proy) setProject(JSON.parse(JSON.stringify(it.proy))); }); return; }
   if (t.dataset.galshare){ compartirCreacion(t.dataset.galshare); return; }
@@ -2206,6 +2412,10 @@ document.addEventListener('click', e=>{
     case 'fab': { const c = $('#chat'); c.hidden = !c.hidden; if (!c.hidden){ renderChat(); $('#chatIn').focus(); } break; }
     case 'chatClose': $('#chat').hidden = true; break;
     case 'chatReset': chat = []; LS.set('armalab.chat', chat); renderChat(); break;
+    case 'chatCfg': renderArmiCfg(); break;
+    case 'amSave': case 'amTest': { const sel = document.querySelector('input[name="am"]:checked'); armiCfg.modo = sel ? sel.value : 'reglas'; armiCfg.elegido = true; const k = $('#amKey').value.trim(); if (k !== armiCfg.key){ armiCfg.key = k; armiCfg.model = ''; } LS.set('armalab.armiCfg', armiCfg); renderChat();
+      if (t.id==='amSave'){ $('#modal').hidden = true; break; }
+      $('#amMsg').textContent = 'Probando…'; llamarIA('Respondé solo con JSON {"ok":true}', 'hola').then(x=>{ leerJSON(x); $('#amMsg').textContent = '✓ Funciona' + (armiCfg.model?` (${armiCfg.model.replace('models/','')})`:''); }).catch(err=>{ $('#amMsg').textContent = '✕ ' + (err.message||'No funcionó'); }); break; }
     case 'galSave': guardarCreacion(); break;
     case 'closeModal': $('#modal').hidden = true; break;
     case 'e-del': if (pc){ state.project.pieces = state.project.pieces.filter(p=>p!==pc); state.sel = null; afterEdit(true); } break;
@@ -2286,6 +2496,7 @@ window.addEventListener('keydown', e=>{
   if (saved && Array.isArray(saved.pieces) && saved.pieces.every(p=>KINDS[p.kind] && MAT[p.mat])) state.project = saved;
   else fromTemplate('sakura');
   resize(); rebuildScene(); renderAll(); fit();
+  setTimeout(()=>{ const v = $('#vhint'); if (v) v.hidden = true; }, 7000);
   if (LS.get('armalab.vista', null) !== VERSION){ LS.set('armalab.vista', VERSION); if (saved) showChangelog(); }
 })();
 </script>

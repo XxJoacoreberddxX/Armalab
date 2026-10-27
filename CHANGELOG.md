@@ -1,5 +1,15 @@
 # Cambios
 
+## 0.4.0 — 2026-10-26
+
+- **Armi inteligente** (opcional): con una clave gratis de Gemini o un servidor propio, entiende cualquier pedido y arma objetos nuevos combinando piezas (por ejemplo una mesita). Las respuestas de la IA se validan: piezas inventadas se descartan y las medidas imposibles se corrigen. Si no hay conexión, responde con las reglas.
+- Armi sin internet entiende carteles, “hacelo más grande / más chico” y cambios de color.
+- Plantilla nueva: **cartel de mano** con palo y tira de refuerzo, con el texto dibujado en el 3D.
+- Árboles más lindos: ramas continuas que se afinan, copa esponjosa con flores de dos tonos y pétalos caídos.
+- Rendimiento: dibuja solo cuando algo cambia, ramas fusionadas en una sola pieza, modo liviano en celulares (menos flores, sin sombras).
+- Servidor opcional de Armi para Cloudflare Workers (`worker/`).
+- 105 pruebas automáticas.
+
 ## 0.3.0 — 2026-10-26
 
 - **Armi**, asistente integrado: entiende pedidos como “árbol sakura de 3 metros”, “20 cajitas de 8 cm” o “letras KIZUNA de 40 cm”, arma el modelo solo, recomienda materiales con el porqué, y responde sobre materiales, técnicas y costos.

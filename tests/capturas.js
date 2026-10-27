@@ -1,14 +1,13 @@
 // Capturas de las pantallas principales (para revisar el diseño)
 const { chromium } = require('playwright'); const path = require('path'); const fs = require('fs');
 (async () => { const out = path.resolve(__dirname, '../shots'); fs.mkdirSync(out, {recursive:true});
-  const b = await chromium.launch({args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist']}); const pg = await b.newPage({viewport:{width:1440,height:900}}); const errs=[];
-  pg.on('pageerror', e => errs.push(e.message)); await pg.route('https://**', r => r.abort());
-  await pg.goto('file://' + path.resolve(__dirname, '../ArmaLab-offline.html')); await pg.waitForTimeout(1200);
-  await pg.click('#fab'); await pg.fill('#chatIn', 'quiero diseñar un árbol sakura de 3 metros, ¿qué papel uso?'); await pg.press('#chatIn','Enter'); await pg.waitForTimeout(900);
-  await pg.screenshot({path:out+'/1-armi.png'});
-  await pg.click('#chatClose'); await pg.click('.tabs[data-group="L"] [data-tab="modelar"]'); await pg.waitForTimeout(300); await pg.screenshot({path:out+'/2-modelar.png'});
-  await pg.click('[data-tpl="casita"]').catch(()=>{}); await pg.evaluate(()=>{ fromTemplate('casita'); setProject(state.project); state.tabR='compras'; showTabs(); }); await pg.waitForTimeout(500); await pg.screenshot({path:out+'/3-compras.png'});
-  await pg.evaluate(()=>showMaterial('corrD')); await pg.waitForTimeout(200); await pg.screenshot({path:out+'/4-ficha.png'}); await pg.click('#closeModal');
-  await pg.evaluate(()=>{ state.tabR='piezas'; showTabs(); }); await pg.screenshot({path:out+'/5-piezas.png'});
-  await pg.setViewportSize({width:400,height:850}); await pg.waitForTimeout(400); await pg.screenshot({path:out+'/6-celu.png', fullPage:false});
+  const b = await chromium.launch({args:['--use-gl=swiftshader','--enable-webgl','--ignore-gpu-blocklist']}); const errs=[];
+  const abrir = async (vp) => { const pg = await b.newPage({viewport:vp}); pg.on('pageerror', e => errs.push(e.message)); await pg.route('https://**', r => r.abort()); await pg.goto('file://' + path.resolve(__dirname, '../ArmaLab-offline.html')); await pg.waitForTimeout(1200); return pg; };
+  const pg = await abrir({width:1440,height:900});
+  for (const [t, p] of [['sakura',{}],['arbolG',{H:300}]]){ await pg.evaluate(([t,p])=>{ fromTemplate(t,p); setProject(state.project); }, [t,p]); await pg.waitForTimeout(500); await pg.screenshot({path:`${out}/arbol-${t}.png`}); }
+  await pg.click('#fab'); await pg.fill('#chatIn', 'quiero un cartel con palo para una marcha que diga "EDUCACIÓN PÚBLICA"'); await pg.press('#chatIn','Enter'); await pg.waitForTimeout(800);
+  await pg.screenshot({path:out+'/cartel-armi.png'});
+  const m = await abrir({width:400,height:850}); await m.evaluate(()=>{ fromTemplate('arbolG',{H:300}); setProject(state.project); }); await m.waitForTimeout(500);
+  const t0 = Date.now(); await m.evaluate(()=>{ for (let i=0;i<10;i++){ camera.position.x += 1; renderer.render(scene, camera); } }); console.log('celu 10 frames ms', Date.now()-t0, await m.evaluate(()=>LIVIANO));
+  await m.screenshot({path:out+'/celu-arbol.png'});
   console.log('errores:', errs); await b.close(); })();

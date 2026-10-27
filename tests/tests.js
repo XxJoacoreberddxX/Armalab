@@ -233,7 +233,34 @@ const results = []; const ok = (n, c, d='') => { results.push({n, c:!!c, d}); };
   await pg.click('#fab'); await pg.fill('#chatIn', 'sakura de 20 cm'); await pg.press('#chatIn', 'Enter'); await pg.waitForTimeout(400);
   const ch = await E(() => ({vis:!document.querySelector('#chat').hidden, n:document.querySelectorAll('#msgs .msg').length, tid:state.project.template.id, H:state.project.template.params.H}));
   ok('96 Chat: se abre, se escribe y arma el proyecto', ch.vis && ch.n>=2 && ch.tid==='sakura' && ch.H===20, JSON.stringify(ch));
-  ok('97 Sin errores de JavaScript en todas las pruebas', errs.length===0, errs.slice(0,3).join(' | '));
+
+  /* ===== 0.4.0: CARTEL, ARMI MEJORADO, IA, RENDIMIENTO ===== */
+  a = await ask('quiero un cartel con un palo para sostenerlo en una protesta que diga "NO AL AUMENTO"');
+  ok('98 Armi (sin internet): cartel con palo para una protesta', a.tid==='cartel' && /NO AL AUMENTO/.test(a.p.texto), JSON.stringify(a.p));
+  const cp = await E(() => state.project.pieces.map(p=>p.kind+':'+(p.p.nombre||'')).join(','));
+  ok('99 Cartel: placa + palo + tira de refuerzo', /placa:Cartel/.test(cp) && /varilla:Palo/.test(cp) && /Tira de refuerzo/.test(cp), cp);
+  const w0 = a.p.W; a = await ask('hacelo más grande');
+  ok('100 Armi entiende “hacelo más grande”', a.tid==='cartel' && a.p.W > w0, `${w0} → ${a.p.W}`);
+  a = await ask('ponelo en amarillo');
+  ok('101 Armi entiende “ponelo en amarillo”', a.p.ct==='amarillo' || a.p.fondo==='amarillo', JSON.stringify(a.p));
+  const ia = await E(async () => {
+    const orig = window.fetch; let pedido = null;
+    window.fetch = async (url, opt) => { pedido = {url, body: opt && opt.body}; return new Response(JSON.stringify({candidates:[{content:{parts:[{text: JSON.stringify({respuesta:'Te armé una mesita de 20 cm.', accion:{tipo:'piezas', nombre:'Mesita', piezas:[
+      {kind:'disco', mat:'cg3c', p:{d:20}, pos:[0,20,0]}, {kind:'varilla', mat:'var8', p:{len:20}, pos:[7,0,7]}, {kind:'varilla', mat:'var8', p:{len:20}, pos:[-7,0,7]}, {kind:'varilla', mat:'var8', p:{len:20}, pos:[7,0,-7]}, {kind:'varilla', mat:'var8', p:{len:20}, pos:[-7,0,-7]},
+      {kind:'nave_espacial', mat:'foam'}, {kind:'placa', mat:'galv16', p:{w:9999, h:5}, pos:[0,0,0]}]}, unidades:3})}]}}]}), {status:200, headers:{'Content-Type':'application/json'}}); };
+    armiCfg = {modo:'gemini', key:'TEST', model:'models/gemini-test'};
+    await armiEnviar('una mesita de 20 cm');
+    const r = {n: state.project.pieces.length, nombre: state.project.nombre, kinds: state.project.pieces.map(p=>p.kind+':'+p.mat+':'+(p.p.w||p.p.d||p.p.len)).join(','), N: state.N, last: chat[chat.length-1].html, url: pedido && pedido.url, sys: pedido && JSON.parse(pedido.body).systemInstruction.parts[0].text.length};
+    window.fetch = async () => { throw new Error('sin red'); }; await armiEnviar('una lámpara'); r.fallo = chat[chat.length-1].html;
+    window.fetch = orig; armiCfg = {modo:'reglas', key:'', model:''}; return r; });
+  ok('102 Modo inteligente: arma un objeto nuevo con piezas (mesita) desde la respuesta de la IA', ia.n===6 && ia.nombre==='Mesita' && ia.N===3 && /Te armé una mesita/.test(ia.last) && /gemini-test:generateContent/.test(ia.url), JSON.stringify(ia).slice(0,300));
+  ok('103 Modo inteligente: descarta piezas inventadas y corrige material y medidas imposibles', !/nave/.test(ia.kinds) && /placa:(?!galv16)[a-zA-Z0-9]+:300/.test(ia.kinds), ia.kinds);
+  ok('104 Sin conexión: avisa y responde con las reglas', /No pude usar el modo inteligente/.test(ia.fallo), ia.fallo.slice(0,120));
+  const perf = await E(() => { T.load('arbolG', {H:300}); renderer.info.autoReset = true; renderer.render(scene, camera); const calls = renderer.info.render.calls; let meshes = 0; objs.get(state.project.pieces[0].id).traverse(o=>{ if (o.isMesh) meshes++; }); return {calls, meshes}; });
+  ok('105 Árbol de 3 m: ramas fusionadas (pocas piezas para dibujar)', perf.meshes <= 5, JSON.stringify(perf));
+  const f0 = await E(() => renderer.info.render.frame); await pg.waitForTimeout(600); const f1 = await E(() => renderer.info.render.frame);
+  ok('106 Sin movimiento no redibuja (ahorra batería)', f1 - f0 <= 2, `${f0} → ${f1}`);
+  ok('107 Sin errores de JavaScript en todas las pruebas', errs.length===0, errs.slice(0,3).join(' | '));
   const pass = results.filter(r=>r.c).length;
   results.forEach(r => console.log(`${r.c?'✅':'❌'} ${r.n}${r.c?'':'  → '+r.d}`));
   console.log(`\n${pass}/${results.length} OK`);

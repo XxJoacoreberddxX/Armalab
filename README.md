@@ -11,7 +11,7 @@
 
 👉 **Probalo online:** https://xxjoacoreberddxx.github.io/Armalab/
 
-Versión actual: **0.3.0** (beta). Ver [CHANGELOG.md](CHANGELOG.md).
+Versión actual: **0.4.0** (beta). Ver [CHANGELOG.md](CHANGELOG.md).
 
 ## Qué podés hacer
 
@@ -21,6 +21,7 @@ Versión actual: **0.3.0** (beta). Ver [CHANGELOG.md](CHANGELOG.md).
 | Árbol de encastre de cartón (10–40 cm) | Standee de tamaño real con tu imagen (1–2,2 m) |
 | Casita de cartón (corrige medidas por espesor) | Árbol grande con estructura (0,8–3,5 m) |
 | Caja con tapa (troquel con pliegues) | Papel maché / piñata (15 cm – 1,5 m) |
+| | Cartel de mano con palo (20 cm – 1,2 m) |
 | Modelador libre: placas, discos, tubos, conos, cajas, cilindros, pirámides, prismas, varillas, bolitas, papel maché | Letras 3D para cartelería (5 cm – 1 m) |
 
 Cada material tiene **ficha con imagen** (cómo es, cómo se corta y se pega, dónde comprarlo con link). La pestaña **Comunidad** guarda fotos y videos de lo que armaste para compartirlos.
@@ -46,7 +47,8 @@ Los proyectos se guardan solos en el navegador. Para pasarlos a otra compu: *Pro
 ```
 src/armalab.src.html   código fuente (único archivo: HTML + CSS + JS)
 build.py               genera index.html, ArmaLab-offline.html y dist/artifact.html
-tests/tests.js         96 pruebas automáticas (Playwright)
+tests/tests.js         105 pruebas automáticas (Playwright)
+worker/armi-proxy.js   servidor opcional de Armi (Cloudflare Worker)
 tests/capturas.js      capturas de las pantallas principales
 tests/smoke.js         recorre todas las plantillas y saca capturas
 ```
@@ -54,7 +56,7 @@ tests/smoke.js         recorre todas las plantillas y saca capturas
 ```bash
 npm install            # instala Playwright y Three.js 0.147 para el build
 npm run build          # python3 build.py node_modules/three
-npm test               # corre las 96 pruebas
+npm test               # corre las 105 pruebas
 ```
 
 ## Datos y límites
@@ -62,7 +64,7 @@ npm test               # corre las 96 pruebas
 - **Precios:** relevados en Mercado Libre, librerías y mayoristas argentinos a fines de octubre de 2026 (El Poli, Librería Mayorista Leo, Multienvases, Hijos de Garber, entre otros). Cambian seguido: se editan en la pestaña *Precios*.
 - **Reglas de cantidades** (largo de alambre, flores por copa, pasta de papel maché, factor de arrugado, tiempos): son estimaciones a calibrar con prototipos reales.
 - **Física:** rigidez ∝ espesor^2,6 (Iggesund Reference Manual); caballete de standee = 75 % de la altura (práctica de fabricantes); ángulo de vuelco θ = atan((base/2)/altura del centro de masa), con umbrales de diseño 12° y 20°.
-- **Armi** no es una IA general: funciona sin internet con reglas propias de ArmaLab (entiende qué querés armar, el tamaño, colores, cantidad y preguntas sobre materiales y técnicas).
+- **Armi** tiene dos modos: *sin internet* (reglas propias de ArmaLab) e *inteligente* (un modelo de lenguaje interpreta el pedido y arma plantillas u objetos nuevos con piezas). El inteligente usa tu clave gratis de Gemini o un servidor propio: ver [worker/README.md](worker/README.md).
 - **Imágenes de personas o personajes:** para venderlas puede hacer falta permiso de quien tiene los derechos.
 
 ## Créditos y licencia
