@@ -316,7 +316,7 @@ a.lnk{color:var(--kraft);font-weight:700;text-decoration:none} a.lnk:hover{text-
    ArmaLab — modelador de manualidades con materiales de librería
    Unidades internas: centímetros. Espesores del catálogo en mm.
    ========================================================= */
-const VERSION = '0.4.6';
+const VERSION = '0.4.7';
 // URL del servidor de Armi (Cloudflare Worker de /worker). Si queda vacío, cada persona puede usar su propia clave de Gemini.
 const ARMI_PROXY = 'https://armi.joacofermandez.workers.dev';
 const FONT_JSON = /*FONT_JSON*/null;
@@ -1209,9 +1209,9 @@ function cutsOf(pc){
       C.push({...base, mano:true, qty:c.tiras, area:c.papel, medida:'tiras rasgadas de 3 × 15 cm', nombre:`Tiras de ${MAT[pc.mat].nombre.split(' (')[0].toLowerCase()}`});
       if (c.flecos) C.push({pid:pc.id, mat:'crepe', color:pc.p.tcolor, nombre:'Flecos', mano:true, qty:Math.ceil(c.flecos/(6*50)), area:c.flecos, medida:'tiras de 6 × 50 cm con flecos de 4 cm'});
       if (c.flecos) C.push({pid:pc.id, ins:'plasticola', qty:1});
-      if (pc.p.pasta==='engrudo') C.push({pid:pc.id, ins:'harina', qty:Math.max(1, Math.ceil(c.harina/1000))}); else C.push({pid:pc.id, ins:'cola1k', qty:Math.max(1, Math.ceil(c.colaG/1000))});
+      if (pc.p.pasta==='engrudo') C.push({pid:pc.id, ins:'harina', qty:c.harina/1000}); else C.push({pid:pc.id, ins:'cola1k', qty:c.colaG/1000});
       C.push({pid:pc.id, ins:'globo', qty:1});
-      if (pc.p.term==='pintura') C.push({pid:pc.id, ins:'latex', qty:1}, {pid:pc.id, ins:'acril', qty:1});
+      if (pc.p.term==='pintura'){ if (c.area > 2500) C.push({pid:pc.id, ins:'latex', qty:c.area/1e4*2/40}); C.push({pid:pc.id, ins:'acril', qty:c.area/1e4*2/1.5}); }   // en piezas chicas alcanza con acrílico   // 4 L ≈ 40 m² por mano; 200 ml ≈ 1,5 m²
       break; }
     case 'prisma': case 'piramide': case 'prismaT': {
       const n = pc.kind==='prisma' ? netPrisma(pc.p.w, pc.p.d, pc.p.h) : pc.kind==='piramide' ? netPiramide(pc.p.b, pc.p.h) : netPrismaT(pc.p.a, pc.p.l);
@@ -1368,7 +1368,7 @@ function computeBOM(N, transfer){
   let colaG = 0; pcs.forEach(p=>{ if (p.p.noCut) return; cutsOf(p).forEach(c=>{ if (c.ins || !c.shape) return; const g = MAT[c.mat].grupo; if (g==='carton'||g==='foam'||g==='cartulina') colaG += (c.w*c.h/1e4)*60*c.qty; }); if (p.kind==='arbol') colaG += 40; if (p.kind==='arbolG') colaG += arbolGCalc(p.p).kraft/1e4*250; });
   colaG *= N;
   if (colaG > 0 && !insQ.cola1k) { if (colaG > 600) add('cola1k', Math.ceil(colaG/1000), 'kg', `~${Math.round(colaG)} g estimados`); else add('plasticola', Math.max(1, Math.ceil(colaG/250)), 'frasco', `~${Math.max(20,Math.round(colaG))} g estimados`); }
-  Object.entries(insQ).forEach(([id,q])=>{ if (q>0) add(id, q*N, 'u.', INS[id].uso); });
+  Object.entries(insQ).forEach(([id,q])=>{ if (q>0) add(id, Math.ceil(q*N - 1e-9), 'u.', INS[id].uso); });   // los insumos compartidos (harina, pintura) se suman y se redondean una sola vez
   if (gotas*N > 0) add('sili7', Math.max(2, Math.ceil(gotas*N/70)), 'barras', `~${gotas*N} gotas chicas`);
   if (gotasG*N > 0) add('sili11', Math.max(3, Math.ceil(gotasG*N/25)), 'barras', `~${gotasG*N} puntos grandes`);
   if (grupos.has('aluminio')) add('doblefaz', 1, 'rollo', 'Aluminio / celofán');
@@ -2254,11 +2254,12 @@ Tu trabajo: interpretar lo que la persona quiere armar y devolver un plan que la
 Respondé SOLO con JSON válido con esta forma:
 {"idea": "lista corta de las partes del objeto real, pensada como alguien que lo arma a mano (estructura, forrado, decoración)",
  "respuesta": "2 a 5 oraciones: qué armaste, con qué materiales y por qué, y un consejo práctico. Mencioná SOLO materiales y piezas que de verdad pusiste",
- "accion": {"tipo":"plantilla","id":"<id>","params":{...}} o {"tipo":"piezas","nombre":"<nombre corto>","piezas":[{"kind":"<kind>","mat":"<material>","p":{...},"pos":[x,y,z],"rot":[rx,ry,rz],"color":"<color>","forro":{"mat":"<papel>","color":"<color>"},"nombre":"<nombre de la pieza>"}]} o {"tipo":"ninguna"},
+ "accion": {"tipo":"plantilla","id":"<id>","params":{...}} o {"tipo":"piezas","nombre":"<nombre corto>","piezas":[{"kind":"<kind>","mat":"<material>","p":{...},"pos":[x,y,z],"rot":[rx,ry,rz],"color":"<color>","forro":{"mat":"<papel>","color":"<color>"},"sobre":<índice de la pieza de abajo, o "piso">,"nombre":"<nombre de la pieza>"}]} o {"tipo":"ninguna"},
  "unidades": número de unidades si lo pidió, o null}
 Reglas:
 1. Si una plantilla sirve, usala (son las más completas). Si no, armá el objeto combinando piezas (máximo 30) para que se parezca de verdad a lo pedido.
-2. Unidades en centímetros. y es la altura, el piso es y=0. Rotaciones en grados.
+2. Unidades en centímetros. Ejes: x = izquierda (−) / derecha (+), y = altura (piso y=0), z = atrás (−) / adelante (+, hacia quien mira). Rotaciones en grados.
+2b. APILAR: no calcules alturas a mano. Poné "sobre": N (N = posición, empezando en 0, de una pieza ANTERIOR de la lista) y la app apoya la pieza justo arriba de esa; con "sobre":"piso" la apoya en el piso. Vos solo elegí bien x y z para que quede encima (centrada o en la esquina que corresponda). Ordená la lista de abajo hacia arriba: base, patas, cuerpo, cuello, cabeza, detalles. Las piezas pegadas de costado (nariz, ojos, brazos, puerta, orejas) NO llevan "sobre": dales y, x, z exactos para que toquen la superficie de la pieza donde van.
 3. "placa": caja de w (eje x) × espesor (eje y) × h (eje z), acostada; pos es su centro. Para pararla de frente usá rot [90,0,0]: queda w de ancho y h de alto. "disco": acostado, pos es su centro.
 4. "varilla", "tubo", "cilindro", "prisma", "piramide", "cono", "arbol": parados, pos es el centro de la base. "racimo" y "esfera": pos es el centro.
 5. Elegí materiales que aguanten: placas paradas de más de 50 cm en corrugado doble (corrD) o foam; palos con liston o var8; cajas y cilindros en cartulina, opalina o micro. Si el pedido trae colores, usalos (solo en materiales con color).
@@ -2278,8 +2279,8 @@ Geometría exacta de cada pieza (en cm):
 - cilindro / tubo: eje vertical, pos = centro de la base. tubo es hueco (cinta, aro, columna); cilindro tiene tapas.
 - prisma (caja): w (x) × d (z) × h (alto), pos = centro de la base. piramide: base b, alto h. prismaT: triángulo de lado a, largo l (eje z), apoyado en un lado. cono: radio r, alto h. Todos con pos = centro de la base.
 - varilla: vertical de largo len, pos = punta de abajo. Para acostarla: rot [0,0,90] o [90,0,0].
-- racimo: nube de bolitas de papel (flores, follaje, pompones), radio r, n bolitas, pos = centro.
-- esfera: papel maché de diámetro d y alto "alto", pos = centro.
+- racimo: nube suelta de bolitas de papel, SOLO para flores, follaje, copas de árboles y adornos chiquitos. Para que se vea lleno usá n ≈ (r/1)^3 × 4 con b 2–3 (r 2 → 30 bolitas, r 3 → 100). NUNCA lo uses para un cuerpo, una cabeza o una pelota: para eso usá esfera.
+- esfera: bola u óvalo de papel maché, diámetro d y alto "alto", pos = centro; con "color" queda pintada de ese color. Es la pieza para cuerpos redondos, cabezas, pelotas, muñecos.
 - arbol: árbol de alambre con flores (H, hebras), pos = base.
 Para apilar: si una pieza mide h y su base está en y=a, la de arriba va en y=a+h.
 Recetas de objetos comunes (adaptá medidas y colores al pedido):
@@ -2291,9 +2292,12 @@ Recetas de objetos comunes (adaptá medidas y colores al pedido):
 - lámpara o farol: prisma o cilindro de cartulina con calados + base de cartón gris + techo pirámide.
 - casa / casita: usá la plantilla casita. Castillo: prismas (paredes) + cilindros (torres) + conos (techos de torres).
 - mesa: disco o placa de tapa + 4 varillas o cilindros de patas. Silla: placa asiento + placa respaldo parada + 4 patas.
+- animal de 4 patas (jirafa, perro, caballo, vaca, gato): 4 patas = cilindros (d 1.5–3) con "sobre":"piso" en las esquinas (x ±(largo/2−1.5), z ±(ancho/2−1)); cuerpo = prisma acostado (largo en x) con "sobre": la primera pata, centrado en x=0, z=0; cuello = cilindro con "sobre": el cuerpo, en el extremo delantero (x = largo/2 − 2) (la jirafa lo tiene muy largo: 1,5 a 2 veces el largo del cuerpo); cabeza = prisma o esfera con "sobre": el cuello, misma x; orejas y cuernitos = conos o varillas finitas con "sobre": la cabeza; cola = varilla finita pegada atrás con rot [0,0,−45]; manchas = discos chiquitos de otro color pegados de costado (rot [90,0,0]) sobre el cuerpo y el cuello. Pintá todo con "color" o "forro".
+  Si el cuello es largo y adelante (jirafa), sumá abajo una base: placa de cartón gris (cg2c) más grande que el animal, con las patas "sobre" la base, para que no se caiga.
+- persona / muñeco: piernas = 2 cilindros "sobre":"piso"; torso = prisma o cilindro "sobre" una pierna; cabeza = esfera "sobre" el torso; brazos = cilindros finitos pegados a los costados.
 - auto: prisma de carrocería + prisma más chico arriba (cabina) + 4 discos parados (rot [90,0,0]) de ruedas.
 - robot: prismas apilados (cuerpo, cabeza) + cilindros (brazos, piernas) + discos chicos (ojos).
-- muñeco de nieve: 3 esferas o racimos blancos apilados (de mayor a menor) + cono naranja (nariz) + cilindro negro (sombrero).
+- muñeco de nieve: 3 esferas blancas apiladas con "sobre" (de mayor a menor) + nariz: cono naranja chico con rot [90,0,0] (apunta hacia adelante) pegado al frente de la cabeza + ojos y botones: discos negros chiquitos parados (rot [90,0,0]) en la cara/panza + brazos: varillas finitas inclinadas (rot [0,0,±60]) clavadas a los costados + sombrero: disco negro (ala) y cilindro negro con "sobre" + bufanda: tubo rojo finito entre la panza y la cabeza.
 - árbol de navidad: 3 conos verdes apilados o pirámide verde + cilindro marrón de tronco + racimos de colores (adornos) + estrella (racimo amarillo) arriba.
 - cohete: cilindro + cono arriba + 3 prismas triangulares chicos de aletas abajo.
 - torre / faro: cilindro alto + tubos de franjas de color + cono de techo.
@@ -2314,6 +2318,17 @@ Ejemplos:
   {"kind":"varilla","mat":"al22","p":{"len":16},"pos":[1.5,18,0],"nombre":"Tallo 2"},
   {"kind":"racimo","mat":"crepe","p":{"r":3,"n":30,"b":3},"pos":[-1.5,33,0],"color":"rosa fuerte","nombre":"Flor 1"},
   {"kind":"racimo","mat":"crepe","p":{"r":3,"n":30,"b":3},"pos":[1.5,35,0],"color":"amarillo","nombre":"Flor 2"}]}
+- "jirafa de 40 cm" → {"tipo":"piezas","nombre":"Jirafa","piezas":[
+  {"kind":"cilindro","mat":"cartulina","p":{"d":2,"h":12},"pos":[-5,0,-2.5],"color":"amarillo","sobre":"piso","nombre":"Pata trasera izq."},
+  {"kind":"cilindro","mat":"cartulina","p":{"d":2,"h":12},"pos":[-5,0,2.5],"color":"amarillo","sobre":"piso","nombre":"Pata trasera der."},
+  {"kind":"cilindro","mat":"cartulina","p":{"d":2,"h":12},"pos":[5,0,-2.5],"color":"amarillo","sobre":"piso","nombre":"Pata delantera izq."},
+  {"kind":"cilindro","mat":"cartulina","p":{"d":2,"h":12},"pos":[5,0,2.5],"color":"amarillo","sobre":"piso","nombre":"Pata delantera der."},
+  {"kind":"prisma","mat":"cartulina","p":{"w":14,"d":7,"h":7},"pos":[0,0,0],"color":"amarillo","sobre":0,"nombre":"Cuerpo"},
+  {"kind":"cilindro","mat":"cartulina","p":{"d":3,"h":16},"pos":[5,0,0],"color":"amarillo","sobre":4,"nombre":"Cuello"},
+  {"kind":"prisma","mat":"cartulina","p":{"w":6,"d":3.5,"h":3.5},"pos":[6.5,0,0],"color":"amarillo","sobre":5,"nombre":"Cabeza"},
+  {"kind":"varilla","mat":"brochette","p":{"len":2.5},"pos":[5,0,-1],"sobre":6,"nombre":"Cuernito 1"},
+  {"kind":"varilla","mat":"brochette","p":{"len":2.5},"pos":[5,0,1],"sobre":6,"nombre":"Cuernito 2"},
+  {"kind":"disco","mat":"cartulina","p":{"d":2.5},"pos":[0,15,3.6],"rot":[90,0,0],"color":"marrón","nombre":"Mancha"}]}
 - "mesita de 20 cm" → disco de cartón gris 3 mm Ø 20 en y=20 (tapa), cuatro varillas var8 de 20 cm en (±7, 0, ±7) (patas) y un disco más chico abajo como estante en y=8.
 - "corona de cumpleaños" → tubo de cartulina dorada (d 18, h 6) y 6 conos de cartulina dorada (r 1.5, h 4) repartidos arriba del borde, con racimos chiquitos de glasé en las puntas.`;
 }
@@ -2354,23 +2369,34 @@ function piezaSegura(raw){
   let m = MAT[raw.mat]; if (!m || !K.mats(m)) m = MATS.find(K.mats); if (!m) return null;
   const p = {}; K.params.forEach(q=>{ const v = raw.p ? raw.p[q.k] : undefined; if (q.opts) p[q.k] = q.opts.some(o=>o[0]===v) ? v : q.def; else { const n = parseFloat(v); p[q.k] = isFinite(n) ? clamp(n, q.min, q.max) : q.def; } });
   if (raw.kind==='arbol'){ p.c1 = COLORES[raw.p && raw.p.c1] ? raw.p.c1 : 'rosa claro'; p.c2 = COLORES[raw.p && raw.p.c2] ? raw.p.c2 : 'rosa fuerte'; }
-  if (raw.kind==='esfera'){ p.pasta = 'engrudo'; p.term = 'nada'; p.tcolor = 'blanco'; p.hum = 1; }
+  if (raw.kind==='esfera'){ p.pasta = 'engrudo'; const c = COLORES[raw.color] ? raw.color : null; p.term = c ? 'pintura' : 'nada'; if (p.d < 20) p.capas = Math.min(p.capas, 3); p.tcolor = c || 'blanco'; p.hum = 1; }
   if (raw.nombre) p.nombre = String(raw.nombre).slice(0, 40);
   const num3 = (a, d) => Array.isArray(a) && a.length===3 ? a.map(x=>{ const n = parseFloat(x); return isFinite(n) ? clamp(n, -500, 500) : 0; }) : d;
   const pc = P(raw.kind, m.id, p, num3(raw.pos, [0,0,0]).map(r1), m.colorable ? {color: COLORES[raw.color] ? raw.color : (DEFCOL[m.id]||'blanco')} : {});
   pc.rot = num3(raw.rot, [0,0,0]).map(v=>Math.round(v));
+  if (raw.sobre==='piso' || Number.isInteger(raw.sobre)) pc._sobre = raw.sobre;
   const fo = raw.forro; if (fo && MAT[fo.mat] && ['fino','cartulina','aluminio','eva'].includes(MAT[fo.mat].grupo) && superficie(pc) > 0) pc.p.forro = {mat:fo.mat, color: COLORES[fo.color] ? fo.color : (DEFCOL[fo.mat]||'blanco')};
   return pc;
 }
-// Baja las piezas que quedaron flotando hasta que apoyen en otra pieza o en el piso.
+// Acomoda la altura de las piezas: "sobre" (índice de otra pieza o "piso") las apoya arriba de esa pieza;
+// las demás, si quedaron flotando sin tocar nada, bajan hasta apoyar en otra pieza o en el piso.
 function asentar(pcs){
-  const cajas = pcs.map(pc=>{ const o = buildPiece(pc); return {pc, bb:new THREE.Box3().setFromObject(o)}; }).sort((a,b)=>a.bb.min.y - b.bb.min.y);
-  const hechas = [];
-  cajas.forEach(c=>{
-    let piso = 0; hechas.forEach(h=>{ const solapa = c.bb.min.x < h.bb.max.x - 0.2 && c.bb.max.x > h.bb.min.x + 0.2 && c.bb.min.z < h.bb.max.z - 0.2 && c.bb.max.z > h.bb.min.z + 0.2; if (solapa && h.bb.max.y <= c.bb.min.y + 0.5) piso = Math.max(piso, h.bb.max.y); });
-    const dy = c.bb.min.y - piso; if (c.pc.kind!=='racimo' && (dy > 0.3 || c.bb.min.y < -0.05)){ c.pc.pos[1] = r1(c.pc.pos[1] - dy); c.bb.min.y -= dy; c.bb.max.y -= dy; }
-    hechas.push(c);
+  const caja = pc => new THREE.Box3().setFromObject(buildPiece(pc));
+  const mover = (c, dy) => { c.pc.pos[1] = r1(c.pc.pos[1] + dy); c.bb.min.y += dy; c.bb.max.y += dy; };
+  const cs = pcs.map((pc, i)=>({pc, i, bb:caja(pc)}));
+  // 1) las que dicen sobre qué van (en orden, así una cadena patas → cuerpo → cuello → cabeza se arma sola)
+  cs.forEach(c=>{ const s = c.pc._sobre; if (s==null) return; const base = s==='piso' ? null : cs[s];
+    if (s!=='piso' && (!base || base===c)) return; mover(c, (base ? base.bb.max.y : 0) - c.bb.min.y); c.fijo = true; });
+  // 2) gravedad para las que flotan solas
+  const toca = (a, b) => a.bb.min.x <= b.bb.max.x + 0.3 && a.bb.max.x >= b.bb.min.x - 0.3 && a.bb.min.y <= b.bb.max.y + 0.3 && a.bb.max.y >= b.bb.min.y - 0.3 && a.bb.min.z <= b.bb.max.z + 0.3 && a.bb.max.z >= b.bb.min.z - 0.3;
+  cs.slice().sort((a,b)=>a.bb.min.y - b.bb.min.y).forEach(c=>{
+    if (c.fijo || c.pc.kind==='racimo'){ c.fijo = true; return; }
+    if (c.bb.min.y < -0.05){ mover(c, -c.bb.min.y); c.fijo = true; return; }
+    if (c.bb.min.y < 0.3 || cs.some(o=>o!==c && o.fijo && toca(c, o))){ c.fijo = true; return; }
+    let piso = 0; cs.forEach(h=>{ if (h===c || !h.fijo) return; const sol = c.bb.min.x < h.bb.max.x - 0.2 && c.bb.max.x > h.bb.min.x + 0.2 && c.bb.min.z < h.bb.max.z - 0.2 && c.bb.max.z > h.bb.min.z + 0.2; if (sol && h.bb.max.y <= c.bb.min.y + 0.5) piso = Math.max(piso, h.bb.max.y); });
+    mover(c, piso - c.bb.min.y); c.fijo = true;
   });
+  pcs.forEach(pc=>{ delete pc._sobre; });
   return pcs;
 }
 function aplicarPlan(plan){

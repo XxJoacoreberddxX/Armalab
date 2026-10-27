@@ -1,5 +1,12 @@
 # Cambios
 
+## 0.4.7 — 2026-10-27
+
+- Armi apila bien: cada pieza puede decir sobre cuál va ("sobre") y la app calcula la altura sola. Así las jirafas tienen patas → cuerpo → cuello → cabeza en orden.
+- Recetas nuevas de animales de 4 patas y personas, con un ejemplo completo de jirafa; el muñeco de nieve se arma con esferas (no con nubes de bolitas).
+- La gravedad ya no tira al piso las piezas pegadas de costado (narices, brazos, puertas).
+- Papel maché con color: se pinta del color pedido. Pintura y harina se comparten entre piezas (antes compraba una lata de látex por cada bola).
+
 ## 0.4.6 — 2026-10-26
 
 - Armi sabe mucho más: fichas de todos los materiales, técnicas, geometría exacta de cada pieza y recetas de más de 20 objetos comunes (maceta, florero, portalápices, auto, robot, castillo, muñeco de nieve…).
