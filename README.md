@@ -8,6 +8,8 @@
 - el **paso a paso** con tus medidas,
 - avisos de **física**: si el cartón aguanta, cuánto pesa y si se puede caer.
 
+👉 **Probalo online:** https://xxjoacoreberddxx.github.io/Armalab/
+
 Versión actual: **0.2.0** (beta). Ver [CHANGELOG.md](CHANGELOG.md).
 
 ## Qué podés hacer
@@ -24,7 +26,7 @@ La pestaña **Técnicas** explica cómo se comporta cada papel (arrugar, estirar
 
 ## Cómo usarlo
 
-- **Online:** abrí la página de GitHub Pages del repositorio.
+- **Online:** https://xxjoacoreberddxx.github.io/Armalab/
 - **Sin internet (Windows):** descargá `ArmaLab-offline.html` y abrilo con doble clic en Chrome o Edge. Desde ahí se pueden imprimir las plantillas.
 - Al imprimir: **Escala 100 %** y **Márgenes: ninguno**. Medí la barra de control de cada hoja: tiene que dar 5 cm.
 
