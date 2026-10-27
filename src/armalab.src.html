@@ -316,7 +316,7 @@ a.lnk{color:var(--kraft);font-weight:700;text-decoration:none} a.lnk:hover{text-
    ArmaLab — modelador de manualidades con materiales de librería
    Unidades internas: centímetros. Espesores del catálogo en mm.
    ========================================================= */
-const VERSION = '0.4.2';
+const VERSION = '0.4.3';
 // URL del servidor de Armi (Cloudflare Worker de /worker). Si queda vacío, cada persona puede usar su propia clave de Gemini.
 const ARMI_PROXY = 'https://armi.joacofermandez.workers.dev';
 const FONT_JSON = /*FONT_JSON*/null;
@@ -2290,9 +2290,9 @@ async function llamarIA(system, prompt){
     return ((j.candidates||[])[0]?.content?.parts||[]).map(p=>p.text||'').join('');
   }
   const url = ARMI_PROXY || armiCfg.url; if (!url) throw new Error('Falta la dirección del servidor de Armi.');
-  const ctl = new AbortController(); const to = setTimeout(()=>ctl.abort(), 35000); let r;
+  const ctl = new AbortController(); const to = setTimeout(()=>ctl.abort(), 50000); let r;
   try{ r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({system, prompt}), signal:ctl.signal}); }
-  catch(e){ throw new Error(e.name==='AbortError' ? 'tardó más de 35 segundos' : 'no hay conexión con el servidor'); } finally { clearTimeout(to); }
+  catch(e){ throw new Error(e.name==='AbortError' ? 'tardó más de 50 segundos' : 'no hay conexión con el servidor'); } finally { clearTimeout(to); }
   const j = await r.json().catch(()=>({})); if (!r.ok || j.error) throw new Error(j.error || 'El servidor de Armi no respondió.'); return j.text || '';
 }
 function leerJSON(txt){ const m = String(txt).replace(/```json|```/g,'').match(/\{[\s\S]*\}/); if (!m) throw new Error('respuesta sin JSON'); return JSON.parse(m[0]); }

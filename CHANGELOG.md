@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.4.3 — 2026-10-26
+
+- Servidor de Armi: prueba varios ajustes para que Gemini conteste sin razonar de más, informa qué modelo y modo usó, y tiene una prueba rápida en `?probar`.
+
 ## 0.4.2 — 2026-10-26
 
 - Armi más rápido: el servidor le pide a Gemini que responda sin “pensar” de más y corta a los 25 segundos; la página espera como máximo 35 segundos y si no, responde sin internet.
