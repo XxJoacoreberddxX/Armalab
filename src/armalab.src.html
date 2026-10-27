@@ -316,7 +316,7 @@ a.lnk{color:var(--kraft);font-weight:700;text-decoration:none} a.lnk:hover{text-
    ArmaLab — modelador de manualidades con materiales de librería
    Unidades internas: centímetros. Espesores del catálogo en mm.
    ========================================================= */
-const VERSION = '0.4.1';
+const VERSION = '0.4.2';
 // URL del servidor de Armi (Cloudflare Worker de /worker). Si queda vacío, cada persona puede usar su propia clave de Gemini.
 const ARMI_PROXY = 'https://armi.joacofermandez.workers.dev';
 const FONT_JSON = /*FONT_JSON*/null;
@@ -2283,12 +2283,16 @@ async function llamarIA(system, prompt){
   if (armiCfg.modo==='gemini'){
     if (!armiCfg.key) throw new Error('Falta la clave de Gemini.');
     const model = await geminiModelo(armiCfg.key);
-    const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/${model}:generateContent?key=${encodeURIComponent(armiCfg.key)}`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({systemInstruction:{parts:[{text:system}]}, contents:[{role:'user', parts:[{text:prompt}]}], generationConfig:{temperature:0.35, responseMimeType:'application/json'}})});
+    const ctl = new AbortController(); const to = setTimeout(()=>ctl.abort(), 35000); let r;
+    try{ r = await fetch(`https://generativelanguage.googleapis.com/v1beta/${model}:generateContent?key=${encodeURIComponent(armiCfg.key)}`, {method:'POST', headers:{'Content-Type':'application/json'}, signal:ctl.signal, body:JSON.stringify({systemInstruction:{parts:[{text:system}]}, contents:[{role:'user', parts:[{text:prompt}]}], generationConfig:{temperature:0.35, responseMimeType:'application/json'}})}); }
+    catch(e){ throw new Error(e.name==='AbortError' ? 'tardó más de 35 segundos' : 'no hay conexión con Gemini'); } finally { clearTimeout(to); }
     const j = await r.json().catch(()=>({})); if (!r.ok){ if (r.status===404){ armiCfg.model = ''; LS.set('armalab.armiCfg', armiCfg); } throw new Error((j.error && j.error.message) || 'Gemini no respondió.'); }
     return ((j.candidates||[])[0]?.content?.parts||[]).map(p=>p.text||'').join('');
   }
   const url = ARMI_PROXY || armiCfg.url; if (!url) throw new Error('Falta la dirección del servidor de Armi.');
-  const r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({system, prompt})});
+  const ctl = new AbortController(); const to = setTimeout(()=>ctl.abort(), 35000); let r;
+  try{ r = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({system, prompt}), signal:ctl.signal}); }
+  catch(e){ throw new Error(e.name==='AbortError' ? 'tardó más de 35 segundos' : 'no hay conexión con el servidor'); } finally { clearTimeout(to); }
   const j = await r.json().catch(()=>({})); if (!r.ok || j.error) throw new Error(j.error || 'El servidor de Armi no respondió.'); return j.text || '';
 }
 function leerJSON(txt){ const m = String(txt).replace(/```json|```/g,'').match(/\{[\s\S]*\}/); if (!m) throw new Error('respuesta sin JSON'); return JSON.parse(m[0]); }
@@ -2329,7 +2333,7 @@ async function armiEnviar(txt){
   chat.push({who:'me', html:esc(txt)});
   let r = null;
   if (armiCfg.modo !== 'reglas'){
-    pensando = true; chat.push({who:'ai', html:'<span class="muted">Pensando… 🌸</span>'}); renderChat();
+    pensando = true; chat.push({who:'ai', html:'<span class="muted">Pensando… 🌸 (tarda entre 5 y 20 segundos)</span>'}); renderChat();
     try{
       const plan = leerJSON(await llamarIA(armiSistema(), `${armiContexto()}\n\nPedido nuevo: ${txt}`));
       const tid = aplicarPlan(plan);

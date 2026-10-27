@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.4.2 — 2026-10-26
+
+- Armi más rápido: el servidor le pide a Gemini que responda sin “pensar” de más y corta a los 25 segundos; la página espera como máximo 35 segundos y si no, responde sin internet.
+
 ## 0.4.1 — 2026-10-26
 
 - Armi usa el modo inteligente para todos a través del servidor de ArmaLab (sin poner ninguna clave). Aviso de privacidad en el chat.
