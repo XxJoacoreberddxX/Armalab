@@ -190,6 +190,7 @@ const results = []; const ok = (n, c, d='') => { results.push({n, c:!!c, d}); };
   
 
   /* ===== 0.3.0: ARMI, FORMAS, COMPRAS, MATERIALES, COMUNIDAD ===== */
+  await E(() => { armiCfg = {modo:'reglas', key:'', model:'', elegido:true}; });
   const ask = q => E(q => { armiEnviar(q); const pr = state.project; return {tid: pr.template && pr.template.id, p: pr.template && pr.template.params, N: state.N, last: chat[chat.length-1].html}; }, q);
   let a = await ask('quiero diseñar un árbol sakura de 3 metros, ¿qué papel uso?');
   ok('78 Armi: “árbol sakura de 3 metros” → árbol grande de 3 m con alma de PVC', a.tid==='arbolG' && a.p.H===300 && a.p.alma==='pvc40' && /seda/.test(a.last), JSON.stringify(a.p));

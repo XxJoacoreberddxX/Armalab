@@ -1,5 +1,9 @@
 # Cambios
 
+## 0.4.1 — 2026-10-26
+
+- Armi usa el modo inteligente para todos a través del servidor de ArmaLab (sin poner ninguna clave). Aviso de privacidad en el chat.
+
 ## 0.4.0 — 2026-10-26
 
 - **Armi inteligente** (opcional): con una clave gratis de Gemini o un servidor propio, entiende cualquier pedido y arma objetos nuevos combinando piezas (por ejemplo una mesita). Las respuestas de la IA se validan: piezas inventadas se descartan y las medidas imposibles se corrigen. Si no hay conexión, responde con las reglas.

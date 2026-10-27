@@ -316,9 +316,9 @@ a.lnk{color:var(--kraft);font-weight:700;text-decoration:none} a.lnk:hover{text-
    ArmaLab — modelador de manualidades con materiales de librería
    Unidades internas: centímetros. Espesores del catálogo en mm.
    ========================================================= */
-const VERSION = '0.4.0';
+const VERSION = '0.4.1';
 // URL del servidor de Armi (Cloudflare Worker de /worker). Si queda vacío, cada persona puede usar su propia clave de Gemini.
-const ARMI_PROXY = '';
+const ARMI_PROXY = 'https://armi.joacofermandez.workers.dev';
 const FONT_JSON = /*FONT_JSON*/null;
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -2229,7 +2229,7 @@ function armiResponder(raw){
 }
 function renderChat(){
   const box = $('#msgs'); if (!box) return;
-  if (!chat.length) chat.push({who:'ai', html:'¡Hola! Soy <b>Armi</b> 🌸, el asistente de ArmaLab. Decime qué querés armar y de qué tamaño (por ejemplo <i>“árbol sakura de 3 metros”</i>) y te armo el modelo, te recomiendo los materiales y te dejo las compras y el paso a paso.<br><span class="small muted">Funciono sin internet con las reglas de ArmaLab.</span>'});
+  if (!chat.length) chat.push({who:'ai', html:'¡Hola! Soy <b>Armi</b> 🌸, el asistente de ArmaLab. Decime qué querés armar y de qué tamaño (por ejemplo <i>“árbol sakura de 3 metros”</i>) y te armo el modelo, te recomiendo los materiales y te dejo las compras y el paso a paso.<br><span class="small muted">' + (armiCfg.modo==='reglas' ? 'Estoy en modo sin internet (⚙ para cambiar).' : 'Uso una IA con internet: no escribas datos personales.') + '</span>'});
   box.innerHTML = chat.map(m=>`<div class="msg ${m.who}">${m.html}${m.acts&&m.acts.length?`<div class="acts">${m.acts.map(([k,l])=>`<button data-armi="${k}">${esc(l)}</button>`).join('')}</div>`:''}</div>`).join('');
   box.scrollTop = box.scrollHeight;
   const am = $('#armiModo'); if (am) am.textContent = armiCfg.modo==='reglas' ? 'Modo sin internet · ⚙ para el inteligente' : 'Modo inteligente 🧠';
